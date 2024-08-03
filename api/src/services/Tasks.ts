@@ -89,6 +89,6 @@ const runNotificationService = async () => {
     }
 };
 
-cron.schedule('*/10 * * * * *', runNotificationService);
-// cron.schedule('0 0 * * * *', runNotificationService);
+// cron.schedule('*/10 * * * * *', runNotificationService);
+cron.schedule('0 0 * * * *', runNotificationService);
 
