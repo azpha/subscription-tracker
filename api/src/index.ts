@@ -28,6 +28,7 @@ app.get('/', (req,res) => {
 });
 
 app.use("/items", Routes.Budget);
+app.use("/analytics", Routes.Analytics);
 
 // global handlers
 app.use("*", (req,res) => {

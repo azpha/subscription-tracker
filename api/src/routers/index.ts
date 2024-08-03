@@ -1,5 +1,7 @@
 import Budget from "./Budget"
+import Analytics from './Analytics';
 
 export default {
-    Budget
+    Budget,
+    Analytics
 }
