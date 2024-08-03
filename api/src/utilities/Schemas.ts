@@ -1,0 +1,19 @@
+import { z } from "zod";
+
+const CreateItemSchema = z.object({
+    name: z.string().min(1),
+    description: z.string().min(1),
+    price: z.string().min(1),
+    lastBillingDate: z.date(),
+    nextBillingDate: z.date(),
+    billingMethod: z.string(),
+    billingFrequency: z.enum(["yearly", "monthly"])
+})
+const RetrieveItemSchema = z.number();
+const DeleteItemSchema = z.number();
+
+export default {
+    CreateItemSchema,
+    RetrieveItemSchema,
+    DeleteItemSchema
+}
