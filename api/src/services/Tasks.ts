@@ -40,33 +40,35 @@ const runNotificationService = async () => {
             }
         }
 
-        await fetch(process.env.DISCORD_NOTIFICATION_WEBHOOK as string, {
-            method: 'post',
-            headers: {
-                'content-type': "application/json"
-            },
-            body: JSON.stringify({
-                username: "Subscriptions",
-                embeds: [
-                    {
-                        title: "Subscriptions expiring!",
-                        description: "You have subscriptions expiring soon!",
-                        color: 16711680,
-                        fields: inThresholdForNotification.map((v) => {
-                            const currentDate = moment(new Date());
-                            const nextDate = moment(v.nextBillingDate);
-                            const diffInDays = nextDate.diff(currentDate, 'days');
-
-                            return {
-                                name: v.name,
-                                value: `${diffInDays} day(s), ${v.billingMethod}`,
-                                inline: true
-                            }
-                        })
-                    }
-                ]
+        if (inThresholdForNotification.length > 0) {
+            await fetch(process.env.DISCORD_NOTIFICATION_WEBHOOK as string, {
+                method: 'post',
+                headers: {
+                    'content-type': "application/json"
+                },
+                body: JSON.stringify({
+                    username: "Subscriptions",
+                    embeds: [
+                        {
+                            title: "Subscriptions expiring!",
+                            description: "You have subscriptions expiring soon!",
+                            color: 16711680,
+                            fields: inThresholdForNotification.map((v) => {
+                                const currentDate = moment(new Date());
+                                const nextDate = moment(v.nextBillingDate);
+                                const diffInDays = nextDate.diff(currentDate, 'days');
+    
+                                return {
+                                    name: v.name,
+                                    value: `${diffInDays} day(s), ${v.billingMethod}`,
+                                    inline: true
+                                }
+                            })
+                        }
+                    ]
+                })
             })
-        })
+        }
     }
     if (hasExpired.length > 0) {
         for (const subscription of hasExpired) {
@@ -90,5 +92,5 @@ const runNotificationService = async () => {
 };
 
 // cron.schedule('*/10 * * * * *', runNotificationService);
-cron.schedule('0 0 * * * *', runNotificationService);
+cron.schedule('0 0 * * *', runNotificationService);
 
