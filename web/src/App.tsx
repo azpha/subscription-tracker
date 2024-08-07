@@ -21,14 +21,14 @@ export default function App() {
   const [ error, setError ] = useState<string>("");
   const [ showModal, setShowModal ] = useState<boolean>(false);
 
-  const getTimePeriodDueIn = (nextBillingDate: Date, lastBillingDate: Date) => {
+  const getTimePeriodDueIn = (nextBillingDate: Date) => {
     // create moment date objects
-    const lastMoment = moment(lastBillingDate);
+    const currentMoment = moment(new Date());
     const nextMoment = moment(nextBillingDate);
 
     // get diffs for days & weeks
-    const differenceInDays = nextMoment.diff(lastMoment, 'days');
-    const differenceInWeeks = nextMoment.diff(lastMoment, 'weeks');
+    const differenceInDays = nextMoment.diff(currentMoment, 'days');
+    const differenceInWeeks = nextMoment.diff(currentMoment, 'weeks');
 
     // return days value if it's <~1mo
     if (differenceInDays <= 30) {
@@ -134,7 +134,7 @@ export default function App() {
                       id={v.id}
                       name={v.name}
                       price={v.price}
-                      timePeriodDueIn={getTimePeriodDueIn(v.nextBillingDate, v.lastBillingDate)}
+                      timePeriodDueIn={getTimePeriodDueIn(v.nextBillingDate)}
                       onDeleteItem={submitDeleteToApi}
                     />
                   })
