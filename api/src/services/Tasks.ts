@@ -34,7 +34,7 @@ const runNotificationService = async () => {
             const nextDate = moment(subscription.nextBillingDate);
             const diffInDays = nextDate.diff(currentDate, 'days');
 
-            if (diffInDays === 7 || diffInDays === 5 || diffInDays === 2 || diffInDays === 1) {
+            if (diffInDays <= 7) {
                 console.log("sending notification!")
                 inThresholdForNotification.push(subscription);
             }
