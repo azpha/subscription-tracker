@@ -180,7 +180,7 @@ export default function App() {
             />
             <InputBox 
               name="price"
-              placeholder="Price.."
+              placeholder="Price (without $).."
               onChange={(value) => {
                 setCreateData((prevState) => {
                   return {
