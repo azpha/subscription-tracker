@@ -62,7 +62,7 @@ export default function CreateModal({
                 />
                 <InputBox 
                     name="image"
-                    placeholder="SVG.."
+                    placeholder="Image.."
                     onChange={(value) => {
                         setCreateData((prevState) => {
                             return {
