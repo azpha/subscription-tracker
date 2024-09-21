@@ -68,7 +68,7 @@ export default function App() {
             <Calendar month={shownMonth} items={data} />
           </div>
         ) : (
-          <div className="text-center">
+          <div className="text-center text-white">
             <h1 className="font-bold text-2xl text-red-500">Oops..</h1>
             <p>There's no data here :(</p>
           </div>

@@ -18,10 +18,11 @@ export default function ItemDisplay({
     const possibleData = items.filter((v) => {
         if (v?.nextBillingDate) {
             const date = new Date(v.nextBillingDate);
+            console.log(v.name, date)
 
             return (date.getFullYear() === new Date().getFullYear())
                 && (date.getMonth() === month)
-                && (date.getDate() + 1 === day);
+                && (date.getDate() === day);
         }
     })
 

@@ -11,7 +11,7 @@ export default function ItemTooltip({
     children,
     budgetItem
 }: TooltipProps) {
-    const dateOfRenewal = new Date(budgetItem.nextBillingDate).getDate() + 1;
+    const dateOfRenewal = new Date(budgetItem.nextBillingDate).getDate();
     const generateDateString = () => {
         if (budgetItem.billingFrequency === "yearly") {
             return <p className="text-xs mb-2 opacity-85">
