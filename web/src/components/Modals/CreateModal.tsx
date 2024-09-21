@@ -115,7 +115,14 @@ export default function CreateModal({
                 />
 
                 <div className="block text-center">
-                    <button onClick={() => ItemUtils.submitDataToApi(createData)} type="button" className="bg-black text-white font-bold p-2 rounded-lg">Submit</button>
+                    <button onClick={() => {
+                        ItemUtils.submitDataToApi(createData)
+                            .then((res) => {
+                                if (res) {
+                                    setShowModal(false);
+                                }
+                            })
+                    }} type="button" className="bg-black text-white font-bold p-2 rounded-lg">Submit</button>
                 </div>
                 <p className="italic text-red-500">{error}</p>
             </div>
