@@ -22,7 +22,7 @@ export default function Calendar({
     return (
         <div className="grid grid-cols-7 gap-1">
             {daysInMonth().map((v, k) => (
-            <ItemDisplay day={v} items={items} key={k} />
+                <ItemDisplay day={v} items={items} key={k} />
             ))}
         </div>
     );
