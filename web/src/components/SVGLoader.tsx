@@ -65,7 +65,7 @@ export default function SVGLoader({
 
     return (
         <div 
-            className="svg-container"
+            className="svg-container inline-block"
             dangerouslySetInnerHTML={{ __html: svgElement.outerHTML }} 
         />
     );
