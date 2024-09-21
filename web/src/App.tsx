@@ -8,6 +8,7 @@ import CreateModal from "./components/Modals/CreateModal";
 export default function App() {
   const date = new Date()
 
+  const [ loading, setLoading ] = useState<boolean>(true);
   const [ data, setData ] = useState<BudgetItem[] | null>(null);
   const [ shownMonth, setShownMonth ] = useState<number>(date.getMonth())
   const [ didGoToNext, setDidGoToNext ] = useState<boolean>(true);
@@ -18,8 +19,10 @@ export default function App() {
       ItemUtils.fetchAllItems()
       .then((data) => {
         setData(data);
+        setLoading(false);
       }).catch((e) => {
         console.error("Failed to fetch data!", e);
+        setLoading(false)
       })
     }
   }, [showModal])
@@ -30,7 +33,7 @@ export default function App() {
   return (
     <div className="flex min-h-screen justify-center items-center">
       {
-        data && data.length > 0 ? (
+        ((data && data.length > 0) && !loading) ? (
           <div className="flex flex-col min-h-screen justify-center items-start">
 
             <div className="mb-4 select-none">
@@ -69,8 +72,18 @@ export default function App() {
           </div>
         ) : (
           <div className="text-center text-white">
-            <h1 className="font-bold text-2xl text-red-500">Oops..</h1>
-            <p>There's no data here :(</p>
+            {
+              loading ? (
+                <>
+                  <h1 className="font-bold text-2xl text-white">Loading..</h1>
+                </>
+              ) : (
+                <>
+                  <h1 className="font-bold text-2xl text-red-500">Oops..</h1>
+                  <p className="text-white">There's no data here :(</p>
+                </>
+              )
+            }
           </div>
         )
       }
