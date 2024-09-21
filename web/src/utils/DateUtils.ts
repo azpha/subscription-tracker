@@ -17,13 +17,13 @@ function getDaysInMonth(year: number, month: number) {
     return new Date(year, month + 1, 0).getDate();
 }
 function getSuffix(day: number) {
-    if (String(day).endsWith("3")) {
-        return "rd"
-    } else if (String(day).endsWith("2")) {
-        return "nd"
-    } else if (String(day).endsWith("1")) {
-        return "st"
-    } else return "th"
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd"
+        default: return "th";
+    }
 }
 
 export default {
