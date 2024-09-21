@@ -17,29 +17,28 @@ export default function SVGLoader({
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        if (isLoading) {
-            try {
-                fetch(url)
-                    .then(async (res) => {
-                        if (!res.ok) {
-                            throw new Error("Failed to fetch SVG from server! " + res.status)
-                        } else {
-                            const svgText = await res.text();
-                            setSvgContent(svgText);
-                        }
+        console.log("loading svg..")
+        try {
+            fetch(url)
+                .then(async (res) => {
+                    if (!res.ok) {
+                        throw new Error("Failed to fetch SVG from server! " + res.status)
+                    } else {
+                        const svgText = await res.text();
+                        setSvgContent(svgText);
+                    }
 
-                        setIsLoading(false)
-                    })
-                    .catch((e) => {
-                        console.error("Could not fetch SVG: ", e);
-                        setIsLoading(false);
-                    })
-            } catch (e) {
-                console.error("Failed to fetch SVG", e);
-                setIsLoading(false);
-            }
+                    setIsLoading(false)
+                })
+                .catch((e) => {
+                    console.error("Could not fetch SVG: ", e);
+                    setIsLoading(false);
+                })
+        } catch (e) {
+            console.error("Failed to fetch SVG", e);
+            setIsLoading(false);
         }
-    }, [isLoading, url])
+    }, [url])
 
     if (isLoading) return <div/>;
 
