@@ -11,12 +11,12 @@ datasource db {
 }
 
 model Subscription {
-  id Int @id @default(autoincrement())
-  name String
-  description String
-  price String
-  lastBillingDate DateTime
-  nextBillingDate DateTime
-  billingMethod String
+  id               Int      @id @default(autoincrement())
+  name             String
+  price            String
+  lastBillingDate  DateTime
+  nextBillingDate  DateTime
+  billingMethod    String
   billingFrequency String
+  image            String?
 }

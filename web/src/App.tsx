@@ -1,240 +1,52 @@
-import ListItem from "./components/ListItem";
-import Modal from './components/Modal';
-import InputBox from "./components/InputBox";
-import Calendar from 'react-calendar';
-import moment from 'moment';
+import Calendar from "./components/Calendar";
 import { useState, useEffect } from 'react';
 import type { BudgetItem } from "./types";
+import ItemUtils from "./utils/ItemUtils";
+import DateUtils from "./utils/DateUtils";
+import CreateModal from "./components/Modals/CreateModal";
 
 export default function App() {
   const [ data, setData ] = useState<BudgetItem[] | null>(null);
-  const [ createData, setCreateData ] = useState<BudgetItem>({
-    name: "",
-    description: "",
-    billingMethod: "",
-    id: 0,
-    lastBillingDate: new Date(),
-    nextBillingDate: new Date(),
-    price: "",
-    billingFrequency: "monthly"
-  })
-  const [ error, setError ] = useState<string>("");
   const [ showModal, setShowModal ] = useState<boolean>(false);
 
-  const getTimePeriodDueIn = (nextBillingDate: Date) => {
-    // create moment date objects
-    const currentMoment = moment(new Date());
-    const nextMoment = moment(nextBillingDate);
-
-    // get diffs for days & weeks
-    const differenceInDays = nextMoment.diff(currentMoment, 'days');
-    const differenceInWeeks = nextMoment.diff(currentMoment, 'weeks');
-
-    // return days value if it's <~1mo
-    if (differenceInDays <= 30) {
-      return differenceInDays === 1 ? `${differenceInDays} day` : `${differenceInDays} days`
-    } else {
-      return differenceInWeeks === 1 ? `${differenceInWeeks} week` : `${differenceInWeeks} weeks`
-    }
-  };
-
-  const submitDeleteToApi = (id: number) => {
-    fetch(import.meta.env.VITE_API_URL + "items/" + id, {
-      method: "delete"
-    })
-    .then((res) => {
-      if (res.ok) {
-        fetchAllItems()
-      } else {
-        setError("Failed to fetch! Status: " + res.status)
-      }
-    })
-    .catch((e) => {
-      setError(e.message);
-    })
-  }
-  const submitDataToApi = () => {
-    const data = {
-      name: createData.name,
-      description: createData.description,
-      price: createData.price,
-      lastBillingDate: createData.lastBillingDate,
-      nextBillingDate: createData.nextBillingDate,
-      billingMethod: createData.billingMethod,
-      billingFrequency: createData.billingFrequency
-    }
-
-    fetch(import.meta.env.VITE_API_URL + "items", {
-      method: "post",
-      headers: {
-        "content-type": "application/json"
-      },
-      body: JSON.stringify(data)
-    })
-    .then((res) => {
-      if (res.ok) {
-        setShowModal(false);
-        fetchAllItems()
-      } else {
-        setError("Failed to create! Status code: " + res.status);
-      }
-    })
-    .catch((e) => {
-      setError(e.message)
-    })
-  };
-  const fetchAllItems = () => {
-    fetch(import.meta.env.VITE_API_URL + "items", {
-      method: 'get'
-    })
-    .then(async (res) => {
-      if (res.ok) {
-        const apiData = await res.json();
-        setData(apiData.subscription);
-      } else {
-        setError("Failed to fetch! Status code: " + res.status)
-      }
-    })
-    .catch((e) => {
-      setError(e.message);
-    })
-  }
-
   useEffect(() => {
-    fetchAllItems();
-  }, [])
-  useEffect(() => {
-    if (error) {
-      setTimeout(() => {
-        setError("")
-      }, 3000)
+    if (!showModal) {
+      ItemUtils.fetchAllItems()
+      .then((data) => {
+        setData(data);
+      }).catch((e) => {
+        console.error("Failed to fetch data!", e);
+      })
     }
-  }, [error])
+  }, [showModal])
   useEffect(() => {
-    console.log(createData)
-  }, [createData])
+    console.log(data)
+  }, [data])
 
   return (
     <div className="flex min-h-screen justify-center items-center">
-      <div className="bg-white p-4 rounded-lg">
-        <div className="text-center">
-          <h1 className="font-bold text-2xl">Subscriptions</h1>
-          <p onClick={() => setShowModal(true)} className="select-none hover:underline hover:cursor-pointer hover:opacity-40">Create</p>
-          <hr className="my-2 border-black" />
-        </div>
+      {
+        data && data.length > 0 ? (
+          <div className="flex flex-col min-h-screen justify-center items-start">
 
-        <div className="overflow-y-scroll no-scrollbar max-h-96">
-          {
-            (data && data.length > 0) ? (
-              <>
-                {
-                  data.map((v,k) => {
-                    return <ListItem 
-                      key={k}
-                      id={v.id}
-                      name={v.name}
-                      price={v.price}
-                      timePeriodDueIn={getTimePeriodDueIn(v.nextBillingDate)}
-                      onDeleteItem={submitDeleteToApi}
-                    />
-                  })
-                }
-              </>
-            ) : (
-              <div className="text-center">
-                <h1 className="font-bold text-2xl text-red-500">Oops..</h1>
-                <p>There's no data here :(</p>
-              </div>
-            )
-          }
-        </div>
-      </div>
-
-      <Modal showModal={showModal} setShowModal={setShowModal}>
-          <h1 className="text-2xl font-bold mb-2 text-center">Create</h1>
-
-          <div className="space-y-2 text-center">
-            <InputBox 
-              name="name"
-              placeholder="Name.."
-              onChange={(value) => {
-                setCreateData((prevState) => {
-                  return {
-                    ...prevState,
-                    name: value
-                  }
-                })
-              }}
-            />
-            <InputBox 
-              name="description"
-              placeholder="Description.."
-              onChange={(value) => {
-                setCreateData((prevState) => {
-                  return {
-                    ...prevState,
-                    description: value
-                  }
-                })
-              }}
-            />
-            <InputBox 
-              name="price"
-              placeholder="Price (without $).."
-              onChange={(value) => {
-                setCreateData((prevState) => {
-                  return {
-                    ...prevState,
-                    price: value
-                  }
-                })
-              }}
-            />
-            <InputBox 
-              name="billingMethod"
-              placeholder="Billing method.."
-              onChange={(value) => {
-                setCreateData((prevState) => {
-                  return {
-                    ...prevState,
-                    billingMethod: value
-                  }
-                })
-              }}
-            />
-            <InputBox 
-              name="billingFrequency"
-              placeholder="Billing frequency.."
-              isOption={true}
-              options={[
-                "Monthly",
-                "Yearly"
-              ]}
-              onChange={(value) => {
-                setCreateData((prevState) => {
-                  return {
-                    ...prevState,
-                    billingFrequency: value.toLowerCase() as "yearly" | "monthly"
-                  }
-                })
-              }}
-            />
-
-            <Calendar onChange={(v) => {
-              setCreateData((prevState) => {
-                return {
-                  ...prevState,
-                  nextBillingDate: new Date(v?.toString() as string)
-                }
-              })
-            }} />
-
-            <div className="block text-center">
-              <button onClick={submitDataToApi} type="button" className="bg-black text-white font-bold p-2 rounded-lg">Submit</button>
+            <div className="mb-4 select-none">
+              <h1 className="text-white text-4xl"> 
+                <span className="font-semibold">{DateUtils.months[new Date().getMonth()]} </span>
+                <span className="opacity-50">{new Date().getFullYear()}</span>
+              </h1>
+              <h1 onClick={() => setShowModal(true)} className="text-white mt-2 max-w-fit hover:underline hover:cursor-pointer">Create</h1>
             </div>
-            <p className="italic text-red-500">{error}</p>
+            <Calendar items={data} />
           </div>
-      </Modal>
+        ) : (
+          <div className="text-center">
+            <h1 className="font-bold text-2xl text-red-500">Oops..</h1>
+            <p>There's no data here :(</p>
+          </div>
+        )
+      }
+
+      <CreateModal setShowModal={setShowModal} showModal={showModal} />
     </div>
   )
 }

@@ -21,7 +21,7 @@ const CreateItem = async (
         const subscription = await Storage.subscription.create({
             data: {
                 name: req.body.name,
-                description: req.body.description,
+                image: req.body.image,
                 price: req.body.price,
                 lastBillingDate: req.body.lastBillingDate,
                 nextBillingDate: req.body.nextBillingDate,
