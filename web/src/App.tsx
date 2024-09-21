@@ -7,6 +7,7 @@ import CreateModal from "./components/Modals/CreateModal";
 
 export default function App() {
   const [ data, setData ] = useState<BudgetItem[] | null>(null);
+  const [ shownMonth, setShownMonth ] = useState<number>(new Date().getMonth());
   const [ showModal, setShowModal ] = useState<boolean>(false);
 
   useEffect(() => {
@@ -31,12 +32,30 @@ export default function App() {
 
             <div className="mb-4 select-none">
               <h1 className="text-white text-4xl"> 
-                <span className="font-semibold">{DateUtils.months[new Date().getMonth()]} </span>
+                <span className="font-semibold">{DateUtils.months[shownMonth]} </span>
                 <span className="opacity-50">{new Date().getFullYear()}</span>
               </h1>
-              <h1 onClick={() => setShowModal(true)} className="text-white mt-2 max-w-fit hover:underline hover:cursor-pointer">Create</h1>
+              <div className="space-x-2">
+                <h1 
+                  onClick={() => setShowModal(true)} 
+                  className="text-white mt-2 max-w-fit hover:underline hover:cursor-pointer inline"
+                >
+                  Create
+                </h1>
+                <h1 
+                  onClick={() => {
+                    setShownMonth((prevState) => {
+                      if (prevState < 11) return prevState + 1;
+                      else return 0;
+                    })
+                  }} 
+                  className="text-white mt-2 max-w-fit hover:underline hover:cursor-pointer inline"
+                >
+                  Next
+                </h1>
+              </div>
             </div>
-            <Calendar items={data} />
+            <Calendar month={shownMonth} items={data} />
           </div>
         ) : (
           <div className="text-center">

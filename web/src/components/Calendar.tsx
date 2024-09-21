@@ -2,11 +2,13 @@ import { BudgetItem } from "../types";
 import DateUtils from "../utils/DateUtils";
 import ItemDisplay from "./ItemDisplay";
 type CalendarComponentProps = {
-    items: BudgetItem[]
+    items: BudgetItem[],
+    month: number
 }
 
 export default function Calendar({
-    items
+    items,
+    month
 }: CalendarComponentProps) {
     const currentDate = new Date();
     const daysInMonth = () => {
@@ -22,7 +24,7 @@ export default function Calendar({
     return (
         <div className="grid grid-cols-7 gap-1">
             {daysInMonth().map((v, k) => (
-                <ItemDisplay day={v} items={items} key={k} />
+                <ItemDisplay month={month} day={v} items={items} key={k} />
             ))}
         </div>
     );
