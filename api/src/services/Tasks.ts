@@ -84,7 +84,8 @@ const runNotificationService = async () => {
                 },
                 data: {
                     nextBillingDate: newBillingDate.toDate(),
-                    lastBillingDate: subscription.nextBillingDate
+                    lastBillingDate: subscription.nextBillingDate,
+                    totalSpent: parseFloat(subscription.price) + subscription.totalSpent
                 }
             })
         }
@@ -92,5 +93,7 @@ const runNotificationService = async () => {
 };
 
 // cron.schedule('*/10 * * * * *', runNotificationService);
-cron.schedule('0 0 * * *', runNotificationService);
+cron.schedule('0 0 * * *', runNotificationService, {
+    timezone: process.env.TIMEZONE as string
+});
 

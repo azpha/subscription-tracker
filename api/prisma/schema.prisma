@@ -19,4 +19,5 @@ model Subscription {
   billingMethod    String
   billingFrequency String
   image            String?
+  totalSpent       Float    @default(0.0)
 }
