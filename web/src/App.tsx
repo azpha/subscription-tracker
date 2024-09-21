@@ -36,7 +36,7 @@ export default function App() {
             <div className="mb-4 select-none">
               <h1 className="text-white text-4xl"> 
                 <span className="font-semibold">
-                  {DateUtils.months[didGoToNext ? date.getMonth() : date.getMonth() + 1]}
+                  {DateUtils.months[shownMonth]}
                 </span>
                 <span className="opacity-50"> {date.getFullYear()}</span>
               </h1>
@@ -50,11 +50,11 @@ export default function App() {
                 <h1 
                   onClick={() => {
                     setShownMonth((prevState) => {
-                      if (didGoToNext) {
-                        setDidGoToNext(false);
+                      if (!didGoToNext) {
+                        setDidGoToNext(true);
                         return prevState - 1
                       } else {
-                        setDidGoToNext(true);
+                        setDidGoToNext(false);
                         return prevState + 1
                       }
                     })
