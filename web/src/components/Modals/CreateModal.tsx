@@ -78,8 +78,8 @@ export default function CreateModal({
                     onChange={(value) => {
                         setCreateData((prevState) => {
                             return {
-                            ...prevState,
-                            billingMethod: value
+                                ...prevState,
+                                billingMethod: value
                             }
                         })
                     }}
@@ -90,8 +90,8 @@ export default function CreateModal({
                     onChange={(value) => {
                         setCreateData((prevState) => {
                             return {
-                            ...prevState,
-                            nextBillingDate: new Date(value)
+                                ...prevState,
+                                nextBillingDate: new Date(value)
                             }
                         })
                     }}
@@ -107,8 +107,8 @@ export default function CreateModal({
                     onChange={(value) => {
                         setCreateData((prevState) => {
                             return {
-                            ...prevState,
-                            billingFrequency: value.toLowerCase() as "yearly" | "monthly"
+                                ...prevState,
+                                billingFrequency: value.toLowerCase() as "yearly" | "monthly"
                             }
                         })
                     }}
@@ -120,7 +120,12 @@ export default function CreateModal({
                             .then((res) => {
                                 if (res) {
                                     setShowModal(false);
+                                } else {
+                                    setError("Failed to create!")
                                 }
+                            })
+                            .catch((e) => {
+                                setError(e.message);
                             })
                     }} type="button" className="bg-black text-white font-bold p-2 rounded-lg">Submit</button>
                 </div>
