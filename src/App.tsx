@@ -31,44 +31,43 @@ export default function App() {
   }, [data])
 
   return (
-    <div className="flex min-h-screen justify-center items-center">
+    <div className="flex flex-col min-h-screen justify-center items-center">
+      <div className="mb-4 select-none">
+        <h1 className="text-white text-4xl"> 
+          <span className="font-semibold">
+            {DateUtils.months[shownMonth]}
+          </span>
+          <span className="opacity-50"> {date.getFullYear()}</span>
+        </h1>
+        <div className="space-x-2">
+          <h1 
+            onClick={() => setShowModal(true)} 
+            className="text-white mt-2 max-w-fit hover:underline hover:cursor-pointer inline"
+          >
+            Create
+          </h1>
+          <h1 
+            onClick={() => {
+              setShownMonth((prevState) => {
+                if (!didGoToNext) {
+                  setDidGoToNext(true);
+                  return prevState - 1
+                } else {
+                  setDidGoToNext(false);
+                  return prevState + 1
+                }
+              })
+            }} 
+            className="text-white mt-2 max-w-fit hover:underline hover:cursor-pointer inline"
+          >
+            { !didGoToNext ? "Previous" : "Next" }
+          </h1>
+        </div>
+      </div>
+
       {
         ((data && data.length > 0) && !loading) ? (
-          <div className="flex flex-col min-h-screen justify-center items-start">
-            <div className="mb-4 select-none">
-              <h1 className="text-white text-4xl"> 
-                <span className="font-semibold">
-                  {DateUtils.months[shownMonth]}
-                </span>
-                <span className="opacity-50"> {date.getFullYear()}</span>
-              </h1>
-              <div className="space-x-2">
-                <h1 
-                  onClick={() => setShowModal(true)} 
-                  className="text-white mt-2 max-w-fit hover:underline hover:cursor-pointer inline"
-                >
-                  Create
-                </h1>
-                <h1 
-                  onClick={() => {
-                    setShownMonth((prevState) => {
-                      if (!didGoToNext) {
-                        setDidGoToNext(true);
-                        return prevState - 1
-                      } else {
-                        setDidGoToNext(false);
-                        return prevState + 1
-                      }
-                    })
-                  }} 
-                  className="text-white mt-2 max-w-fit hover:underline hover:cursor-pointer inline"
-                >
-                  { !didGoToNext ? "Previous" : "Next" }
-                </h1>
-              </div>
-            </div>
-            <Calendar month={shownMonth} items={data} />
-          </div>
+          <Calendar month={shownMonth} items={data} />
         ) : (
           <div className="text-center text-white">
             {

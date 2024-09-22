@@ -17,7 +17,7 @@ import { ZodError } from 'zod';
 
 // get path for prod dist
 const prodWebPath = path.resolve('dist');
-const isDev = process.env.NODE_ENV === "development"
+const isDev = process.env.PROXY === "true"
 const proxy = createProxyMiddleware({
     target: "http://localhost:5173",
     changeOrigin: true,
