@@ -1,4 +1,4 @@
-import Storage from "../services/Storage";
+import Storage from "../services/Storage.js";
 import moment from 'moment';
 import type {
     Request,
@@ -7,7 +7,7 @@ import type {
 } from 'express';
 
 function ExpiringSoon(
-    req: Request,
+    _: Request,
     res: Response,
     next: NextFunction
 ) {
@@ -34,7 +34,7 @@ function ExpiringSoon(
 }
 
 async function GetSubscriptionCount(
-    req: Request,
+    _: Request,
     res: Response,
     next: NextFunction
 ) {

@@ -1,7 +1,7 @@
 import type { BudgetItem } from "../types";
 
 const fetchAllItems = async () => {
-    return fetch(import.meta.env.VITE_API_URL + "items", {
+    return fetch(import.meta.env.VITE_API_URL + "api/items", {
         method: 'get'
     })
     .then(async (res) => {
@@ -14,7 +14,7 @@ const fetchAllItems = async () => {
     })
 }
 const submitDeleteToApi = async (id: number) => {
-    return await fetch(import.meta.env.VITE_API_URL + "items/" + id, {
+    return await fetch(import.meta.env.VITE_API_URL + "api/items/" + id, {
         method: "delete"
     })
     .then((res) => {
@@ -26,7 +26,7 @@ const submitDeleteToApi = async (id: number) => {
     })
 }
 const submitDataToApi = async (data: BudgetItem) => {
-    return await fetch(import.meta.env.VITE_API_URL + "items", {
+    return await fetch(import.meta.env.VITE_API_URL + "api/items", {
         method: "post",
         headers: {
         "content-type": "application/json"

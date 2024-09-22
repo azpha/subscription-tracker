@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import AnalyticController from '../controllers/Analytics';
+import AnalyticController from '../controllers/Analytics.js';
 
 const router = Router();
 router.get('/expiring', AnalyticController.ExpiringSoon);

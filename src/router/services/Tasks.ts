@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import Storage from './Storage';
+import Storage from './Storage.js';
 import moment from 'moment';
 import 'dotenv/config';
 

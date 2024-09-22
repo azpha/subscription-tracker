@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import BudgetController from '../controllers/Budget';
+import BudgetController from '../controllers/Budget.js';
 const router = Router();
 
 router.get("/", BudgetController.RetrieveAllItems);

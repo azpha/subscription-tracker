@@ -1,9 +1,11 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import 'dotenv/config';
 
 // import routes
-import Routes from './routers';
+import Routes from './routers/index.js';
 
 // express types for error handler
 import type {
@@ -13,6 +15,15 @@ import type {
 } from 'express';
 import { ZodError } from 'zod';
 
+// get path for prod dist
+const prodWebPath = path.resolve('dist');
+const isDev = process.env.NODE_ENV === "development"
+const proxy = createProxyMiddleware({
+    target: "http://localhost:5173",
+    changeOrigin: true,
+    ws: true
+})
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -20,18 +31,24 @@ app.use(cors());
 app.disable('x-powered-by');
 
 // routes
-app.get('/', (req,res) => {
+app.use("/api/items", Routes.Budget);
+app.use("/api/analytics", Routes.Analytics);
+
+if (isDev) {
+    app.use(proxy);
+} else {
+    app.use(express.static(prodWebPath));
+}
+
+app.get('/', (_,res) => {
     return res.status(200).json({
         status: 200,
         message: "Server online"
     })
 });
 
-app.use("/items", Routes.Budget);
-app.use("/analytics", Routes.Analytics);
-
 // global handlers
-app.use("*", (req,res) => {
+app.use("*", (_,res) => {
     return res.status(404).json({
         status: 404,
         message: "That endpoint was not found on this server"
@@ -40,7 +57,7 @@ app.use("*", (req,res) => {
 app.use(
     (
         err: Error,
-        req: Request,
+        _: Request,
         res: Response,
         next: NextFunction
     ) => {

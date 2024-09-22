@@ -1,5 +1,5 @@
-import Storage from '../services/Storage';
-import Schemas from '../utilities/Schemas';
+import Storage from '../services/Storage.js';
+import Schemas from '../utilities/Schemas.js';
 import type {
     Request,
     Response,
@@ -95,7 +95,7 @@ const DeleteItem = async (
 }
 
 const RetrieveAllItems = async (
-    req: Request,
+    _: Request,
     res: Response,
     next: NextFunction
 ) => {
