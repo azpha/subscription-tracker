@@ -1,0 +1,15 @@
+version: '3'
+
+volumes:
+  sub-tracker-data:
+
+services:
+  tracker:
+    image: ghcr.io/azpha/subscription-tracker:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - DISCORD_WEBHOOK=https://discord.com/api/webhooks/
+      - TIMEZONE=America/New_York
+    volumes:
+      - sub-tracker-data:/usr/src/app
