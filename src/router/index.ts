@@ -33,7 +33,6 @@ app.disable('x-powered-by');
 // routes
 app.use("/api/items", Routes.Budget);
 app.use("/api/analytics", Routes.Analytics);
-app.use("/api/settings", Routes.Settings);
 
 if (isDev) {
     // this proxies everything to the Vite dev server

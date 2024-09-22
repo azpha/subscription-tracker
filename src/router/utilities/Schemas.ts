@@ -14,17 +14,11 @@ const RetrieveItemSchema = z.number();
 const DeleteItemSchema = z.number();
 
 // settings
-const UpdateSettingSchema = z.object({
-    id: z.number(),
-    value: z.string().min(1)
-})
+// const UpdateSettingSchema = z.array(z.object({ name: z.string(), value: z.string() }));
 
 export default {
     // items
     CreateItemSchema,
     RetrieveItemSchema,
     DeleteItemSchema,
-
-    // settings
-    UpdateSettingSchema
 }

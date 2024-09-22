@@ -42,42 +42,9 @@ const submitDataToApi = async (data: BudgetItem) => {
     })
 };
 
-// settings
-const fetchAllSettings = async () => {
-    return fetch("/api/settings", {
-        method: 'get'
-    })
-    .then(async (res) => {
-        if (res.ok) {
-            const settingsData = await res.json();
-            return settingsData.settings;
-        }
-    })
-}
-const submitSettingsUpdateToApi = async (id: number, value: string) => {
-    return fetch("/api/settings", {
-        method: 'patch',
-        body: JSON.stringify({
-            id,
-            value
-        })
-    })
-    .then((res) => {
-        if (res.ok) {
-            return true
-        } else {
-            return false
-        }
-    })
-}
-
 export default {
     // items
     submitDeleteToApi,
     fetchAllItems,
     submitDataToApi,
-
-    // settings
-    fetchAllSettings,
-    submitSettingsUpdateToApi
 }

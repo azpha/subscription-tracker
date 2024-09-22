@@ -35,7 +35,6 @@ export default function App() {
       {
         ((data && data.length > 0) && !loading) ? (
           <div className="flex flex-col min-h-screen justify-center items-start">
-
             <div className="mb-4 select-none">
               <h1 className="text-white text-4xl"> 
                 <span className="font-semibold">
