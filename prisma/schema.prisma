@@ -21,3 +21,9 @@ model Subscription {
   image            String?
   totalSpent       Float    @default(0.0)
 }
+
+model Settings {
+  id    Int    @id @default(autoincrement())
+  name  String
+  value String
+}

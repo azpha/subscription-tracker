@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// items
 const CreateItemSchema = z.object({
     name: z.string().min(1),
     price: z.string().min(1),
@@ -12,8 +13,18 @@ const CreateItemSchema = z.object({
 const RetrieveItemSchema = z.number();
 const DeleteItemSchema = z.number();
 
+// settings
+const UpdateSettingSchema = z.object({
+    id: z.number(),
+    value: z.string().min(1)
+})
+
 export default {
+    // items
     CreateItemSchema,
     RetrieveItemSchema,
-    DeleteItemSchema
+    DeleteItemSchema,
+
+    // settings
+    UpdateSettingSchema
 }
