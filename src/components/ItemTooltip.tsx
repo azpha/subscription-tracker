@@ -2,6 +2,8 @@ import type { BudgetItem } from "../types"
 import { useState } from "react";
 import DateUtils from "../utils/DateUtils";
 import SVGLoader from "./SVGLoader";
+import Trash from "./Icons/Trash";
+import ItemUtils from "../utils/ItemUtils";
 
 type TooltipProps = {
     children: JSX.Element,
@@ -46,6 +48,13 @@ export default function ItemTooltip({
                     
                     <h1 className="text-lg font-semibold">{budgetItems[selectedItem].name}</h1>
                     <p className="font-bold">${budgetItems[selectedItem].price}</p>
+
+                    <div className="pl-4">
+                        <Trash onClick={() => {
+                            ItemUtils.submitDeleteToApi(budgetItems[selectedItem].id);
+                            location.reload();
+                        }} />
+                    </div>
                 </div>
                 {
                     budgetItems.length > 1 && (

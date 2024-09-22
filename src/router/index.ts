@@ -35,6 +35,8 @@ app.use("/api/items", Routes.Budget);
 app.use("/api/analytics", Routes.Analytics);
 
 if (isDev) {
+    // this proxies everything to the Vite dev server
+    // maintains HMR compatibility (ws is forwarded via createProxyMiddleware)
     app.use(proxy);
 } else {
     app.use(express.static(prodWebPath));
