@@ -47,9 +47,8 @@ export default function ItemTooltip({
                     }
                     
                     <h1 className="text-lg font-semibold">{budgetItems[selectedItem].name}</h1>
-                    <p className="font-bold">${budgetItems[selectedItem].price}</p>
 
-                    <div className="pl-4">
+                    <div className="absolute top-0 right-0 p-2">
                         <Trash onClick={() => {
                             ItemUtils.submitDeleteToApi(budgetItems[selectedItem].id);
                             location.reload();
@@ -58,12 +57,13 @@ export default function ItemTooltip({
                 </div>
                 {
                     budgetItems.length > 1 && (
-                        <div className="absolute ml-[150px] mt-[10px]">
+                        <div className="absolute bottom-0 right-0 mb-[20px] mr-[35px]">
                             <p onClick={() => incrementSelectedState()} className="text-xs absolute hover:underline hover:cursor-pointer">Next</p>
                         </div>
                     )
                 }
                 {generateDateString()}
+                <p className="font-bold">${budgetItems[selectedItem].price}</p>
             </div>
       </div>
     );
