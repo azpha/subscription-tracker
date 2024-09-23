@@ -19,9 +19,9 @@ import { ZodError } from 'zod';
 const prodWebPath = path.resolve('dist');
 const isDev = process.env.PROXY === "true"
 const proxy = createProxyMiddleware({
-    target: "http://localhost:5173",
-    changeOrigin: true,
-    ws: true
+    target: "http://localhost:5173", // base URL for Vite dev server
+    changeOrigin: true, // changes the "Host" header
+    ws: true // forwards websocket requests for Vite HMR
 })
 
 const app = express();
@@ -33,6 +33,11 @@ app.disable('x-powered-by');
 // routes
 app.use("/api/items", Routes.Budget);
 app.use("/api/analytics", Routes.Analytics);
+app.get("/api/health", (req,res) => {
+    return res.status(200).json({
+        status: 200
+    })
+})
 
 if (isDev) {
     // this proxies everything to the Vite dev server
@@ -41,13 +46,6 @@ if (isDev) {
 } else {
     app.use(express.static(prodWebPath));
 }
-
-app.get('/', (_,res) => {
-    return res.status(200).json({
-        status: 200,
-        message: "Server online"
-    })
-});
 
 // global handlers
 app.use("*", (_,res) => {

@@ -12,7 +12,12 @@ COPY . .
 RUN npm run api:db:push
 
 # expose router
-EXPOSE 3000
+ENV PORT 3000
+EXPOSE $PORT
+
+# healthcheck
+HEALTHCHECK --interval=10s --timeout=3s --start-period=20s \
+    CMD curl -f http://localhost:$PORT/api/health || exit 1
 
 # start service
 CMD ["npm", "run", "start"]
