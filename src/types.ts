@@ -6,6 +6,7 @@ type BudgetItem = {
     nextBillingDate: Date,
     billingMethod: string,
     billingFrequency: "yearly" | "monthly",
+    totalSpent?: number,
     image?: string
 }
 

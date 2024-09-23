@@ -30,10 +30,16 @@ export default function ItemDisplay({
     const getImagesForData = () => {
         const images = [];
         for (let i = 0; i <= 3; i++) {
-            if (possibleData[i]) {
-                images.push(
-                    <SVGLoader key={i} url={possibleData[i].image as string} width="16" height="16" fill="white" />
-                );
+            if (possibleData[i] && images.length < 3) {
+                if (possibleData[i].image?.includes(".svg")) {
+                    images.push(
+                        <SVGLoader key={i} url={possibleData[i].image as string} width="16" height="16" fill="white" />
+                    )
+                } else {
+                    images.push(
+                        <img className="inline" key={i} src={possibleData[i].image} width="16" height="16" />
+                    )
+                }
             }
         }
         return images;

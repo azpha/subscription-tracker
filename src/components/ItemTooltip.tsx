@@ -43,10 +43,14 @@ export default function ItemTooltip({
             <div className="absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity duration-300 bottom-full left-0 -mt-1 bg-zinc-800 text-white p-2 rounded shadow-lg w-48">
                 <div className="flex items-center space-x-2 mb-1">
                     {
-                        budgetItems[selectedItem].image && <SVGLoader fill="white" height={"20"} width={"20"} url={budgetItems[selectedItem].image} />
+                        (budgetItems[selectedItem].image && budgetItems[selectedItem].image.includes(".svg")) ? (
+                            <SVGLoader fill="white" height={"20"} width={"20"} url={budgetItems[selectedItem].image} />
+                        ) : (
+                            <img className='inline' src={budgetItems[selectedItem].image} width={"20"} height={"20"} />
+                        )
                     }
                     
-                    <h1 className="text-lg font-semibold">{budgetItems[selectedItem].name}</h1>
+                    <h1 className="text-lg font-semibold whitespace-nowrap truncate max-w-[120px]">{budgetItems[selectedItem].name}</h1>
 
                     <div className="absolute top-0 right-0 p-2">
                         <Trash onClick={() => {
@@ -63,7 +67,10 @@ export default function ItemTooltip({
                     )
                 }
                 {generateDateString()}
-                <p className="font-bold">${budgetItems[selectedItem].price}</p>
+
+                <p className="font-bold inline">${budgetItems[selectedItem].price}</p>
+                <p className="opacity-50 inline">/</p>
+                <p className="font-bold inline">${budgetItems[selectedItem].totalSpent}</p>
             </div>
       </div>
     );
