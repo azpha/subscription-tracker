@@ -62,7 +62,31 @@ async function GetSubscriptionCount(
     }
 }
 
+async function GetTotalSpentForSubscriptions(
+    _: Request,
+    res: Response,
+    next: NextFunction
+) {
+    try {
+        const allTotalSpent = await Storage.subscription.findMany({
+            select: {
+                id: true,
+                name: true,
+                totalSpent: true
+            }
+        })
+
+        return res.status(200).json({
+            status: 200,
+            subscriptions: allTotalSpent
+        })
+    } catch (e) {
+        next(e);
+    }
+}
+
 export default {
     ExpiringSoon,
-    GetSubscriptionCount
+    GetSubscriptionCount,
+    GetTotalSpentForSubscriptions
 }
