@@ -9,7 +9,6 @@ RUN npm install
 
 # copy files & setup database
 COPY . .
-RUN npm run api:db:push
 
 # expose router
 ENV PORT 3000

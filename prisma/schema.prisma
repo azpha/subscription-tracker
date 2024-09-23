@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./tracker.db"
+  provider = "postgres"
+  url      = "postgres://postgres:postgres@tracker_database:5432/tracker_database"
 }
 
 model Subscription {
