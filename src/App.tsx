@@ -11,7 +11,7 @@ export default function App() {
   const [ loading, setLoading ] = useState<boolean>(true);
   const [ data, setData ] = useState<BudgetItem[] | null>(null);
   const [ shownMonth, setShownMonth ] = useState<number>(date.getMonth())
-  const [ didGoToNext, setDidGoToNext ] = useState<boolean>(true);
+  const [ isAtNext, setIsAtNext ] = useState<boolean>(false);
   const [ showModal, setShowModal ] = useState<boolean>(false);
 
   useEffect(() => {
@@ -30,38 +30,57 @@ export default function App() {
     console.log(data)
   }, [data])
 
+  const incrementMonth = () => {
+    setShownMonth((prevState) => {
+      if (!isAtNext) {
+        setIsAtNext(true);
+        return prevState + 1;
+      } else {
+        setIsAtNext(false);
+        return prevState - 1;
+      }
+    })
+  }
+
+  const LoadingMessage = () => {
+    if (!loading) {
+      if (!data) {
+        return (
+          <>
+            <h1 className="font-bold text-2xl text-red-500">Oops..</h1>
+            <p className="text-white">No data received. Is the database working?</p>
+          </>
+        )
+      } else if (data && data.length <= 0) {
+        return (
+          <>
+            <h1 className="font-bold text-2xl text-red-500">Oops..</h1>
+            <p className="text-white">There are no subscriptions saved :(</p>
+          </>
+        )
+      }
+    } else {
+      return <h1 className="font-bold text-2xl text-white">Loading..</h1>
+    }
+  }
+
   return (
-    <div className="flex flex-col min-h-screen justify-center items-center">
-      <div className="mb-4 select-none">
-        <h1 className="text-white text-4xl"> 
+    <div className="flex flex-col min-h-screen justify-center items-center max-w-fit mx-auto">
+      <div className="select-none mb-4 self-start text-white">
+        <h1 className="text-4xl space-x-2">
           <span className="font-semibold">
             {DateUtils.months[shownMonth]}
           </span>
-          <span className="opacity-50"> {date.getFullYear()}</span>
+          <span className="opacity-50">
+             {date.getFullYear()}
+          </span>
         </h1>
+
         <div className="space-x-2">
-          <h1 
-            onClick={() => setShowModal(true)} 
-            className="text-white mt-2 max-w-fit hover:underline hover:cursor-pointer inline"
-          >
-            Create
-          </h1>
-          <h1 
-            onClick={() => {
-              setShownMonth((prevState) => {
-                if (!didGoToNext) {
-                  setDidGoToNext(true);
-                  return prevState - 1
-                } else {
-                  setDidGoToNext(false);
-                  return prevState + 1
-                }
-              })
-            }} 
-            className="text-white mt-2 max-w-fit hover:underline hover:cursor-pointer inline"
-          >
-            { !didGoToNext ? "Previous" : "Next" }
-          </h1>
+          <p className="inline hover:underline hover:cursor-pointer" onClick={() => setShowModal(true)}>Create</p>
+          <p className="inline hover:underline hover:cursor-pointer" onClick={incrementMonth}>
+            { !isAtNext ? "Next" : "Previous" }
+          </p>
         </div>
       </div>
 
@@ -69,20 +88,7 @@ export default function App() {
         ((data && data.length > 0) && !loading) ? (
           <Calendar month={shownMonth} items={data} />
         ) : (
-          <div className="text-center text-white">
-            {
-              loading ? (
-                <>
-                  <h1 className="font-bold text-2xl text-white">Loading..</h1>
-                </>
-              ) : (
-                <>
-                  <h1 className="font-bold text-2xl text-red-500">Oops..</h1>
-                  <p className="text-white">There's no data here :(</p>
-                </>
-              )
-            }
-          </div>
+          <LoadingMessage />
         )
       }
 
