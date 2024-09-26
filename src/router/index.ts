@@ -33,6 +33,7 @@ app.disable('x-powered-by');
 // routes
 app.use("/api/items", Routes.Budget);
 app.use("/api/analytics", Routes.Analytics);
+app.use("/api/settings", Routes.Settings);
 app.get("/api/health", (req,res) => {
     return res.status(200).json({
         status: 200

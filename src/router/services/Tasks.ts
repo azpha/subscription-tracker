@@ -40,7 +40,7 @@ const runNotificationService = async () => {
             }
         }
 
-        if (inThresholdForNotification.length > 0) {
+        if (inThresholdForNotification.length > 0 && process.env.DISCORD_NOTIFICATION_WEBHOOK) {
             await fetch(process.env.DISCORD_NOTIFICATION_WEBHOOK as string, {
                 method: 'post',
                 headers: {
