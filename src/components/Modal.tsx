@@ -7,12 +7,18 @@ export default function Modal({
     showModal: boolean,
     setShowModal: (state: boolean) => void
   }) {
+    document.addEventListener("keydown", (e) => {
+      e.preventDefault();
+      if (e.key === "Escape") {
+        setShowModal(false);
+      }
+    })
+
     return (
       <div 
-        className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ${
+        className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 select-none ${
           showModal ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
-        onClick={() => setShowModal(false)}
       >
         <div 
           className={`bg-white p-4 max-w-md rounded-lg shadow-lg transform transition-all duration-300 ${
@@ -20,12 +26,14 @@ export default function Modal({
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-          <button 
-            onClick={() => setShowModal(false)} 
-            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-          >
-            <span className="text-2xl">&times;</span>
-          </button>
+          <div className="absolute bg-black rounded-lg">
+            <button 
+              onClick={() => setShowModal(false)} 
+              className="text-white hover:text-gray-500"
+            >
+              <span className="text-lg p-1">&times;</span>
+            </button>
+          </div>
           {children}
         </div>
       </div>
