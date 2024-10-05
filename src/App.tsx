@@ -1,9 +1,10 @@
 import Calendar from "./components/Calendar";
+import ToastBox from "./components/ToastBox";
+import CreateModal from "./components/Modals/CreateModal";
 import { useState, useEffect } from 'react';
-import type { BudgetItem } from "./types";
+import { ToastBoxType, type BudgetItem } from "./types";
 import ItemUtils from "./utils/ItemUtils";
 import DateUtils from "./utils/DateUtils";
-import CreateModal from "./components/Modals/CreateModal";
 
 export default function App() {
   const date = new Date()
@@ -13,6 +14,12 @@ export default function App() {
   const [ shownMonth, setShownMonth ] = useState<number>(date.getMonth())
   const [ isAtNext, setIsAtNext ] = useState<boolean>(false);
   const [ showModal, setShowModal ] = useState<boolean>(false);
+  const [ toastBoxContent, setToastBoxContent ] = useState<ToastBoxType>({
+    header: undefined,
+    headerColor: undefined,
+    message: undefined,
+    onClose: undefined
+  })
 
   useEffect(() => {
     if (!showModal) {
@@ -29,6 +36,22 @@ export default function App() {
   useEffect(() => {
     console.log(data)
   }, [data])
+  useEffect(() => {
+    ItemUtils.fetchNotificationSettings()
+    .then((data) => {
+      if (!data.discord) {
+        setToastBoxContent({
+          header: "Notifications Disabled",
+          headerColor: "red",
+          message: "Check if DISCORD_NOTIFICATION_WEBHOOK is set correctly in your Docker configuration.",
+          onClose: () => setToastBoxContent({})
+        })
+      }
+    })
+    .catch((e) => {
+      console.error(e);
+    })
+  }, [])
 
   const incrementMonth = () => {
     setShownMonth((prevState) => {
@@ -93,6 +116,7 @@ export default function App() {
       }
 
       <CreateModal setShowModal={setShowModal} showModal={showModal} />
+      <ToastBox {...toastBoxContent} />
     </div>
   )
 }

@@ -10,6 +10,14 @@ type BudgetItem = {
     image?: string
 }
 
+type ToastBoxType = {
+    header?: string,
+    headerColor?: string,
+    message?: string,
+    onClose?: () => void
+}
+
 export type {
-    BudgetItem
+    BudgetItem,
+    ToastBoxType
 }

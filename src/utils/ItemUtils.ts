@@ -9,7 +9,7 @@ const fetchAllItems = async () => {
             const apiData = await res.json();
             return apiData.subscription;
         } else {
-            return false
+            throw new Error("Failed to fetch item data: " + res.status);
         }
     })
 }
@@ -21,7 +21,7 @@ const submitDeleteToApi = async (id: number) => {
         if (res.ok) {
             return true;
         } else {
-            return false;
+            throw new Error("Failed to submit deletion: " + res.status);
         }
     })
 }
@@ -29,7 +29,7 @@ const submitDataToApi = async (data: BudgetItem) => {
     return await fetch("/api/items", {
         method: "post",
         headers: {
-        "content-type": "application/json"
+            "content-type": "application/json"
         },
         body: JSON.stringify(data)
     })
@@ -37,14 +37,32 @@ const submitDataToApi = async (data: BudgetItem) => {
         if (res.ok) {
             return true
         } else {
-            return false
+            throw new Error("Failed to submit item data: " + res.status);
         }
     })
 };
+
+// settings
+const fetchNotificationSettings = async () => {
+    return await fetch("/api/settings/notifications", {
+        method: 'get'
+    })
+    .then(async (res) => {
+        if (res.ok) {
+            const data = await res.json()
+            return data.notifications
+        } else {
+            throw new Error("Failed to fetch notifications settings: " + res.status);
+        }
+    })
+}
 
 export default {
     // items
     submitDeleteToApi,
     fetchAllItems,
     submitDataToApi,
+
+    // settings
+    fetchNotificationSettings
 }
