@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgres"
-  url      = "postgres://postgres:postgres@tracker_database:5432/tracker_database"
+  url      = env("DATABASE_URL")
 }
 
 model Subscription {

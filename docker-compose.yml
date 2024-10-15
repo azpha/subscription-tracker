@@ -16,11 +16,13 @@ services:
       - PGDATA=/data/postgres
 
   tracker:
-    image: ghcr.io/azpha/subscription-tracker:latest
+    build: .
+    # image: ghcr.io/azpha/subscription-tracker:latest
     ports:
       - "3000:3000"
     depends_on:
       - database
     environment:
+      - DATABASE_URL=postgres://postgres:postgres@tracker_database:5432/tracker_database
       - DISCORD_WEBHOOK=https://discord.com/api/webhooks/
       - TIMEZONE=America/New_York
