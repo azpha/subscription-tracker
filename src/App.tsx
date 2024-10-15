@@ -21,21 +21,36 @@ export default function App() {
     onClose: undefined
   })
 
+  // functions
+  const refetchData = () => {
+    ItemUtils.fetchAllItems()
+    .then((data) => {
+      setData(data);
+      setLoading(false);
+    }).catch((e) => {
+      console.error("Failed to fetch data!", e);
+      setLoading(false)
+    })
+  }
+
+  const incrementMonth = () => {
+    setShownMonth((prevState) => {
+      if (!isAtNext) {
+        setIsAtNext(true);
+        return prevState + 1;
+      } else {
+        setIsAtNext(false);
+        return prevState - 1;
+      }
+    })
+  }
+
+  // hooks
   useEffect(() => {
     if (!showModal) {
-      ItemUtils.fetchAllItems()
-      .then((data) => {
-        setData(data);
-        setLoading(false);
-      }).catch((e) => {
-        console.error("Failed to fetch data!", e);
-        setLoading(false)
-      })
+      refetchData()
     }
   }, [showModal])
-  useEffect(() => {
-    console.log(data)
-  }, [data])
   useEffect(() => {
     ItemUtils.fetchNotificationSettings()
     .then((data) => {
@@ -53,18 +68,7 @@ export default function App() {
     })
   }, [])
 
-  const incrementMonth = () => {
-    setShownMonth((prevState) => {
-      if (!isAtNext) {
-        setIsAtNext(true);
-        return prevState + 1;
-      } else {
-        setIsAtNext(false);
-        return prevState - 1;
-      }
-    })
-  }
-
+  // components
   const LoadingMessage = () => {
     if (!loading) {
       if (!data) {
@@ -109,7 +113,7 @@ export default function App() {
 
       {
         ((data && data.length > 0) && !loading) ? (
-          <Calendar month={shownMonth} items={data} />
+          <Calendar refetchData={refetchData} month={shownMonth} items={data} />
         ) : (
           <LoadingMessage />
         )

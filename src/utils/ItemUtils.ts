@@ -41,6 +41,18 @@ const submitDataToApi = async (data: BudgetItem) => {
         }
     })
 };
+const pushItemToNextMonthViaApi = async (id: number) => {
+    return await fetch("/api/items/" + id + "/pushToNext", {
+        method: "PATCH"
+    })
+    .then(async (res) => {
+        if (res.ok) {
+            return true
+        } else {
+            throw new Error("Failed to push subscription to next month: " + res.status)
+        }
+    })
+}
 
 // settings
 const fetchNotificationSettings = async () => {
@@ -62,6 +74,7 @@ export default {
     submitDeleteToApi,
     fetchAllItems,
     submitDataToApi,
+    pushItemToNextMonthViaApi,
 
     // settings
     fetchNotificationSettings

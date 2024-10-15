@@ -5,12 +5,14 @@ import SVGLoader from "./SVGLoader";
 type ItemDisplayProps = {
     day: number,
     month: number,
-    items: BudgetItem[]
+    items: BudgetItem[],
+    refetchData: () => void
 }
 export default function ItemDisplay({
     day,
     month,
-    items
+    items,
+    refetchData
 }: ItemDisplayProps) {
     const isCurrentDate = () => {
         return (day === new Date().getDate()) && new Date().getMonth() === month
@@ -60,7 +62,7 @@ export default function ItemDisplay({
 
     if (possibleData.length > 0) {
         return (
-            <ItemTooltip budgetItems={possibleData}>
+            <ItemTooltip refetchData={refetchData} budgetItems={possibleData}>
                 {element}
             </ItemTooltip>
         )

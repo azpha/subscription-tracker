@@ -5,12 +5,14 @@ import { useState, useEffect } from "react";
 
 type CalendarComponentProps = {
     items: BudgetItem[],
-    month: number
+    month: number,
+    refetchData: () => void
 }
 
 export default function Calendar({
     items,
-    month
+    month,
+    refetchData
 }: CalendarComponentProps) {
     const [ daysInMonth, setDaysInMonth ] = useState<number[]>([]);
 
@@ -29,7 +31,7 @@ export default function Calendar({
     return (
         <div className="grid grid-cols-7 gap-1">
             {daysInMonth.map((v, k) => (
-                <ItemDisplay month={month} day={v} items={items} key={k} />
+                <ItemDisplay refetchData={refetchData} month={month} day={v} items={items} key={k} />
             ))}
         </div>
     );

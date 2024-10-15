@@ -7,12 +7,14 @@ import ItemUtils from "../utils/ItemUtils";
 
 type TooltipProps = {
     children: JSX.Element,
-    budgetItems: BudgetItem[]
+    budgetItems: BudgetItem[],
+    refetchData: () => void
 }
 
 export default function ItemTooltip({
     children,
-    budgetItems
+    budgetItems,
+    refetchData
 }: TooltipProps) {
     const [ selectedItem, setSelectedItem ] = useState<number>(0);
 
@@ -54,8 +56,12 @@ export default function ItemTooltip({
 
                     <div className="absolute top-0 right-0 p-2">
                         <Trash onClick={() => {
-                            ItemUtils.submitDeleteToApi(budgetItems[selectedItem].id);
-                            location.reload();
+                            ItemUtils.submitDeleteToApi(budgetItems[selectedItem].id)
+                                .then((res) => {
+                                    if (res) {
+                                        refetchData()
+                                    }
+                                })
                         }} />
                     </div>
                 </div>
@@ -70,7 +76,19 @@ export default function ItemTooltip({
 
                 <p className="font-bold inline">${budgetItems[selectedItem].price}</p>
                 <p className="opacity-50 inline">/</p>
-                <p className="font-bold inline">${budgetItems[selectedItem].totalSpent}</p>
+                <p
+                    className="font-bold inline hover:cursor-pointer"
+                    onClick={() => {
+                        ItemUtils.pushItemToNextMonthViaApi(budgetItems[selectedItem].id)
+                            .then((res) => {
+                                if (res) {
+                                    refetchData()
+                                }
+                            })
+                    }} 
+                >
+                    ${budgetItems[selectedItem].totalSpent}
+                </p>
             </div>
       </div>
     );
