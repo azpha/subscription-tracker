@@ -8,8 +8,8 @@ export default function Modal({
     setShowModal: (state: boolean) => void
   }) {
     document.addEventListener("keydown", (e) => {
-      e.preventDefault();
       if (e.key === "Escape") {
+        e.preventDefault();
         setShowModal(false);
       }
     })
