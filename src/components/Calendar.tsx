@@ -18,7 +18,7 @@ export default function Calendar({
 
     useEffect(() => {
         const currentDate = new Date();
-        const maxDays = DateUtils.getDaysInMonth(currentDate.getFullYear(), month);
+        const maxDays = DateUtils.getDaysInMonth(currentDate.getFullYear(), month + 1);
         const elements = Array.from({ length: maxDays + 1 }, (_, i) => i);
 
         // removes 0 from list

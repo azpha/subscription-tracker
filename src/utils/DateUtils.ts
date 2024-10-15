@@ -14,7 +14,7 @@ const months = [
 ]
 
 function getDaysInMonth(year: number, month: number) {
-    return new Date(year, month + 1, 0).getDate();
+    return new Date(year, month, 0).getDate();
 }
 function getSuffix(day: number) {
     if (day > 3 && day < 21) return 'th';
