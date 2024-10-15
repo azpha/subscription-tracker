@@ -1,5 +1,6 @@
 import Storage from '../services/Storage.js';
 import Schemas from '../utilities/Schemas.js';
+import moment from 'moment';
 import type {
     Request,
     Response,
@@ -111,9 +112,57 @@ const RetrieveAllItems = async (
     }
 }
 
+const PushToNextMonth = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        Schemas.PushToNextMonthSchema.parse(parseInt(req.params.id));
+
+        const subscription = await Storage.subscription.findFirst({
+            where: {
+                id: parseInt(req.params.id)
+            }
+        })
+
+        if (subscription) {
+            const newSubBillingDate = moment(subscription.nextBillingDate).add(
+                1,
+                (subscription.billingFrequency === "yearly" ? "year" : "month")
+            );
+            const newTotalSpend = parseFloat(subscription.price + subscription.totalSpent);
+
+            await Storage.subscription.update({
+                where: {
+                    id: parseInt(req.params.id)
+                },
+                data: {
+                    nextBillingDate: newSubBillingDate.toDate(),
+                    lastBillingDate: subscription.nextBillingDate,
+                    totalSpent: newTotalSpend
+                }
+            })
+
+            return res.status(200).json({
+                status: 200,
+                message: "Successfully pushed subscription"
+            })
+        } else {
+            return res.status(404).json({
+                status: 404,
+                message: "That subscription was not found"
+            })
+        }
+    } catch (e) {
+        next(e)
+    }
+}
+
 export default {
     CreateItem,
     RetrieveItem,
     DeleteItem,
-    RetrieveAllItems
+    RetrieveAllItems,
+    PushToNextMonth
 }

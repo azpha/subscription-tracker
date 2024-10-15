@@ -12,10 +12,12 @@ const CreateItemSchema = z.object({
 })
 const RetrieveItemSchema = z.number();
 const DeleteItemSchema = z.number();
+const PushToNextMonthSchema = z.number();
 
 export default {
     // items
     CreateItemSchema,
     RetrieveItemSchema,
     DeleteItemSchema,
+    PushToNextMonthSchema
 }
