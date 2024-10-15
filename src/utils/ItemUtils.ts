@@ -68,6 +68,34 @@ const fetchNotificationSettings = async () => {
         }
     })
 }
+const fetchInstalledAppVersion = async () => {
+    return await fetch("/api/settings/version", {
+        method: 'get'
+    })
+    .then(async (res) => {
+        if (res.ok) {
+            const data = await res.json()
+            return data.version
+        } else {
+            throw new Error("Failed to fetch notifications settings: " + res.status);
+        }
+    })
+}
+
+// external
+const fetchLatestAppVersion = async () => {
+    return await fetch("https://api.github.com/repos/azpha/subscription-tracker/releases/latest", {
+        method: 'get'
+    })
+    .then(async (res) => {
+        if (res.ok) {
+            const data = await res.json();
+            return data.tag_name
+        } else {
+            throw new Error("Failed to fetch latest app vers from GitHub: " + res.status);
+        }
+    })
+}
 
 export default {
     // items
@@ -77,5 +105,9 @@ export default {
     pushItemToNextMonthViaApi,
 
     // settings
-    fetchNotificationSettings
+    fetchNotificationSettings,
+    fetchInstalledAppVersion,
+
+    // external
+    fetchLatestAppVersion
 }
