@@ -18,6 +18,17 @@ const GetNotificationSettings = (
     })
 }
 
+const GetImageVersion = (
+    _: Request,
+    res: Response
+) => {
+    return res.status(200).json({
+        status: 200,
+        version: process.env.APPLICATION_VERSION
+    })
+}
+
 export default {
-    GetNotificationSettings
+    GetNotificationSettings,
+    GetImageVersion
 }

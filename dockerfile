@@ -3,6 +3,10 @@ FROM node:22
 # cwd
 WORKDIR /usr/src/app
 
+# set version variable
+ARG VERSION
+ENV APPLICATION_VERSION=${VERSION}
+
 # setup project
 COPY package*.json ./
 RUN npm install
