@@ -16,8 +16,7 @@ services:
       - PGDATA=/data/postgres
 
   tracker:
-    build: .
-    # image: ghcr.io/azpha/subscription-tracker:latest
+    image: ghcr.io/azpha/subscription-tracker:latest
     ports:
       - "3000:3000"
     depends_on:
