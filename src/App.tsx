@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { ToastBoxType, type BudgetItem } from "./types";
 import ItemUtils from "./utils/ItemUtils";
 import DateUtils from "./utils/DateUtils";
+import Version from "./components/Version";
 
 export default function App() {
   const date = new Date()
@@ -118,6 +119,10 @@ export default function App() {
           <LoadingMessage />
         )
       }
+
+      <div className="absolute bottom-0 right-0 left-0 text-white text-center mb-4">
+        <Version />
+      </div>
 
       <CreateModal setShowModal={setShowModal} showModal={showModal} />
       <ToastBox {...toastBoxContent} />
