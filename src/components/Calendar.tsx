@@ -14,8 +14,10 @@ export default function Calendar({
     month,
     refetchData
 }: CalendarComponentProps) {
-    const [ daysInMonth, setDaysInMonth ] = useState<number[]>([]);
+    const currentDate = new Date();
+    const [ numberOfDaysInMonth, setNumberOfDaysInMonth ] = useState<number[]>([]);
 
+    // hooks
     useEffect(() => {
         const currentDate = new Date();
         const maxDays = DateUtils.getDaysInMonth(currentDate.getFullYear(), month + 1);
@@ -25,14 +27,31 @@ export default function Calendar({
         elements.shift();
 
         // updates state
-        setDaysInMonth(elements);
+        setNumberOfDaysInMonth(elements);
     }, [month])
 
     return (
         <div className="grid grid-cols-7 gap-1">
-            {daysInMonth.map((v, k) => (
-                <ItemDisplay refetchData={refetchData} month={month} day={v} items={items} key={k} />
-            ))}
+            {numberOfDaysInMonth.map((v, k) => {
+                return <div>
+                    {
+                        (v <= 7) && (
+                            <div className="mb-2">
+                                <p className="text-white text-center bg-zinc-800 rounded-lg">
+                                    {
+                                        DateUtils.getDateFromMonth(
+                                            currentDate.getFullYear(),
+                                            month,
+                                            v
+                                        )
+                                    }
+                                </p>
+                            </div>
+                        )
+                    }
+                    <ItemDisplay refetchData={refetchData} month={month} day={v} items={items} key={k} />
+                </div>
+            })}
         </div>
     );
 }
