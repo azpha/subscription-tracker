@@ -33,7 +33,7 @@ export default function Calendar({
     return (
         <div className="grid grid-cols-7 gap-1">
             {numberOfDaysInMonth.map((v, k) => {
-                return <div>
+                return <div key={k}>
                     {
                         (v <= 7) && (
                             <div className="mb-2">
