@@ -37,7 +37,7 @@ export default function Version() {
     // loaded, display versions
     if (versions.isUpdateAvailable) {
         return (
-            <div className="max-w-fit mx-auto">
+            <div className="max-w-fit mx-auto select-none">
                 <a href="https://github.com/azpha/subscription-tracker/releases/latest"target="_blank">
                     <p className="text-green-500 font-bold opacity-80">Version (upgrade available!): {versions.installed}</p>
                 </a>
@@ -47,7 +47,7 @@ export default function Version() {
         return (
             <div className="max-w-fit mx-auto">
                 <a href={"https://github.com/azpha/subscription-tracker/releases/" + versions.installed} target="_blank">
-                    <p className="font-bold opacity-50">Version: {versions.installed}</p>
+                    <p className="font-bold opacity-50 select-none">Version: {versions.installed}</p>
                 </a>
             </div>
         )

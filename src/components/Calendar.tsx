@@ -36,7 +36,7 @@ export default function Calendar({
                 return <div key={k}>
                     {
                         (v <= 7) && (
-                            <div className="mb-2">
+                            <div className="mb-2 select-none">
                                 <p className="text-white text-center bg-zinc-800 rounded-lg">
                                     {
                                         DateUtils.getDateFromMonth(
