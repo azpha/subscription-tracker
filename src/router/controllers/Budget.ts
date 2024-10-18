@@ -1,6 +1,5 @@
 import Storage from '../services/Storage.js';
 import Schemas from '../utilities/Schemas.js';
-import moment from 'moment';
 import type {
     Request,
     Response,
@@ -127,18 +126,20 @@ const PushToNextMonth = async (
         })
 
         if (subscription) {
-            const newSubBillingDate = moment(subscription.nextBillingDate).add(
-                1,
-                (subscription.billingFrequency === "yearly" ? "year" : "month")
-            );
             const newTotalSpend = parseFloat(subscription.price + subscription.totalSpent);
+            const newSubBillingDate = subscription.nextBillingDate;
+            if (subscription.billingFrequency === "yearly") {
+                newSubBillingDate.setUTCFullYear(newSubBillingDate.getUTCFullYear() + 1);
+            } else {
+                newSubBillingDate.setMonth(newSubBillingDate.getMonth() + 1);
+            }
 
             await Storage.subscription.update({
                 where: {
                     id: parseInt(req.params.id)
                 },
                 data: {
-                    nextBillingDate: newSubBillingDate.toDate(),
+                    nextBillingDate: newSubBillingDate,
                     lastBillingDate: subscription.nextBillingDate,
                     totalSpent: newTotalSpend
                 }

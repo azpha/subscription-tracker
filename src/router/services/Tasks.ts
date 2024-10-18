@@ -1,25 +1,26 @@
 import cron from 'node-cron';
 import Storage from './Storage.js';
-import moment from 'moment';
 import 'dotenv/config';
 
 const runNotificationService = async () => {
-    const currentDate = new Date();
-    const currentDatePlusSeven = moment(new Date()).add(7, 'days');
-    const currentDateMinusSeven = moment(new Date()).subtract(7, 'days');
+    const currentDate = new Date()
+    const currentDatePlusSeven = new Date();
+    const currentDateMinusSeven = new Date();
+    currentDatePlusSeven.setDate(currentDatePlusSeven.getDate() + 7);
+    currentDateMinusSeven.setDate(currentDateMinusSeven.getDate() - 7);
 
     const expiringSoon = await Storage.subscription.findMany({
         where: {
             nextBillingDate: {
                 gte: currentDate,
-                lte: currentDatePlusSeven.toDate()
+                lte: currentDatePlusSeven
             }
         }
     })
     const hasExpired = await Storage.subscription.findMany({
         where: {
             nextBillingDate: {
-                gte: currentDateMinusSeven.toDate(),
+                gte: currentDateMinusSeven,
                 lte: currentDate
             }
         }
@@ -30,9 +31,10 @@ const runNotificationService = async () => {
         const inThresholdForNotification = [];
 
         for (const subscription of expiringSoon) {
-            const currentDate = moment(new Date());
-            const nextDate = moment(subscription.nextBillingDate);
-            const diffInDays = nextDate.diff(currentDate, 'days');
+            const currentDate = new Date()
+            const nextDate = subscription.nextBillingDate;
+            const differnceInMs = Math.abs(currentDate.getTime() - nextDate.getTime());
+            const diffInDays = Math.floor(differnceInMs / (1000 * 60 * 60 * 24));
 
             if (diffInDays <= 7) {
                 console.log("sending notification!")
@@ -54,9 +56,10 @@ const runNotificationService = async () => {
                             description: "You have subscriptions expiring soon!",
                             color: 16711680,
                             fields: inThresholdForNotification.map((v) => {
-                                const currentDate = moment(new Date());
-                                const nextDate = moment(v.nextBillingDate);
-                                const diffInDays = nextDate.diff(currentDate, 'days');
+                                const currentDate = new Date()
+                                const nextDate = v.nextBillingDate;
+                                const differnceInMs = Math.abs(currentDate.getTime() - nextDate.getTime());
+                                const diffInDays = Math.floor(differnceInMs / (1000 * 60 * 60 * 24));
     
                                 return {
                                     name: v.name,
@@ -73,17 +76,19 @@ const runNotificationService = async () => {
     if (hasExpired.length > 0) {
         for (const subscription of hasExpired) {
             console.log('updating subscription', subscription)
-            const newBillingDate = moment(subscription.nextBillingDate).add(
-                1,
-                (subscription.billingFrequency === "yearly" ? "year" : "month")
-            )
+            const newSubBillingDate = subscription.nextBillingDate;
+            if (subscription.billingFrequency === "yearly") {
+                newSubBillingDate.setUTCFullYear(newSubBillingDate.getUTCFullYear() + 1);
+            } else {
+                newSubBillingDate.setMonth(newSubBillingDate.getMonth() + 1);
+            }
 
             await Storage.subscription.update({
                 where: {
                     id: subscription.id
                 },
                 data: {
-                    nextBillingDate: newBillingDate.toDate(),
+                    nextBillingDate: newSubBillingDate,
                     lastBillingDate: subscription.nextBillingDate,
                     totalSpent: parseFloat(subscription.price) + subscription.totalSpent
                 }

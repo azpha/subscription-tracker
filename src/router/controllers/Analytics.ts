@@ -1,21 +1,21 @@
 import Storage from "../services/Storage.js";
-import moment from 'moment';
 import type {
     Request,
     Response,
     NextFunction
 } from 'express';
 
-function ExpiringSoon(
+async function ExpiringSoon(
     _: Request,
     res: Response,
     next: NextFunction
 ) {
     try {
-        const currentDate = moment(new Date()).toDate();
-        const currentDatePlusSeven = moment(new Date()).add(7, 'days').toDate();
+        const currentDate = new Date();
+        const currentDatePlusSeven = new Date();
+        currentDatePlusSeven.setDate(currentDatePlusSeven.getDate() + 7);
     
-        const expiringSoon = Storage.subscription.findMany({
+        const expiringSoon = await Storage.subscription.findMany({
             where: {
                 nextBillingDate: {
                     lte: currentDatePlusSeven,
