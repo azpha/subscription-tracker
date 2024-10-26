@@ -8,12 +8,10 @@ import DateUtils from "./utils/DateUtils";
 import Version from "./components/Version";
 
 export default function App() {
-  const date = new Date()
-
   const [ loading, setLoading ] = useState<boolean>(true);
   const [ data, setData ] = useState<BudgetItem[] | null>(null);
-  const [ shownMonth, setShownMonth ] = useState<number>(date.getMonth())
-  const [ isAtNext, setIsAtNext ] = useState<boolean>(false);
+  const [ shownDate, setShownDate ] = useState<Date>(new Date());
+  const [ selectedDate, setSelectedDate ] = useState<Date>(new Date());
   const [ showModal, setShowModal ] = useState<boolean>(false);
   const [ toastBoxContent, setToastBoxContent ] = useState<ToastBoxType>({
     header: undefined,
@@ -33,17 +31,19 @@ export default function App() {
       setLoading(false)
     })
   }
-
-  const incrementMonth = () => {
-    setShownMonth((prevState) => {
-      if (!isAtNext) {
-        setIsAtNext(true);
-        return prevState + 1;
-      } else {
-        setIsAtNext(false);
-        return prevState - 1;
-      }
-    })
+  const incrementDate = () => {
+    const currentSetDate = new Date(shownDate);
+    currentSetDate.setMonth(currentSetDate.getMonth() + 1);
+    setShownDate(currentSetDate)
+  }
+  const decreaseDate = () => {
+    const currentSetDate = new Date(shownDate);
+    currentSetDate.setMonth(currentSetDate.getMonth() - 1);
+    setShownDate(currentSetDate)
+  }
+  const onSelectItem = (item: Date) => {
+    setSelectedDate(item)
+    setShowModal(true)
   }
 
   // hooks
@@ -97,24 +97,26 @@ export default function App() {
       <div className="select-none mb-4 self-start text-white">
         <h1 className="text-4xl space-x-2">
           <span className="font-semibold">
-            {DateUtils.months[shownMonth]}
+            {DateUtils.months[shownDate.getMonth()]}
           </span>
           <span className="opacity-50">
-             {date.getFullYear()}
+             {shownDate.getFullYear()}
           </span>
         </h1>
 
         <div className="space-x-2">
-          <p className="inline hover:underline hover:cursor-pointer" onClick={() => setShowModal(true)}>Create</p>
-          <p className="inline hover:underline hover:cursor-pointer" onClick={incrementMonth}>
-            { !isAtNext ? "Next" : "Previous" }
+          <p className="inline text-md hover:underline hover:cursor-pointer" onClick={decreaseDate}>
+            Previous
+          </p>
+          <p className="inline text-md hover:underline hover:cursor-pointer" onClick={incrementDate}>
+            Next
           </p>
         </div>
       </div>
 
       {
         ((data && data.length > 0) && !loading) ? (
-          <Calendar refetchData={refetchData} month={shownMonth} items={data} />
+          <Calendar onClickCreate={onSelectItem} refetchData={refetchData} date={shownDate} items={data} />
         ) : (
           <LoadingMessage />
         )
@@ -124,7 +126,11 @@ export default function App() {
         <Version />
       </div>
 
-      <CreateModal setShowModal={setShowModal} showModal={showModal} />
+      {
+        showModal && (
+          <CreateModal selectedDate={selectedDate} setShowModal={setShowModal} />
+        )
+      }
       <ToastBox {...toastBoxContent} />
     </div>
   )

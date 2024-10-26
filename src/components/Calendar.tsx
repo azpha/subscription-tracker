@@ -5,13 +5,15 @@ import { useState, useEffect } from "react";
 
 type CalendarComponentProps = {
     items: BudgetItem[],
-    month: number,
+    date: Date,
+    onClickCreate: (date: Date) => void,
     refetchData: () => void
 }
 
 export default function Calendar({
     items,
-    month,
+    date,
+    onClickCreate,
     refetchData
 }: CalendarComponentProps) {
     const currentDate = new Date();
@@ -20,7 +22,7 @@ export default function Calendar({
     // hooks
     useEffect(() => {
         const currentDate = new Date();
-        const maxDays = DateUtils.getDaysInMonth(currentDate.getFullYear(), month + 1);
+        const maxDays = DateUtils.getDaysInMonth(currentDate.getFullYear(), date.getMonth() + 1);
         const elements = Array.from({ length: maxDays + 1 }, (_, i) => i);
 
         // removes 0 from list
@@ -28,7 +30,7 @@ export default function Calendar({
 
         // updates state
         setNumberOfDaysInMonth(elements);
-    }, [month])
+    }, [date])
 
     return (
         <div className="grid grid-cols-7 gap-1">
@@ -41,7 +43,7 @@ export default function Calendar({
                                     {
                                         DateUtils.getDateFromMonth(
                                             currentDate.getFullYear(),
-                                            month,
+                                            date.getMonth(),
                                             v
                                         )
                                     }
@@ -49,7 +51,7 @@ export default function Calendar({
                             </div>
                         )
                     }
-                    <ItemDisplay refetchData={refetchData} month={month} day={v} items={items} key={k} />
+                    <ItemDisplay onItemSelect={onClickCreate} refetchData={refetchData} date={date} day={v} items={items} key={k} />
                 </div>
             })}
         </div>

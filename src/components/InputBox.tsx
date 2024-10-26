@@ -1,12 +1,14 @@
 export default function InputBox({
     name,
     placeholder,
+    defaultValue,
     isOption = false,
     options,
     onChange
 }: {
     name: string,
     placeholder: string,
+    defaultValue?: string,
     text?: boolean,
     isOption?: boolean,
     options?: string[],
@@ -30,6 +32,7 @@ export default function InputBox({
                 <input 
                     type={"text"}
                     name={name}
+                    defaultValue={defaultValue}
                     autoComplete="off"
                     placeholder={placeholder}
                     onChange={(({ target }) => onChange(target.value))}

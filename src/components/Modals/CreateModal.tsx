@@ -6,10 +6,10 @@ import type { BudgetItem } from "../../types"
 
 export default function CreateModal({
     setShowModal,
-    showModal
+    selectedDate
 }: {
     setShowModal: (state: boolean) => void,
-    showModal: boolean
+    selectedDate: Date
 }) {
     const [ createData, setCreateData ] = useState<BudgetItem>({
         name: "",
@@ -30,9 +30,19 @@ export default function CreateModal({
             }, 3000)
         }
     }, [error])
+    useEffect(() => {
+        if (selectedDate) {
+            setCreateData((prevState) => {
+                return {
+                    ...prevState,
+                    nextBillingDate: selectedDate
+                }
+            })
+        }
+    }, []);
 
     return (
-        <Modal showModal={showModal} setShowModal={setShowModal}>
+        <Modal setShowModal={setShowModal}>
             <h1 className="text-2xl font-bold mb-2 text-center">Create</h1>
 
             <div className="space-y-2 text-center">
@@ -84,18 +94,9 @@ export default function CreateModal({
                         })
                     }}
                 />
-                <InputBox 
-                    name="date"
-                    placeholder="Date (ex. 09-20-2024)..."
-                    onChange={(value) => {
-                        setCreateData((prevState) => {
-                            return {
-                                ...prevState,
-                                nextBillingDate: new Date(value)
-                            }
-                        })
-                    }}
-                />
+                <p>
+                    <span className="font-bold">Next date: </span> {selectedDate.toDateString()}
+                </p>
                 <InputBox 
                     name="billingFrequency"
                     placeholder="Billing frequency.."
