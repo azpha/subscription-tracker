@@ -11,15 +11,14 @@ datasource db {
 }
 
 model Subscription {
-  id               Int      @id @default(autoincrement())
-  name             String
-  price            String
-  lastBillingDate  DateTime
-  nextBillingDate  DateTime
-  billingMethod    String
-  billingFrequency String
-  image            String?
-  totalSpent       Float    @default(0.0)
+  id                       Int      @id @default(autoincrement())
+  name                     String
+  price                    String
+  nextBillingDate          DateTime
+  billingMethod            String
+  billingFrequencyInMonths Int      @default(1)
+  image                    String?
+  totalSpent               Float    @default(0.0)
 }
 
 model Settings {

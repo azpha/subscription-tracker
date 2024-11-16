@@ -15,7 +15,7 @@ const CreateItem = async (
         Schemas.CreateItemSchema.parse({
             ...req.body,
             nextBillingDate: new Date(req.body.nextBillingDate),
-            lastBillingDate: new Date(req.body.lastBillingDate)
+            billingFrequencyInMonths: parseInt(req.body.billingFrequencyInMonths)
         });
 
         const subscription = await Storage.subscription.create({
@@ -23,10 +23,9 @@ const CreateItem = async (
                 name: req.body.name,
                 image: req.body.image,
                 price: req.body.price,
-                lastBillingDate: req.body.lastBillingDate,
                 nextBillingDate: req.body.nextBillingDate,
                 billingMethod: req.body.billingMethod,
-                billingFrequency: req.body.billingFrequency 
+                billingFrequencyInMonths: req.body.billingFrequencyInMonths
             }
         })
 
@@ -111,7 +110,7 @@ const RetrieveAllItems = async (
     }
 }
 
-const PushToNextMonth = async (
+const PushToNextCycle = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -128,11 +127,7 @@ const PushToNextMonth = async (
         if (subscription) {
             const newTotalSpend = parseFloat(subscription.price + subscription.totalSpent);
             const newSubBillingDate = subscription.nextBillingDate;
-            if (subscription.billingFrequency === "yearly") {
-                newSubBillingDate.setUTCFullYear(newSubBillingDate.getUTCFullYear() + 1);
-            } else {
-                newSubBillingDate.setMonth(newSubBillingDate.getMonth() + 1);
-            }
+            newSubBillingDate.setUTCMonth(newSubBillingDate.getUTCMonth() + subscription.billingFrequencyInMonths)
 
             await Storage.subscription.update({
                 where: {
@@ -140,7 +135,6 @@ const PushToNextMonth = async (
                 },
                 data: {
                     nextBillingDate: newSubBillingDate,
-                    lastBillingDate: subscription.nextBillingDate,
                     totalSpent: newTotalSpend
                 }
             })
@@ -165,5 +159,5 @@ export default {
     RetrieveItem,
     DeleteItem,
     RetrieveAllItems,
-    PushToNextMonth
+    PushToNextCycle
 }
