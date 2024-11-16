@@ -43,10 +43,8 @@ function isMoreThanOneYearFromNow(d: Date) {
     return d > oneYearFromNow
 }
 function isInThePast(d: Date) {
-    const inThePast = new Date();
-    inThePast.setMonth(inThePast.getMonth() - 1);
-
-    return d <= inThePast
+    const currentDate = new Date();
+    return (d.getFullYear() === currentDate.getFullYear()) && (d.getMonth() <= currentDate.getMonth())
 }
 
 export default {
