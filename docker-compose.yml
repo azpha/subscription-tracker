@@ -14,7 +14,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - PGDATA=/data/postgres
-
   tracker:
     image: ghcr.io/azpha/subscription-tracker:latest
     ports:
@@ -23,5 +22,5 @@ services:
       - database
     environment:
       - DATABASE_URL=postgres://postgres:postgres@tracker_database:5432/tracker_database
-      - DISCORD_WEBHOOK=https://discord.com/api/webhooks/
+      - DISCORD_NOTIFICATION_WEBHOOK=https://discord.com/api/webhooks/
       - TIMEZONE=America/New_York
