@@ -23,12 +23,8 @@ export default function ItemDisplay({
         if (v?.nextBillingDate) {
             const nextBillingDate = new Date(v.nextBillingDate);
 
-            if (v?.billingFrequency === "yearly") {
-                return (nextBillingDate.getMonth() === date.getMonth())
-                && (nextBillingDate.getDate() === day);
-            } else {
-                return (nextBillingDate.getDate() === day);
-            }
+            return (nextBillingDate.getMonth() === date.getMonth())
+            && (nextBillingDate.getDate() === day);
         }
     })
     const whenSelectedItem = (selectedDayValue: number) => {

@@ -53,16 +53,16 @@ export default function App() {
         })
       })
   }
-  const incrementDate = () => {
-    const currentSetDate = new Date(shownDate);
-    currentSetDate.setMonth(currentSetDate.getMonth() + 1);
-    setShownDate(currentSetDate)
-  }
-  const decrementDate = () => {
-    const currentSetDate = new Date(shownDate);
-    currentSetDate.setMonth(currentSetDate.getMonth() - 1);
-    setShownDate(currentSetDate)
-  }
+  // const incrementDate = () => {
+  //   const currentSetDate = new Date(shownDate);
+  //   currentSetDate.setMonth(currentSetDate.getMonth() + 1);
+  //   setShownDate(currentSetDate)
+  // }
+  // const decrementDate = () => {
+  //   const currentSetDate = new Date(shownDate);
+  //   currentSetDate.setMonth(currentSetDate.getMonth() - 1);
+  //   setShownDate(currentSetDate)
+  // }
   const onSelectItem = (d: Date) => {
     setPageState((prevState) => {
       return {
@@ -159,14 +159,14 @@ export default function App() {
           </span>
         </h1>
 
-        <div className="space-x-2">
+        {/* <div className="space-x-2">
           <p className="inline text-md hover:underline hover:cursor-pointer" onClick={decrementDate}>
             Previous
           </p>
           <p className="inline text-md hover:underline hover:cursor-pointer" onClick={incrementDate}>
             Next
           </p>
-        </div>
+        </div> */}
       </div>
 
       {

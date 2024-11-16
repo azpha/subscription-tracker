@@ -18,6 +18,13 @@ const CreateItem = async (
             billingFrequencyInMonths: parseInt(req.body.billingFrequencyInMonths)
         });
 
+        if (new Date().getTime() > new Date(req.body.nextBillingDate).getTime()) {
+            return res.status(400).json({
+                status: 400,
+                message: "Next billing date must be greater than the current date"
+            })
+        }
+
         const subscription = await Storage.subscription.create({
             data: {
                 name: req.body.name,

@@ -103,7 +103,7 @@ export default function CreateModal({
                         setCreateData((prevState) => {
                             return {
                                 ...prevState,
-                                billingFrequency: parseInt(value)
+                                billingFrequencyInMonths: parseInt(value)
                             }
                         })
                     }}
