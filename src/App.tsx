@@ -2,7 +2,7 @@ import ItemDisplay from "./components/ItemDisplay";
 import ToastBox from "./components/ToastBox";
 import CreateModal from "./components/Modals/CreateModal";
 import { useState, useEffect } from 'react';
-import { ToastBoxType, type BudgetItem } from "./types";
+import { type ToastBoxType, type BudgetItem } from "./types";
 import ItemUtils from "./utils/ItemUtils";
 import DateUtils from "./utils/DateUtils";
 import Version from "./components/Version";
@@ -14,7 +14,8 @@ interface PageState {
   errorMessage: string | null,
   shouldRefetchData: boolean,
   selectedDate?: Date,
-  shouldShowModal: boolean
+  shouldShowModal: boolean,
+  toastData?: ToastBoxType
 }
 
 export default function App() {
@@ -26,7 +27,8 @@ export default function App() {
     errorMessage: null,
     shouldRefetchData: true,
     selectedDate: undefined,
-    shouldShowModal: false
+    shouldShowModal: false,
+    toastData: undefined
   })
 
   // utilities
@@ -89,6 +91,14 @@ export default function App() {
       }
     })
   }
+  const closeToastBox = () => {
+    setPageState((prevState) => {
+      return {
+        ...prevState,
+        toastData: undefined
+      }
+    })
+  }
   const getNumberOfDaysInMonth = () => {
     const currentDate = new Date();
     const maxDays = DateUtils.getDaysInMonth(currentDate.getFullYear(), shownDate.getMonth() + 1);
@@ -110,12 +120,17 @@ export default function App() {
     .then((data) => {
       if (!data.discord) {
         console.log("Discord notifications need to be setup!")
-        // setToastBoxContent({
-        //   header: "Notifications Disabled",
-        //   headerColor: "red",
-        //   message: "Check if DISCORD_NOTIFICATION_WEBHOOK is set correctly in your Docker configuration.",
-        //   onClose: () => setToastBoxContent({})
-        // })
+        setPageState((prevState) => {
+          return {
+            ...prevState,
+            toastData: {
+              header: "Notifications Disabled",
+              headerColor: "red",
+              message: "Check if DISCORD_NOTIFICATION_WEBHOOK is set correctly! Read the README.",
+              onClose: closeToastBox
+            }
+          }
+        })
       }
     })
     .catch((e) => {
@@ -211,7 +226,11 @@ export default function App() {
           <CreateModal refetchData={fetchData} selectedDate={pageState.selectedDate} setShowModal={closeModal} />
         )
       }
-      {/* <ToastBox {...toastBoxContent} /> */}
+      {
+        pageState.toastData && (
+          <ToastBox {...pageState.toastData} />
+        )
+      }
     </div>
   )
 }
