@@ -37,11 +37,24 @@ function getSuffix(day: number) {
         default: return "th";
     }
 }
+function isMoreThanOneYearFromNow(d: Date) {
+    const oneYearFromNow = new Date();
+    oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1)
+    return d > oneYearFromNow
+}
+function isInThePast(d: Date) {
+    const inThePast = new Date();
+    inThePast.setMonth(inThePast.getMonth() - 1);
+
+    return d <= inThePast
+}
 
 export default {
     months,
     days,
     getDaysInMonth,
     getDateFromMonth,
-    getSuffix
+    getSuffix,
+    isMoreThanOneYearFromNow,
+    isInThePast
 }

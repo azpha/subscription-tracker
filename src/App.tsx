@@ -6,6 +6,7 @@ import { ToastBoxType, type BudgetItem } from "./types";
 import ItemUtils from "./utils/ItemUtils";
 import DateUtils from "./utils/DateUtils";
 import Version from "./components/Version";
+import NextPreviousButtons from "./components/NextPreviousButtons";
 
 interface PageState {
   isLoading: boolean,
@@ -53,16 +54,16 @@ export default function App() {
         })
       })
   }
-  // const incrementDate = () => {
-  //   const currentSetDate = new Date(shownDate);
-  //   currentSetDate.setMonth(currentSetDate.getMonth() + 1);
-  //   setShownDate(currentSetDate)
-  // }
-  // const decrementDate = () => {
-  //   const currentSetDate = new Date(shownDate);
-  //   currentSetDate.setMonth(currentSetDate.getMonth() - 1);
-  //   setShownDate(currentSetDate)
-  // }
+  const incrementDate = () => {
+    const currentSetDate = new Date(shownDate);
+    currentSetDate.setMonth(currentSetDate.getMonth() + 1);
+    setShownDate(currentSetDate)
+  }
+  const decrementDate = () => {
+    const currentSetDate = new Date(shownDate);
+    currentSetDate.setMonth(currentSetDate.getMonth() - 1);
+    setShownDate(currentSetDate)
+  }
   const onSelectItem = (d: Date) => {
     setPageState((prevState) => {
       return {
@@ -136,7 +137,7 @@ export default function App() {
             ) : (data && data.length <= 0) ? (
               <>
                 <p>There are no subscriptions saved :(</p>
-                  <a className="underline" href="#" onClick={onCreateItemWithoutSuppliedDate}>Create one!</a>
+                <a className="underline" href="#" onClick={onCreateItemWithoutSuppliedDate}>Create one!</a>
               </>
             ) : (
               <h1 className="font-bold text-2xl text-white">Loading..</h1>
@@ -149,24 +150,23 @@ export default function App() {
 
   return (
     <div className="flex flex-col min-h-screen justify-center items-center max-w-fit mx-auto">
-      <div className="select-none mb-4 self-start text-white">
+      <div className="select-none mb-4 self-start text-white flex items-center gap-4 relative w-full">
         <h1 className="text-4xl space-x-2">
           <span className="font-semibold">
             {DateUtils.months[shownDate.getMonth()]}
           </span>
           <span className="opacity-50">
-             {shownDate.getFullYear()}
+            {shownDate.getFullYear()}
           </span>
         </h1>
 
-        {/* <div className="space-x-2">
-          <p className="inline text-md hover:underline hover:cursor-pointer" onClick={decrementDate}>
-            Previous
-          </p>
-          <p className="inline text-md hover:underline hover:cursor-pointer" onClick={incrementDate}>
-            Next
-          </p>
-        </div> */}
+        <div className="absolute right-0">
+          <NextPreviousButtons 
+            shownDate={shownDate} 
+            incrementDate={incrementDate} 
+            decrementDate={decrementDate} 
+          />
+        </div>
       </div>
 
       {
