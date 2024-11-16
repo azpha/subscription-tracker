@@ -25,8 +25,8 @@ RUN npm run web:build
 RUN npm run api:build
 
 # copy built code
-COPY ./dist /usr/src/app/dist
-COPY ./src/router/dist /usr/src/app/api-dist
+COPY --from=builder ./dist /usr/src/app/dist
+COPY --from=builder ./src/router/dist /usr/src/app/api-dist
 
 # copy prisma setup
 COPY prisma ./prisma
