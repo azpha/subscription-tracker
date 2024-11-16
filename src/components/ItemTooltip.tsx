@@ -19,17 +19,13 @@ export default function ItemTooltip({
 
     const generateDateString = () => {
         const dateOfRenewal = new Date(budgetItems[selectedItem].nextBillingDate).getDate();
-        if (budgetItems[selectedItem].billingFrequency === "yearly") {
-            return <p className="text-xs mb-2 opacity-85">
-                Every year on the <span className="font-semibold">{dateOfRenewal}{DateUtils.getSuffix(dateOfRenewal)}</span> of <span className="font-semibold">{DateUtils.months[new Date(budgetItems[selectedItem].nextBillingDate).getMonth()]}</span>
+        const frequency = budgetItems[selectedItem].billingFrequencyInMonths
+
+        return (
+            <p className="text-xs mb-2 opacity-85">
+                Every {frequency} month(s) on the <span className="font-semibold">{dateOfRenewal}{DateUtils.getSuffix(dateOfRenewal)}</span> of <span className="font-semibold">{DateUtils.months[new Date(budgetItems[selectedItem].nextBillingDate).getMonth()]}</span>
             </p>
-        } else if (budgetItems[selectedItem].billingFrequency === "monthly") {
-            return <p className="text-xs mb-2 opacity-85">
-                Every month on the <span className="font-bold">
-                     {dateOfRenewal}{DateUtils.getSuffix(dateOfRenewal)}
-                </span>
-            </p>
-        }
+        )
     }
     const incrementSelectedState = () => {
         setSelectedItem((prevState) => {
