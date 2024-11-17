@@ -77,11 +77,7 @@ const runNotificationService = async () => {
         for (const subscription of hasExpired) {
             console.log('updating subscription', subscription)
             const newSubBillingDate = subscription.nextBillingDate;
-            if (subscription.billingFrequency === "yearly") {
-                newSubBillingDate.setUTCFullYear(newSubBillingDate.getUTCFullYear() + 1);
-            } else {
-                newSubBillingDate.setMonth(newSubBillingDate.getMonth() + 1);
-            }
+            newSubBillingDate.setUTCMonth(newSubBillingDate.getUTCMonth() + subscription.billingFrequencyInMonths);
 
             await Storage.subscription.update({
                 where: {
@@ -89,7 +85,6 @@ const runNotificationService = async () => {
                 },
                 data: {
                     nextBillingDate: newSubBillingDate,
-                    lastBillingDate: subscription.nextBillingDate,
                     totalSpent: parseFloat(subscription.price) + subscription.totalSpent
                 }
             })

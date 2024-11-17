@@ -5,20 +5,21 @@ import { useState, useEffect } from "react"
 import type { BudgetItem } from "../../types"
 
 export default function CreateModal({
+    selectedDate,
     setShowModal,
-    selectedDate
+    refetchData
 }: {
     setShowModal: (state: boolean) => void,
-    selectedDate: Date
+    refetchData: () => void,
+    selectedDate?: Date
 }) {
     const [ createData, setCreateData ] = useState<BudgetItem>({
         name: "",
         billingMethod: "",
         id: 0,
-        lastBillingDate: new Date(),
         nextBillingDate: new Date(),
         price: "",
-        billingFrequency: "monthly",
+        billingFrequencyInMonths: 1,
         image: ""
     })
     const [ error, setError ] = useState<string>("");
@@ -94,32 +95,47 @@ export default function CreateModal({
                         })
                     }}
                 />
-                <p>
-                    <span className="font-bold">Next date: </span> {selectedDate.toDateString()}
-                </p>
+
                 <InputBox 
-                    name="billingFrequency"
-                    placeholder="Billing frequency.."
-                    isOption={true}
-                    options={[
-                    "Monthly",
-                    "Yearly"
-                    ]}
+                    name="billingFrequencyInMonths"
+                    placeholder="Billing frequency (months).."
                     onChange={(value) => {
                         setCreateData((prevState) => {
                             return {
                                 ...prevState,
-                                billingFrequency: value.toLowerCase() as "yearly" | "monthly"
+                                billingFrequencyInMonths: parseInt(value)
                             }
                         })
                     }}
                 />
+
+                {
+                    selectedDate ? (
+                        <p>
+                            <span className="font-bold">Next date: </span> {selectedDate.toDateString()}
+                        </p>
+                    ) : (
+                        <InputBox 
+                            name="nextBillingDate"
+                            placeholder="Date (ex. 10-25-2026)"
+                            onChange={(value) => {
+                                setCreateData((prevState) => {
+                                    return {
+                                        ...prevState,
+                                        nextBillingDate: new Date(value)
+                                    }
+                                })
+                            }}
+                        />
+                    )
+                }
 
                 <div className="block text-center">
                     <button onClick={() => {
                         ItemUtils.submitDataToApi(createData)
                             .then((res) => {
                                 if (res) {
+                                    refetchData()
                                     setShowModal(false);
                                 } else {
                                     setError("Failed to create!")

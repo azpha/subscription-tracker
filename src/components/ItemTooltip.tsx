@@ -1,7 +1,6 @@
 import type { BudgetItem } from "../types"
 import { useState } from "react";
 import DateUtils from "../utils/DateUtils";
-import SVGLoader from "./SVGLoader";
 import Trash from "./Icons/Trash";
 import ItemUtils from "../utils/ItemUtils";
 
@@ -20,17 +19,13 @@ export default function ItemTooltip({
 
     const generateDateString = () => {
         const dateOfRenewal = new Date(budgetItems[selectedItem].nextBillingDate).getDate();
-        if (budgetItems[selectedItem].billingFrequency === "yearly") {
-            return <p className="text-xs mb-2 opacity-85">
-                Every year on the <span className="font-semibold">{dateOfRenewal}{DateUtils.getSuffix(dateOfRenewal)}</span> of <span className="font-semibold">{DateUtils.months[new Date(budgetItems[selectedItem].nextBillingDate).getMonth()]}</span>
+        const frequency = budgetItems[selectedItem].billingFrequencyInMonths
+
+        return (
+            <p className="text-xs mb-2 opacity-85">
+                Every {frequency} month(s) on the <span className="font-semibold">{dateOfRenewal}{DateUtils.getSuffix(dateOfRenewal)}</span> of <span className="font-semibold">{DateUtils.months[new Date(budgetItems[selectedItem].nextBillingDate).getMonth()]}</span>
             </p>
-        } else if (budgetItems[selectedItem].billingFrequency === "monthly") {
-            return <p className="text-xs mb-2 opacity-85">
-                Every month on the <span className="font-bold">
-                     {dateOfRenewal}{DateUtils.getSuffix(dateOfRenewal)}
-                </span>
-            </p>
-        }
+        )
     }
     const incrementSelectedState = () => {
         setSelectedItem((prevState) => {
@@ -45,11 +40,7 @@ export default function ItemTooltip({
             <div className="absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity duration-300 bottom-full left-0 -mt-1 bg-zinc-800 text-white p-2 rounded shadow-lg w-48">
                 <div className="flex items-center space-x-2 mb-1">
                     {
-                        (budgetItems[selectedItem].image && budgetItems[selectedItem].image.includes(".svg")) ? (
-                            <SVGLoader fill="white" height={"20"} width={"20"} url={budgetItems[selectedItem].image} />
-                        ) : (
-                            <img className='inline' src={budgetItems[selectedItem].image} width={"20"} height={"20"} />
-                        )
+                        <img className='inline' src={budgetItems[selectedItem].image} width={"20"} height={"20"} />
                     }
                     
                     <h1 className="text-lg font-semibold whitespace-nowrap truncate max-w-[120px]">{budgetItems[selectedItem].name}</h1>

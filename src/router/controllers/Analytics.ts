@@ -41,12 +41,16 @@ async function GetSubscriptionCount(
     try {
         const monthlyCount = await Storage.subscription.count({
             where: {
-                billingFrequency: "monthly"
+                billingFrequencyInMonths: {
+                    lt: 12
+                }
             }
         })
         const yearlyCount = await Storage.subscription.count({
             where: {
-                billingFrequency: "yearly"
+                billingFrequencyInMonths: {
+                    gte: 12
+                }
             }
         })
 

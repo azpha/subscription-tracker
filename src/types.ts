@@ -2,10 +2,9 @@ type BudgetItem = {
     id: number,
     name: string,
     price: string,
-    lastBillingDate: Date,
     nextBillingDate: Date,
     billingMethod: string,
-    billingFrequency: "yearly" | "monthly",
+    billingFrequencyInMonths: number,
     totalSpent?: number,
     image?: string
 }
