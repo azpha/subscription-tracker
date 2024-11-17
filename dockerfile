@@ -7,7 +7,6 @@ ENV APPLICATION_VERSION=${VERSION}
 
 # copy pkg files
 COPY package*.json ./
-COPY tsconfig*.json ./
 COPY prisma ./prisma/
 
 # install deps
@@ -16,12 +15,12 @@ RUN npm install
 # generate prisma client
 RUN npx prisma generate
 
+# copy code
+COPY . .
+
 # build both the api & web
 RUN npm run web:build
 RUN npm run api:build
-
-# copy code
-COPY . .
 
 # setup environment
 ENV NODE_ENV production
