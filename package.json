@@ -13,7 +13,7 @@
     "api:db:push": "npx prisma db push",
     "api:db:pull": "npx prisma db pull",
     "api:db:studio": "npx prisma studio",
-    "start": "concurrently \"node ./api-dist\" \"node ./api-dist/services/Tasks.js\""
+    "start": "concurrently \"node ./src/router/dist\" \"node ./src/router/dist/services/Tasks.js\""
   },
   "dependencies": {
     "@prisma/client": "^5.17.0",

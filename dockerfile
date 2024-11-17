@@ -15,16 +15,12 @@ RUN npm install
 # generate prisma client
 RUN npx prisma generate
 
-# copy code
-COPY . .
-
 # build both the api & web
 RUN npm run web:build
 RUN npm run api:build
 
-# copy dist files
-COPY ./dist /usr/src/app/dist
-COPY ./src/router/dist /usr/src/app/api-dist
+# copy code
+COPY . .
 
 # setup environment
 ENV NODE_ENV production
