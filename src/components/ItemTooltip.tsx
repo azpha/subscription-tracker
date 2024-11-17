@@ -25,7 +25,7 @@ export default function ItemTooltip({
 
         return (
             <p className="text-xs mb-2 opacity-85">
-                Every {frequency} month(s) on the <span className="font-semibold">{dateOfRenewal}{DateUtils.getSuffix(dateOfRenewal)}</span> of <span className="font-semibold">{DateUtils.months[new Date(budgetItems[selectedItem].nextBillingDate).getMonth()]}</span>
+                Every {frequency} month(s) on the <span className="font-semibold">{dateOfRenewal}{DateUtils.getSuffix(dateOfRenewal)}</span>
             </p>
         )
     }
