@@ -7,7 +7,7 @@ ENV APPLICATION_VERSION=${VERSION}
 
 # copy pkg files
 COPY package*.json ./
-COPY tsconfig.json ./
+COPY tsconfig*.json ./
 COPY prisma ./prisma/
 
 # install deps
