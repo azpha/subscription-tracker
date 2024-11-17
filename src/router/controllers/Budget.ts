@@ -77,6 +77,39 @@ const RetrieveItem = async (
     }
 }
 
+const EditItem = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        Schemas.EditItemSchema.parse({
+            ...req.body,
+            id: parseInt(req.params.id),
+            nextBillingDate: new Date(req.body.nextBillingDate),
+            billingFrequencyInMonths: parseInt(req.body.billingFrequencyInMonths)
+        })
+
+        await Storage.subscription.update({
+            where: {
+                id: parseInt(req.params.id),
+            },
+            data: {
+                ...req.body,
+                nextBillingDate: new Date(req.body.nextBillingDate),
+                billingFrequencyInMonths: parseInt(req.body.billingFrequencyInMonths)
+            }
+        })
+
+        return res.status(200).json({
+            status: 200,
+            message: "Successfully updated subscription",
+        })
+    } catch (e) {
+        next(e)
+    }
+}
+
 const DeleteItem = async (
     req: Request,
     res: Response,
@@ -163,6 +196,7 @@ const PushToNextCycle = async (
 
 export default {
     CreateItem,
+    EditItem,
     RetrieveItem,
     DeleteItem,
     RetrieveAllItems,

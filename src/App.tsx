@@ -1,4 +1,5 @@
 import ItemDisplay from "./components/ItemDisplay";
+import ItemModal from "./components/Modals/ItemModal";
 import ToastBox from "./components/ToastBox";
 import CreateModal from "./components/Modals/CreateModal";
 import { useState, useEffect } from 'react';
@@ -14,7 +15,8 @@ interface PageState {
   errorMessage: string | null,
   shouldRefetchData: boolean,
   selectedDate?: Date,
-  shouldShowModal: boolean,
+  selectedItem?: BudgetItem,
+  shouldShowCreateModal: boolean,
   toastData?: ToastBoxType
 }
 
@@ -27,7 +29,8 @@ export default function App() {
     errorMessage: null,
     shouldRefetchData: true,
     selectedDate: undefined,
-    shouldShowModal: false,
+    selectedItem: undefined,
+    shouldShowCreateModal: false,
     toastData: undefined
   })
 
@@ -66,12 +69,20 @@ export default function App() {
     currentSetDate.setMonth(currentSetDate.getMonth() - 1);
     setShownDate(currentSetDate)
   }
-  const onSelectItem = (d: Date) => {
+  const onSelectSlot = (d: Date) => {
     setPageState((prevState) => {
       return {
         ...prevState,
         selectedDate: d,
-        shouldShowModal: true
+        shouldShowCreateModal: true
+      }
+    })
+  }
+  const onSelectItem = (item: BudgetItem) => {
+    setPageState((prevState) => {
+      return {
+        ...prevState,
+        selectedItem: item
       }
     })
   }
@@ -83,11 +94,19 @@ export default function App() {
       }
     })
   }
-  const closeModal = () => {
+  const closeCreateModal = () => {
     setPageState((prevState) => {
       return {
         ...prevState,
-        shouldShowModal: false
+        shouldShowCreateModal: false
+      }
+    })
+  }
+  const closeItemModal = () => {
+    setPageState((prevState) => {
+      return {
+        ...prevState,
+        selectedItem: undefined
       }
     })
   }
@@ -204,7 +223,7 @@ export default function App() {
                             </div>
                         )
                     }
-                    <ItemDisplay onItemSelect={onSelectItem} refetchData={fetchData} date={shownDate} day={v} items={data!} key={k} />
+                    <ItemDisplay onItemSelect={onSelectItem} onSlotSelect={onSelectSlot} refetchData={fetchData} date={shownDate} day={v} items={data!} key={k} />
                 </div>
             })}
           </div>
@@ -222,8 +241,13 @@ export default function App() {
       </div>
 
       {
-        pageState.shouldShowModal && (
-          <CreateModal refetchData={fetchData} selectedDate={pageState.selectedDate} setShowModal={closeModal} />
+        pageState.shouldShowCreateModal && (
+          <CreateModal refetchData={fetchData} selectedDate={pageState.selectedDate} setShowModal={closeCreateModal} />
+        )
+      }
+      {
+        pageState.selectedItem && (
+          <ItemModal refetchData={fetchData} item={pageState.selectedItem} setShowModal={closeItemModal} />
         )
       }
       {

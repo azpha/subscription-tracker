@@ -41,6 +41,22 @@ const submitDataToApi = async (data: BudgetItem) => {
         }
     })
 };
+const updateItemViaApi = async (id: number, data: BudgetItem) => {
+    return await fetch("/api/items/" + id, {
+        method: "PATCH",
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(async (res) => {
+        if (res.ok) {
+            return true
+        } else {
+            throw new Error("Failed to push subscription to next month: " + res.status)
+        }
+    })
+}
 const pushItemToNextMonthViaApi = async (id: number) => {
     return await fetch("/api/items/" + id + "/pushToNext", {
         method: "PATCH"
@@ -102,6 +118,7 @@ export default {
     submitDeleteToApi,
     fetchAllItems,
     submitDataToApi,
+    updateItemViaApi,
     pushItemToNextMonthViaApi,
 
     // settings

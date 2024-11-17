@@ -5,13 +5,15 @@ type ItemDisplayProps = {
     day: number,
     date: Date,
     items: BudgetItem[],
-    onItemSelect: (date: Date) => void,
+    onSlotSelect: (date: Date) => void,
+    onItemSelect: (item: BudgetItem) => void,
     refetchData: () => void
 }
 export default function ItemDisplay({
     day,
     date,
     items,
+    onSlotSelect,
     onItemSelect,
     refetchData
 }: ItemDisplayProps) {
@@ -48,7 +50,7 @@ export default function ItemDisplay({
 
     const element = (
         <div 
-            onClick={() => onItemSelect(whenSelectedItem(day))} 
+            onClick={() => onSlotSelect(whenSelectedItem(day))}
             className={`w-14 h-14 rounded-lg flex items-end justify-center border border-black ${isCurrentDate() ? "bg-zinc-500 text-black" : "bg-zinc-900"}`}
         >
             {
@@ -64,7 +66,7 @@ export default function ItemDisplay({
 
     if (possibleData.length > 0) {
         return (
-            <ItemTooltip refetchData={refetchData} budgetItems={possibleData}>
+            <ItemTooltip onEditItem={(item: BudgetItem) => onItemSelect(item)} refetchData={refetchData} budgetItems={possibleData}>
                 {element}
             </ItemTooltip>
         )

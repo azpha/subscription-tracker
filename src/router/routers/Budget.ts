@@ -10,6 +10,7 @@ router.get("/:id", BudgetController.RetrieveItem);
 router.post("/", BudgetController.CreateItem);
 
 // patch
+router.patch("/:id", BudgetController.EditItem);
 router.patch("/:id/pushToNext", BudgetController.PushToNextCycle);
 
 // delete

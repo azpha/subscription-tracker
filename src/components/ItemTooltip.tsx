@@ -7,13 +7,15 @@ import ItemUtils from "../utils/ItemUtils";
 type TooltipProps = {
     children: JSX.Element,
     budgetItems: BudgetItem[],
-    refetchData: () => void
+    refetchData: () => void,
+    onEditItem: (item: BudgetItem) => void
 }
 
 export default function ItemTooltip({
     children,
     budgetItems,
-    refetchData
+    refetchData,
+    onEditItem
 }: TooltipProps) {
     const [ selectedItem, setSelectedItem ] = useState<number>(0);
 
@@ -44,6 +46,7 @@ export default function ItemTooltip({
                     }
                     
                     <h1 className="text-lg font-semibold whitespace-nowrap truncate max-w-[120px]">{budgetItems[selectedItem].name}</h1>
+                    <p onClick={() => onEditItem(budgetItems[selectedItem])} className="text-xs hover:underline hover:cursor-pointer">Edit</p>
 
                     <div className="absolute top-0 right-0 p-2">
                         <Trash onClick={() => {

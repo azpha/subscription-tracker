@@ -9,6 +9,15 @@ const CreateItemSchema = z.object({
     billingFrequencyInMonths: z.number(),
     image: z.string()
 })
+const EditItemSchema = z.object({
+    id: z.number(),
+    name: z.string().min(1).optional(),
+    price: z.string().min(1).optional(),
+    nextBillingDate: z.date().optional(),
+    billingMethod: z.string().optional(),
+    billingFrequencyInMonths: z.number().optional(),
+    image: z.string().optional()
+})
 const RetrieveItemSchema = z.number();
 const DeleteItemSchema = z.number();
 const PushToNextMonthSchema = z.number();
@@ -16,6 +25,7 @@ const PushToNextMonthSchema = z.number();
 export default {
     // items
     CreateItemSchema,
+    EditItemSchema,
     RetrieveItemSchema,
     DeleteItemSchema,
     PushToNextMonthSchema
