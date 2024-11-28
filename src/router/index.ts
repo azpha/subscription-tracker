@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
+import cookieParser from 'cookie-parser';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import 'dotenv/config';
 
@@ -26,6 +27,7 @@ const proxy = createProxyMiddleware({
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.disable('x-powered-by');
@@ -34,6 +36,7 @@ app.disable('x-powered-by');
 app.use("/api/items", Routes.Budget);
 app.use("/api/analytics", Routes.Analytics);
 app.use("/api/settings", Routes.Settings);
+app.use('/api/auth', Routes.Auth);
 app.get("/api/health", (req,res) => {
     return res.status(200).json({
         status: 200
