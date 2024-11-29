@@ -6,10 +6,12 @@ import type { User } from "../types";
 
 export default function Layout({
     children,
-    protectedPage = false
+    protectedPage = false,
+    requiresSetup = false
 }: {
     children: JSX.Element | JSX.Element[],
-    protectedPage?: boolean
+    protectedPage?: boolean,
+    requiresSetup?: boolean
 }) {
     const location = useLocation();
     const navigate = useNavigate()
@@ -21,30 +23,18 @@ export default function Layout({
             const user = await AuthUtils.fetchAuthenticatedUser()
             const adminStatus = await AuthUtils.doesAdminExist()
 
-            if (adminStatus.status !== 200 && user.status !== 200) {
+            if (!adminStatus.success && requiresSetup) {
                 navigate("/register")
-            } else if (protectedPage) {
-                try {
-                    setIsAuthenticated(user.status === 200 && user.user)
-                    if (user.status !== 200) {
-                        navigate("/login")
-                    }
-                } catch (e) {
-                    setIsAuthenticated(null)
-                    navigate("/login")
+            } else if (protectedPage && !user.success) {
+                navigate("/login")
+            } else if (location.pathname === "/register" && adminStatus.success) {
+                navigate("/login")
+            } else {
+                setIsAuthenticated(user.success && user.user);
+                if (!user.success) {
+                    navigate('/login')
                 }
             }
-
-            if (location.pathname === "/login" && user.status === 200) {
-                navigate("/")
-            } else if (location.pathname === "/register" && adminStatus.status === 200) {
-                if (user.status === 200) {
-                    navigate("/")
-                } else {
-                    navigate("/login")
-                }
-            }
-
 
             setIsLoading(false)
         }

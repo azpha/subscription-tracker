@@ -54,11 +54,10 @@ export default function Login() {
                             setError("")
                             
                             const user = await AuthUtils.login(inputState.email, inputState.password)
-                            if (user.status === 200) {
+                            if (user.success) {
                                 navigate("/")
                             } else {
                                 console.error("Failed to auth!")
-                                console.log(user)
                                 setError(user.message)
                             }
                         }}>

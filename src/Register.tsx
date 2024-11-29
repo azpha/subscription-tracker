@@ -67,7 +67,7 @@ export default function Register() {
                     <div className="text-center">
                         <Button dark={true} onClick={async () => {
                             const user = await AuthUtils.register(inputState.name, inputState.email, inputState.password)
-                            if (user.status === 200) {
+                            if (user.success) {
                                 navigate("/")
                             } else {
                                 console.error("Failed to auth!")

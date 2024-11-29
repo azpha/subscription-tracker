@@ -20,7 +20,7 @@ async function RegisterAccount(
         })
         if (isExistingUser) {
             return res.status(409).json({
-                status: 409,
+                success: false,
                 message: "User already exists"
             })
         }
@@ -74,7 +74,7 @@ async function RegisterAccount(
         }
 
         return res.status(200).json({
-            status: 200,
+            success: true,
             user,
             token
         })
@@ -101,7 +101,7 @@ async function AddPasswordToUser(
         // check if user already has password
         if (findUser && findUser.password) {
             return res.status(400).json({
-                status: 400,
+                success: false,
                 message: "User already has password"
             })
         }
@@ -138,7 +138,7 @@ async function AddPasswordToUser(
         )
 
         return res.status(200).json({
-            status: 200,
+            success: true,
             user,
             token
         })
@@ -162,11 +162,11 @@ async function DoesAdminExist(
 
         if (admin) {
             return res.status(200).json({
-                status: 200
+                success: true,
             })
         } else {
             return res.status(404).json({
-                status: 404,
+                success: false,
                 message: "No admin exists"
             })
         }
@@ -191,7 +191,7 @@ async function LoginAccount(
         })
         if (!user) {
             return res.status(404).json({
-                status: 404,
+                success: false,
                 message: "That user doesn't exist"
             })
         }
@@ -199,7 +199,7 @@ async function LoginAccount(
         const isValidPass = await bcrypt.compare(req.body.password, user.password)
         if (!isValidPass) {
             return res.status(401).json({
-                status: 401,
+                success: false,
                 message: "Incorrect password"
             })
         }
@@ -216,7 +216,7 @@ async function LoginAccount(
         )
 
         return res.status(200).json({
-            status: 200,
+            success: true,
             token,
             user: {
                 id: user.id,
@@ -262,7 +262,7 @@ async function FetchAuthedAccount(
 
         if (user) {
             return res.status(200).json({
-                status: 200,
+                success: true,
                 user
             })
         } else {
