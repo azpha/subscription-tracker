@@ -90,7 +90,7 @@ export default function App() {
     setPageState((prevState) => {
       return {
         ...prevState,
-        shouldShowModal: true
+        shouldShowCreateModal: true
       }
     })
   }

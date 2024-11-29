@@ -32,7 +32,8 @@ const CreateItem = async (
                 price: req.body.price,
                 nextBillingDate: req.body.nextBillingDate,
                 billingMethod: req.body.billingMethod,
-                billingFrequencyInMonths: req.body.billingFrequencyInMonths
+                billingFrequencyInMonths: req.body.billingFrequencyInMonths,
+                userId: req.user!.userId
             }
         })
 

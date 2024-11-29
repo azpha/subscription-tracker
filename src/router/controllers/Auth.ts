@@ -63,6 +63,16 @@ async function RegisterAccount(
             `authToken=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=172800`
         )
 
+        // if there was no previous server admin before, inherit all legacy subscriptions
+        // to the admin user so they aren't lost
+        if (!serverAdminExists) {
+            await Storage.subscription.updateMany({
+                data: {
+                    userId: user.id
+                }
+            })
+        }
+
         return res.status(200).json({
             status: 200,
             user,
