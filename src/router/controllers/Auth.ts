@@ -31,6 +31,12 @@ async function RegisterAccount(
                 admin: true
             }
         })
+        if (serverAdminExists) {
+            return res.status(409).json({
+                success: false,
+                message: "Cannot register without admin approval"
+            })
+        }
 
         // hash
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
@@ -238,7 +244,7 @@ async function LogoutAccount(
         'Set-Cookie',
         'authToken=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0'
     );
-    return res.redirect("/")
+    return res.redirect("/login")
 }
 
 async function FetchAuthedAccount(
