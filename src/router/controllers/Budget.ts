@@ -32,7 +32,8 @@ const CreateItem = async (
                 price: req.body.price,
                 nextBillingDate: req.body.nextBillingDate,
                 billingMethod: req.body.billingMethod,
-                billingFrequencyInMonths: req.body.billingFrequencyInMonths
+                billingFrequencyInMonths: req.body.billingFrequencyInMonths,
+                userId: req.user!.userId
             }
         })
 
@@ -57,7 +58,8 @@ const RetrieveItem = async (
         // retrieve the item using id
         const subscription = await Storage.subscription.findFirst({
             where: {
-                id: parseInt(req.params.id)
+                id: parseInt(req.params.id),
+                userId: req.user!.userId
             }
         })
 
@@ -93,6 +95,7 @@ const EditItem = async (
         await Storage.subscription.update({
             where: {
                 id: parseInt(req.params.id),
+                userId: req.user!.userId
             },
             data: {
                 ...req.body,
@@ -120,7 +123,8 @@ const DeleteItem = async (
 
         await Storage.subscription.delete({
             where: {
-                id: parseInt(req.params.id)
+                id: parseInt(req.params.id),
+                userId: req.user!.userId
             }
         })
     
@@ -160,7 +164,8 @@ const PushToNextCycle = async (
 
         const subscription = await Storage.subscription.findFirst({
             where: {
-                id: parseInt(req.params.id)
+                id: parseInt(req.params.id),
+                userId: req.user!.userId
             }
         })
 

@@ -4,6 +4,7 @@ export default function InputBox({
     defaultValue,
     isOption = false,
     options,
+    type = "text",
     onChange
 }: {
     name: string,
@@ -12,6 +13,7 @@ export default function InputBox({
     text?: boolean,
     isOption?: boolean,
     options?: string[],
+    type?: "text" | "password" | "email",
     onChange: (value: string) => void
 }) {
     if (isOption) {
@@ -30,7 +32,7 @@ export default function InputBox({
         return (
             <div className="block">
                 <input 
-                    type={"text"}
+                    type={type}
                     name={name}
                     defaultValue={defaultValue}
                     autoComplete="off"

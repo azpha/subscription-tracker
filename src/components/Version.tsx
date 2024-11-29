@@ -18,7 +18,7 @@ export default function Version() {
                     ItemUtils.fetchLatestAppVersion()
                 ]);
 
-                const isUpdateAvailable = compareVersions(latestVersion, installedVersion) === 1;
+                const isUpdateAvailable = installedVersion !== "dev" ? compareVersions(latestVersion, installedVersion) === 1 : false
                 console.log(`[Version] isUpdateAvailable: ${isUpdateAvailable}. Currently running version ${installedVersion}, latest is ${latestVersion}`)
 
                 setVersions({ installed: installedVersion, latest: latestVersion, isUpdateAvailable });

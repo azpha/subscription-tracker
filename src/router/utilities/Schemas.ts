@@ -22,11 +22,31 @@ const RetrieveItemSchema = z.number();
 const DeleteItemSchema = z.number();
 const PushToNextMonthSchema = z.number();
 
+// authentication
+const RegisterUserSchema = z.object({
+    email: z.string(),
+    name: z.string(),
+    password: z.string()
+})
+const AddPasswordToUserSchema = z.object({
+    email: z.string(),
+    password: z.string()
+})
+const LoginUserSchema = z.object({
+    email: z.string(),
+    password: z.string()
+})
+
 export default {
     // items
     CreateItemSchema,
     EditItemSchema,
     RetrieveItemSchema,
     DeleteItemSchema,
-    PushToNextMonthSchema
+    PushToNextMonthSchema,
+
+    // authentication
+    RegisterUserSchema,
+    AddPasswordToUserSchema,
+    LoginUserSchema
 }

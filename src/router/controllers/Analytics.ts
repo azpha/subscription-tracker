@@ -6,7 +6,7 @@ import type {
 } from 'express';
 
 async function ExpiringSoon(
-    _: Request,
+    req: Request,
     res: Response,
     next: NextFunction
 ) {
@@ -17,6 +17,7 @@ async function ExpiringSoon(
     
         const expiringSoon = await Storage.subscription.findMany({
             where: {
+                userId: req.user?.userId,
                 nextBillingDate: {
                     lte: currentDatePlusSeven,
                     gte: currentDate
@@ -25,7 +26,7 @@ async function ExpiringSoon(
         });
     
         return res.status(200).json({
-            status: 200,
+            success: true,
             subscription: expiringSoon
         })
     } catch (e) {
@@ -34,13 +35,14 @@ async function ExpiringSoon(
 }
 
 async function GetSubscriptionCount(
-    _: Request,
+    req: Request,
     res: Response,
     next: NextFunction
 ) {
     try {
         const monthlyCount = await Storage.subscription.count({
             where: {
+                userId: req.user?.userId,
                 billingFrequencyInMonths: {
                     lt: 12
                 }
@@ -48,6 +50,7 @@ async function GetSubscriptionCount(
         })
         const yearlyCount = await Storage.subscription.count({
             where: {
+                userId: req.user?.userId,
                 billingFrequencyInMonths: {
                     gte: 12
                 }
@@ -55,7 +58,7 @@ async function GetSubscriptionCount(
         })
 
         return res.status(200).json({
-            status: 200,
+            success: true,
             count: {
                 monthly: monthlyCount,
                 yearly: yearlyCount
@@ -67,12 +70,15 @@ async function GetSubscriptionCount(
 }
 
 async function GetTotalSpentForSubscriptions(
-    _: Request,
+    req: Request,
     res: Response,
     next: NextFunction
 ) {
     try {
         const allTotalSpent = await Storage.subscription.findMany({
+            where: {
+                userId: req.user?.userId
+            },
             select: {
                 id: true,
                 name: true,
@@ -81,7 +87,7 @@ async function GetTotalSpentForSubscriptions(
         })
 
         return res.status(200).json({
-            status: 200,
+            success: true,
             subscriptions: allTotalSpent
         })
     } catch (e) {
