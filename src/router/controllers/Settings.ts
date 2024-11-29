@@ -24,7 +24,7 @@ const GetImageVersion = (
 ) => {
     return res.status(200).json({
         status: 200,
-        version: process.env.APPLICATION_VERSION
+        version: process.env.APPLICATION_VERSION || "dev"
     })
 }
 
