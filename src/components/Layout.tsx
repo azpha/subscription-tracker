@@ -28,7 +28,13 @@ export default function Layout({
             } else if (protectedPage && !user.success) {
                 navigate("/login")
             } else if (location.pathname === "/register" && adminStatus.success) {
-                navigate("/login")
+                if (user.success) {
+                    navigate("/")
+                } else {
+                    navigate("/login")
+                }
+            } else if (location.pathname === "/login" && user.success) {
+                navigate("/")
             } else {
                 setIsAuthenticated(user.success && user.user);
                 if (!user.success) {
