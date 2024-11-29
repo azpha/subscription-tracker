@@ -9,6 +9,12 @@ type BudgetItem = {
     image?: string
 }
 
+type User = {
+    email: string,
+    name: string,
+    admin: boolean
+}
+
 type ToastBoxType = {
     header?: string,
     headerColor?: string,
@@ -18,5 +24,6 @@ type ToastBoxType = {
 
 export type {
     BudgetItem,
+    User,
     ToastBoxType
 }

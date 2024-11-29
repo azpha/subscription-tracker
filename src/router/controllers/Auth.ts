@@ -41,7 +41,7 @@ async function RegisterAccount(
                 email: req.body.email,
                 password: hashedPassword,
                 name: req.body.name,
-                admin: !!serverAdminExists
+                admin: !serverAdminExists
             },
             select: {
                 id: true,
@@ -133,6 +133,33 @@ async function AddPasswordToUser(
             token
         })
 
+    } catch (e) {
+        next(e)
+    }
+}
+
+async function DoesAdminExist(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    try {
+        const admin = await Storage.user.findFirst({
+            where: {
+                admin: true
+            }
+        })
+
+        if (admin) {
+            return res.status(200).json({
+                status: 200
+            })
+        } else {
+            return res.status(404).json({
+                status: 404,
+                message: "No admin exists"
+            })
+        }
     } catch (e) {
         next(e)
     }
@@ -230,6 +257,8 @@ async function FetchAuthedAccount(
                 status: 200,
                 user
             })
+        } else {
+            return res.redirect('/api/auth/logout')
         }
     } catch (e) {
         next(e)
@@ -241,5 +270,6 @@ export default {
     AddPasswordToUser,
     LoginAccount,
     LogoutAccount,
-    FetchAuthedAccount
+    FetchAuthedAccount,
+    DoesAdminExist
 }
