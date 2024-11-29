@@ -247,8 +247,6 @@ async function FetchAuthedAccount(
     next: NextFunction
 ) {
     try {
-        console.log(req.user)
-
         const user = await Storage.user.findUnique({
             where: {
                 email: req.user?.email
