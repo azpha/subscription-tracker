@@ -1,20 +1,92 @@
+import Storage from '../services/Storage.js';
+import Schemas from '../utilities/Schemas.js';
 import type {
     Request,
     Response,
+    NextFunction
 } from 'express';
 
-const GetNotificationSettings = (
-    _: Request,
+async function UpdateSettings(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    try {
+        Schemas.UpdateSettingsSchema.parse(req.body)
+
+        const exists = await Storage.userSettings.findFirst({
+            where: {
+                userId: req.user?.userId,
+                name: req.body.name
+            }
+        })
+
+        if (exists) {
+            const setting = await Storage.userSettings.update({
+                where: {
+                    userId: req.user?.userId,
+                    id: exists.id
+                },
+                data: {
+                    name: req.body.name,
+                    value: req.body.value,
+                    type: req.body.type
+                },
+                select: {
+                    name: true,
+                    type: true,
+                    value: true
+                }
+            })
+
+            return res.status(200).json({
+                success: true,
+                setting
+            })
+        } else {
+            const setting = await Storage.userSettings.create({
+                data: {
+                    name: req.body.name,
+                    value: req.body.value,
+                    type: req.body.type,
+                    userId: req.user!.userId
+                },
+                select: {
+                    name: true,
+                    type: true,
+                    value: true
+                }
+            })
+
+            return res.status(200).json({
+                success: true,
+                setting
+            })
+        }
+    } catch (e) {
+        next(e)
+    }
+}
+
+async function GetNotificationSettings(
+    req: Request,
     res: Response
-) => {
+) {
     // is defined & isn't default
-    const isDiscordEnabled = (!!process.env.DISCORD_NOTIFICATION_WEBHOOK && process.env.DISCORD_NOTIFICATION_WEBHOOK !== "https://discord.com/api/webhooks/") 
+    const notificationSettings = await Storage.userSettings.findFirst({
+        where: {
+            type: "notifications",
+            userId: req.user?.userId
+        },
+        select: {
+            name: true,
+            value: true
+        }
+    })
 
     return res.status(200).json({
-        status: 200,
-        notifications: {
-            "discord": isDiscordEnabled
-        }
+        success: true,
+        notificationSettings
     })
 }
 
@@ -29,6 +101,7 @@ const GetImageVersion = (
 }
 
 export default {
+    UpdateSettings,
     GetNotificationSettings,
     GetImageVersion
 }

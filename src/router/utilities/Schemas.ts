@@ -37,6 +37,13 @@ const LoginUserSchema = z.object({
     password: z.string()
 })
 
+// settings
+const UpdateSettingsSchema = z.object({
+    name: z.string(),
+    type: z.enum(["notifications"]),
+    value: z.string()
+})
+
 export default {
     // items
     CreateItemSchema,
@@ -48,5 +55,8 @@ export default {
     // authentication
     RegisterUserSchema,
     AddPasswordToUserSchema,
-    LoginUserSchema
+    LoginUserSchema,
+
+    // settings
+    UpdateSettingsSchema
 }

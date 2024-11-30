@@ -24,6 +24,16 @@ model Subscription {
   createdBy User @relation(fields: [userId], references: [id])
 }
 
+model UserSettings {
+  id    Int    @id @default(autoincrement())
+  type  String
+  name  String
+  value String
+
+  userId    Int
+  createdBy User @relation(fields: [userId], references: [id])
+}
+
 model User {
   id            Int            @id @default(autoincrement())
   email         String         @unique
@@ -33,10 +43,5 @@ model User {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   subscriptions Subscription[]
-}
-
-model Settings {
-  id    Int    @id @default(autoincrement())
-  name  String
-  value String
+  settings      UserSettings[]
 }
