@@ -20,7 +20,7 @@ const CreateItem = async (
 
         if (new Date().getTime() > new Date(req.body.nextBillingDate).getTime()) {
             return res.status(400).json({
-                status: 400,
+                success: false,
                 message: "Next billing date must be greater than the current date"
             })
         }
@@ -38,7 +38,7 @@ const CreateItem = async (
         })
 
         return res.status(200).json({
-            status: 200,
+            success: true,
             message: "Created record",
             subscription
         })
@@ -65,12 +65,12 @@ const RetrieveItem = async (
 
         if (subscription) {
             return res.status(200).json({
-                status: 200,
+                success: true,
                 subscription
             })
         } else {
             return res.status(404).json({
-                status: 404,
+                success: false,
                 message: "No subscription exists with that ID"
             })
         }
@@ -105,7 +105,7 @@ const EditItem = async (
         })
 
         return res.status(200).json({
-            status: 200,
+            success: true,
             message: "Successfully updated subscription",
         })
     } catch (e) {
@@ -129,7 +129,7 @@ const DeleteItem = async (
         })
     
         return res.status(200).json({
-            status: 200,
+            success: true,
             message: "Successfully deleted subscription"
         })
     } catch (e) {
@@ -146,7 +146,7 @@ const RetrieveAllItems = async (
         const data = await Storage.subscription.findMany();
 
         return res.status(200).json({
-            status: 200,
+            success: true,
             subscription: data
         })
     } catch (e) {
@@ -185,12 +185,12 @@ const PushToNextCycle = async (
             })
 
             return res.status(200).json({
-                status: 200,
+                success: true,
                 message: "Successfully pushed subscription"
             })
         } else {
             return res.status(404).json({
-                status: 404,
+                success: false,
                 message: "That subscription was not found"
             })
         }

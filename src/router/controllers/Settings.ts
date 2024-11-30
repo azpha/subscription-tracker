@@ -95,7 +95,7 @@ const GetImageVersion = (
     res: Response
 ) => {
     return res.status(200).json({
-        status: 200,
+        success: true,
         version: process.env.APPLICATION_VERSION || "dev"
     })
 }
