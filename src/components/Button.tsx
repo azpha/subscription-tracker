@@ -10,7 +10,7 @@ export default function Button({
     disabled?: boolean
 }) {
     return (
-        <button onClick={onClick} disabled={disabled} className={`${dark ? "bg-black" : "bg-white"} text-black p-1 mt-2 rounded-lg font-bold`}>
+        <button onClick={onClick} disabled={disabled} className={`${dark ? "bg-black" : "bg-white"} ${disabled && "opacity-50"} text-black p-1 mt-2 rounded-lg font-bold`}>
             {children}
         </button>
     )
