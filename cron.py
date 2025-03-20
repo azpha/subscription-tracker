@@ -1,5 +1,4 @@
 import requests
-import json
 import schedule
 from datetime import date
 import dateutil.parser
@@ -61,8 +60,8 @@ def send_discord_webhook_message(embed):
     requests.post(discord_webhook_url, json=embed, headers=discord_webhook_headers)
 
 def main():
-    # schedule.every().day.do(job)
-    schedule.every(5).seconds.do(job)
+    schedule.every().day.do(job)
+    # schedule.every(5).seconds.do(job)
 
     while True:
         schedule.run_pending()
