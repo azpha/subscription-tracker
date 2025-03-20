@@ -2,41 +2,19 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgres"
-  url      = env("DATABASE_URL")
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
 }
 
 model Subscription {
-  id                       Int      @id @default(autoincrement())
-  name                     String
-  price                    String
-  nextBillingDate          DateTime
-  billingMethod            String
-  billingFrequencyInMonths Int      @default(1)
-  image                    String?
-  totalSpent               Float    @default(0.0)
-
-  userId    Int
-  createdBy User @relation(fields: [userId], references: [id])
-}
-
-model User {
-  id            Int            @id @default(autoincrement())
-  email         String         @unique
-  name          String
-  password      String
-  admin         Boolean
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  subscriptions Subscription[]
-}
-
-model Settings {
-  id    Int    @id @default(autoincrement())
-  name  String
-  value String
+    id              Int      @id @default(autoincrement())
+    name            String
+    price           String
+    nextBillingDate DateTime
+    paymentMethod   String
+    totalSpent      Int      @default(0)
 }
