@@ -31,11 +31,27 @@ export const subscriptionRouter = createTRPCRouter({
                 }
             })
         }),
+    getUpcoming: publicProcedure
+        .query(async ({ ctx }) => {
+            const currentDatePlusSeven = new Date();
+            currentDatePlusSeven.setDate(currentDatePlusSeven.getDate() + 7);
+
+            return ctx.db.subscription.findMany({
+                where: {
+                    nextBillingDate: {
+                        gte: new Date(),
+                        lte: currentDatePlusSeven
+                    }
+                }
+            })
+        }),
     
     // creation + modification + deletion
     create: publicProcedure
         .input(z.object(SubscriptionSchema))
         .mutation(async ({ctx, input}) => {
+            input.price = input.price.replace("$", "")
+
             return ctx.db.subscription.create({
                 data: {
                     ...input
