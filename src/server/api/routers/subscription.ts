@@ -50,8 +50,6 @@ export const subscriptionRouter = createTRPCRouter({
     create: publicProcedure
         .input(z.object(SubscriptionSchema))
         .mutation(async ({ctx, input}) => {
-            input.price = input.price.replace("$", "")
-
             return ctx.db.subscription.create({
                 data: {
                     ...input

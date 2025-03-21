@@ -27,10 +27,14 @@ export default function SubscriptionForm({
             if (subscription) {
                 updateMutation({
                     ...configuredSubscription,
-                    id: subscription.id
+                    id: subscription.id,
+                    price: configuredSubscription.price.replace("$", "")
                 })
             } else {
-                createMutation(configuredSubscription)
+                createMutation({
+                    ...configuredSubscription,
+                    price: configuredSubscription.price.replace("$", "")
+                })
             }
 
             onUpdate()
@@ -65,10 +69,10 @@ export default function SubscriptionForm({
     }, [ configuredSubscription ])
 
     return (
-        <div className="w-fit mx-auto border border-solid border-white rounded-lg p-4 bg-zinc-800 relative">
-            <h1 className="text-2xl font-bold p-2">Create Subscription</h1>
+        <div className="border border-solid border-white rounded-lg p-4 bg-zinc-800 relative">
+            <h1 className="text-2xl font-bold p-2">Create</h1>
 
-            <form onSubmit={handleSubmit} className="pl-2">
+            <form onSubmit={handleSubmit} className="p-2">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2 w-fit">
                     <div>
                         <label>Name</label>
