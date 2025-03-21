@@ -24,17 +24,17 @@ export default function SubscriptionForm({
         if (!configuredSubscription) {
             setFormError("You need to define values before submitting the form!")
         } else {
+            if (configuredSubscription.price) {
+                configuredSubscription.price = configuredSubscription.price.replace("$", "")
+            }
+
             if (subscription) {
                 updateMutation({
                     ...configuredSubscription,
-                    id: subscription.id,
-                    price: configuredSubscription.price.replace("$", "")
+                    id: subscription.id
                 })
             } else {
-                createMutation({
-                    ...configuredSubscription,
-                    price: configuredSubscription.price.replace("$", "")
-                })
+                createMutation(configuredSubscription)
             }
 
             onUpdate()
