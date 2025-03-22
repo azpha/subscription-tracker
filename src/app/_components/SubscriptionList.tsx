@@ -13,7 +13,7 @@ export default function SubscriptionList({
     onDelete: () => void
 }) {
     return (
-        <div className="border border-solid border-white bg-zinc-800">
+        <div className="border border-solid max-h-[50vh] overflow-y-auto border-white bg-zinc-800">
             {
                 subscriptions && subscriptions.length > 0 ? (
                     subscriptions.map((v,k) => {
