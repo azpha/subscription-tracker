@@ -71,9 +71,6 @@ export default function SubscriptionForm({
       }, 5000);
     }
   }, [formError]);
-  useEffect(() => {
-    console.log(configuredSubscription);
-  }, [configuredSubscription]);
 
   return (
     <div className="border border-solid border-white rounded-lg p-4 bg-zinc-800 relative">
