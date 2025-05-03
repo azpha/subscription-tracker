@@ -21,9 +21,16 @@ async function createItem(subscription: Subscription): Promise<Response> {
   })
     .then(async (res) => {
       const body = await res.json();
+      let error = "";
+      if (body.issues) {
+        error = body.issues[0].message;
+      } else {
+        error = body.message;
+      }
+
       return {
         status: res.ok,
-        error: !res.ok && (body.issues[0].message || body.message),
+        error: error,
       };
     })
     .catch((err) => {
@@ -46,12 +53,19 @@ async function updateItem(subscription: Subscription): Promise<Response> {
     .then(async (res) => {
       const body = await res.json();
 
+      let error = "";
+      if (body.issues) {
+        error = body.issues[0].message;
+      } else {
+        error = body.message;
+      }
+
       return {
         status: res.ok,
-        error: !res.ok && (body.issues[0].message || body.message),
+        error: error,
       };
     })
-    .catch((e) => {
+    .catch(async (e) => {
       console.error("Failed to update item", e);
       return {
         status: false,

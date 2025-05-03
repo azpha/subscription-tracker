@@ -5,8 +5,8 @@ interface Subscription {
   totalSpend: number;
   paymentMethod: "Card" | "PayPal" | "Bank";
   shouldNotifyExpiry: boolean;
-  lastBillingDate: string;
-  nextBillingDate: string;
+  lastBillingDate: Date | string;
+  nextBillingDate: Date | string;
   billingFrequencyInMonths: number;
 }
 

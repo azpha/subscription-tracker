@@ -72,6 +72,7 @@ function App() {
             onUpdate={() => {
               fetchSubscriptions();
               setShowForm(false);
+              setEditingSubscription(null);
             }}
             subscription={editingSubscription}
           />

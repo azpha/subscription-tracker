@@ -108,21 +108,32 @@ export default function SubscriptionForm({
               }}
             />
           </div>
-          {!subscription && (
-            <div>
-              <label>Last Billing Date</label>
-              <StyledInput
-                placeholder={"YYYY-MM-DD"}
-                onChange={(v: string) => {
-                  handleValueUpdate({ lastBillingDate: v });
-                }}
-              />
-            </div>
-          )}
+          <div>
+            <label>Last Billing Date</label>
+            <StyledInput
+              defaultValue={
+                subscription
+                  ? new Date(subscription?.lastBillingDate as string)
+                      .toISOString()
+                      .split("T")[0]
+                  : undefined
+              }
+              placeholder={"YYYY-MM-DD"}
+              onChange={(v: string) => {
+                handleValueUpdate({ lastBillingDate: v });
+              }}
+            />
+          </div>
           <div>
             <label>Next Billing Date</label>
             <StyledInput
-              defaultValue={subscription?.nextBillingDate}
+              defaultValue={
+                subscription
+                  ? new Date(subscription?.nextBillingDate as string)
+                      .toISOString()
+                      .split("T")[0]
+                  : undefined
+              }
               placeholder={"YYYY-MM-DD"}
               onChange={(v: string) => {
                 handleValueUpdate({ nextBillingDate: v });
