@@ -35,6 +35,47 @@ async function CreateNewItem(
   }
 }
 
+async function DeleteItem(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<any> {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+      return res.status(400).json({
+        status: 400,
+        message: "Invalid body parameters",
+      });
+    }
+
+    const doesSubExist = await Database.subscription.findFirst({
+      where: {
+        id,
+      },
+    });
+    if (!doesSubExist) {
+      return res.status(404).json({
+        status: 404,
+        message: "No subscription with that id exists",
+      });
+    }
+
+    await Database.subscription.delete({
+      where: {
+        id,
+      },
+    });
+
+    return res.status(200).json({
+      status: 200,
+      message: "Successfully deleted item",
+    });
+  } catch (e) {
+    next(e);
+  }
+}
+
 async function UpdateItems(
   req: Request,
   res: Response,
@@ -160,6 +201,7 @@ async function SearchForItem(
 export default {
   CreateNewItem,
   UpdateItems,
+  DeleteItem,
   FetchItems,
   FetchSpecificItem,
   SearchForItem,
