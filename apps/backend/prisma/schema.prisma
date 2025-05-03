@@ -9,13 +9,13 @@ datasource db {
 }
 
 model Subscription {
-  id                       Int     @id @default(autoincrement())
+  id                       Int      @id @default(autoincrement())
   name                     String
   price                    Float
   paymentMethod            String
-  lastBillingDate          String
-  nextBillingDate          String
+  lastBillingDate          DateTime
+  nextBillingDate          DateTime
   billingFrequencyInMonths Int
-  totalSpend               Float   @default(0.00)
-  shouldNotifyExpiry       Boolean @default(true)
+  totalSpend               Float    @default(0.00)
+  shouldNotifyExpiry       Boolean  @default(true)
 }

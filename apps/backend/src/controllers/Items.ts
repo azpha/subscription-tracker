@@ -19,10 +19,19 @@ async function CreateNewItem(
         12 +
       (nextBillingDateTime.getMonth() - lastBillingDateTime.getMonth());
 
+    if (lastBillingDateTime.getTime() > nextBillingDateTime.getTime()) {
+      return res.status(400).json({
+        status: 400,
+        message: "Last billing date cannot be greater than next billing date",
+      });
+    }
+
     const data = await Database.subscription.create({
       data: {
         ...req.body,
         billingFrequencyInMonths: differenceInMonths,
+        nextBillingDate: nextBillingDateTime,
+        lastBillingDate: lastBillingDateTime,
       },
     });
 
@@ -107,15 +116,34 @@ async function UpdateItems(
     }
 
     // recalculate billing frequency if billing date changed
-    let differenceInMonths = sub.billingFrequencyInMonths;
-    if (req.body.nextBillingDate) {
-      const nextBillingDateTime = new Date(req.body.nextBillingDate);
-      const lastBillingDateTime = new Date(sub.lastBillingDate);
-      differenceInMonths =
+    let updateObject = {
+      billingFrequencyInMonths: sub.billingFrequencyInMonths,
+      nextBillingDate: sub.nextBillingDate,
+      lastBillingDate: sub.lastBillingDate,
+    };
+    if (req.body.nextBillingDate || req.body.lastBillingDate) {
+      const nextBillingDateTime = new Date(
+        req.body.nextBillingDate || sub.nextBillingDate
+      );
+      const lastBillingDateTime = new Date(
+        req.body.lastBillingDate || sub.lastBillingDate
+      );
+
+      if (lastBillingDateTime.getTime() > nextBillingDateTime.getTime()) {
+        return res.status(400).json({
+          status: 400,
+          message: "Last billing date cannot be greater than next billing date",
+        });
+      }
+
+      updateObject.billingFrequencyInMonths =
         (nextBillingDateTime.getFullYear() -
           lastBillingDateTime.getFullYear()) *
           12 +
         (nextBillingDateTime.getMonth() - lastBillingDateTime.getMonth());
+
+      (updateObject.nextBillingDate = nextBillingDateTime),
+        (updateObject.lastBillingDate = lastBillingDateTime);
     }
 
     const data = await Database.subscription.update({
@@ -124,7 +152,7 @@ async function UpdateItems(
       },
       data: {
         ...req.body,
-        billingFrequencyInMonths: differenceInMonths,
+        ...updateObject,
       },
     });
 
