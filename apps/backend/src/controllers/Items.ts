@@ -11,7 +11,7 @@ async function CreateNewItem(
     Schemas.SubscriptionCreation.parse(req.body);
 
     // calculate billing frequency
-    const { nextBillingDate, lastBillingDate } = req.body;
+    let { nextBillingDate, lastBillingDate } = req.body;
     const nextBillingDateTime = new Date(nextBillingDate);
     const lastBillingDateTime = new Date(lastBillingDate);
     const differenceInMonths =
@@ -87,25 +87,35 @@ async function UpdateItems(
     });
 
     const id = parseInt(req.params.id);
-
-    if (!isNaN(id)) {
-      const doesSubExist = await Database.subscription.findFirst({
-        where: {
-          id,
-        },
-      });
-
-      if (!doesSubExist) {
-        return res.status(404).json({
-          status: 404,
-          message: "No subscription with that id exists",
-        });
-      }
-    } else {
+    if (isNaN(id)) {
       return res.status(400).json({
         status: 400,
         message: "Invalid body parameters",
       });
+    }
+
+    const sub = await Database.subscription.findFirst({
+      where: {
+        id,
+      },
+    });
+    if (!sub) {
+      return res.status(404).json({
+        status: 404,
+        message: "No subscription with that id exists",
+      });
+    }
+
+    // recalculate billing frequency if billing date changed
+    let differenceInMonths = sub.billingFrequencyInMonths;
+    if (req.body.nextBillingDate) {
+      const nextBillingDateTime = new Date(req.body.nextBillingDate);
+      const lastBillingDateTime = new Date(sub.lastBillingDate);
+      differenceInMonths =
+        (nextBillingDateTime.getFullYear() -
+          lastBillingDateTime.getFullYear()) *
+          12 +
+        (nextBillingDateTime.getMonth() - lastBillingDateTime.getMonth());
     }
 
     const data = await Database.subscription.update({
@@ -114,6 +124,7 @@ async function UpdateItems(
       },
       data: {
         ...req.body,
+        billingFrequencyInMonths: differenceInMonths,
       },
     });
 

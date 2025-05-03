@@ -11,10 +11,9 @@ export default {
     shouldNotifyExpiry: z.boolean().optional(),
   }),
   SubscriptionUpdate: z.object({
-    id: z.number(),
     name: z.string().optional(),
     price: z.number().optional(),
-    paymentMethod,
+    paymentMethod: paymentMethod.optional(),
     nextBillingDate: z.string().date().optional(),
     shouldNotifyExpiry: z.boolean().optional(),
     totalSpend: z.number().optional(),
