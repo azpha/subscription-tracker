@@ -37,4 +37,4 @@ services:
       - 3000:3000
     environment:
       - DATABASE_URL=mysql://subscription:super_secret@db:3306/subscription
-      - DISCORD_WEBHOOK=https://discord.com/api/webhooks/1368364160332730498/DPr4RLMuR_588C3CY0lBvNZjiZJm5koXDvwJEjXdbE7sgLPt2JyacWF5d1DiRkPfCSGC
+      - DISCORD_WEBHOOK=https://discord.com/api/webhooks/xxxxxxx/xxxxxxxxx
