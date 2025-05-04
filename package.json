@@ -10,11 +10,12 @@
     "build:web": "pnpm --filter frontend build",
     "build:api": "pnpm --filter backend build",
     "start": "concurrently \"pnpm --filter backend start\" \"pnpm --filter frontend start\"",
-    "db:deploy": "prisma migrate deploy"
+    "db:deploy": "prisma migrate deploy",
+    "db:dev:apply": "prisma migrate dev && prisma generate"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "GPL-2.0-only",
   "packageManager": "pnpm@10.10.0",
   "dependencies": {
     "@prisma/client": "6.7.0",

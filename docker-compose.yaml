@@ -25,7 +25,8 @@ services:
       retries: 3
 
   subscription-tracker:
-    build: .
+    image: ghcr.io/azpha/subscription-tracker:latest
+    # build: .
     restart: unless-stopped
     depends_on:
       db:
