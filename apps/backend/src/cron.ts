@@ -52,6 +52,8 @@ async function job() {
     );
     const diffInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
 
+    // any subscription expiring in sub-7 days will be sent to
+    // the subscription
     if (diffInDays <= 7) {
       const field = {
         name: subscription.name,
@@ -60,8 +62,31 @@ async function job() {
       };
       discordWebhookMessage.embeds[0].fields.push(field);
     }
+
+    // update the subscriptions billing date + total tracked spend
+    // if there are no more days until expiration
+    if (diffInDays === 0) {
+      const newBillingDate = subscription.nextBillingDate;
+      newBillingDate.setMonth(
+        subscription.nextBillingDate.getMonth() +
+          subscription.billingFrequencyInMonths
+      );
+
+      await Database.subscription.update({
+        where: {
+          id: subscription.id,
+        },
+        data: {
+          nextBillingDate: newBillingDate,
+          lastBillingDate: new Date(),
+          totalSpend: subscription.price + subscription.totalSpend,
+        },
+      });
+    }
   }
 
+  // send the webhook if there are more than 1 subscription
+  // in the fields
   if (discordWebhookMessage.embeds[0].fields.length > 0) {
     sendDiscordMessage(discordWebhookMessage);
   }
@@ -77,6 +102,7 @@ async function sendDiscordMessage(message: DiscordWebhook) {
   });
 }
 
+// SHORT_CRON_EXPIRY environment variable
 if (isDevelopmentFlagEnabled) {
   cron.schedule("*/5 * * * * *", () => {
     console.log("5 seconds");
