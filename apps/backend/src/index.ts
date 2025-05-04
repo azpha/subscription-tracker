@@ -11,6 +11,7 @@ import "./cron";
 // routers
 import ItemsRouter from "./routers/Items";
 import SettingsRouter from "./routers/Settings";
+import MetricsRouter from "./routers/Metrics";
 
 const app = express();
 app.use(express.json());
@@ -20,6 +21,7 @@ app.use(cors());
 // routes
 app.use("/items", ItemsRouter);
 app.use("/settings", SettingsRouter);
+app.use("/metrics", MetricsRouter);
 
 // error handling
 const errorHandler = (
@@ -42,10 +44,16 @@ const errorHandler = (
     message: "An unexpected error occurred while handling your request",
   });
 };
+app.use(errorHandler as any);
 
-// @ts-ignore pathparams err
-app.use(errorHandler);
+// 404
+app.use("/*splat", (req: Request, res: Response) => {
+  return res.status(404).json({
+    status: 404,
+    message: "No resource found",
+  }) as any;
+});
 
 app.listen(process.env.PORT || 3002, () => {
-  console.log("Listening on port " + (process.env.PORT || 3001));
+  console.log("Listening on port " + (process.env.PORT || 3002));
 });
