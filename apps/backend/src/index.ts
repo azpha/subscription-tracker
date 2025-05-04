@@ -10,6 +10,7 @@ import "./cron";
 
 // routers
 import ItemsRouter from "./routers/Items";
+import SettingsRouter from "./routers/Settings";
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use(cors());
 
 // routes
 app.use("/items", ItemsRouter);
+app.use("/settings", SettingsRouter);
 
 // error handling
 const errorHandler = (
