@@ -9,12 +9,16 @@
     "dev:api": "pnpm --filter backend dev",
     "build:web": "pnpm --filter frontend build",
     "build:api": "pnpm --filter backend build",
-    "start": "concurrently \"pnpm --filter backend start\" \"pnpm --filter frontend start\""
+    "start": "concurrently \"pnpm --filter backend start\" \"pnpm --filter frontend start\"",
+    "db:deploy": "prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "packageManager": "pnpm@10.10.0",
   "dependencies": {
-    "concurrently": "^9.1.2"
+    "@prisma/client": "6.7.0",
+    "concurrently": "^9.1.2",
+    "prisma": "^6.7.0"
   }
 }

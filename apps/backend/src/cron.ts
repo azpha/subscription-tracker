@@ -76,6 +76,9 @@ async function sendDiscordMessage(message: DiscordWebhook) {
 }
 
 cron.schedule("*/5 * * * * *", () => {
-  console.log("10 seconds");
+  console.log("5 seconds");
   job();
 });
+// cron.schedule("0 0 */1 * *", () => {
+//   job();
+// });
