@@ -1,7 +1,7 @@
 import { Subscription, Response } from "./types";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:3001";
-
+const BASE_URL =
+  import.meta.env.VITE_BASE_URL || `http://${location.hostname}:3001`;
 async function fetchItems(): Promise<Subscription[]> {
   return fetch(BASE_URL + "/items").then(async (res) => {
     if (res.ok) {
