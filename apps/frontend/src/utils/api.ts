@@ -87,9 +87,21 @@ async function deleteItem(id: number): Promise<boolean> {
     });
 }
 
+async function fetchVersion(): Promise<string> {
+  return fetch(BASE_URL + "/settings/version", {
+    method: "GET",
+  }).then(async (res) => {
+    if (res.ok) {
+      const body = await res.json();
+      return body.version;
+    } else throw new Error("Failed to fetch version");
+  });
+}
+
 export default {
   fetchItems,
   createItem,
   updateItem,
   deleteItem,
+  fetchVersion,
 };

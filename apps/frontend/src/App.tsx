@@ -4,6 +4,7 @@ import api from "./utils/api";
 import SubscriptionForm from "./components/SubscriptionForm";
 import Modal from "./components/Modal";
 import StyledInput from "./components/StyledInput";
+import Version from "./components/Version";
 import type { Subscription } from "./utils/types";
 
 function App() {
@@ -62,6 +63,7 @@ function App() {
         </div>
       </div>
 
+      <Version />
       {showForm && (
         <Modal onClose={() => setShowForm(false)}>
           <SubscriptionForm
