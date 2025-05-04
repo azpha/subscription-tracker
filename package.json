@@ -15,7 +15,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "GPL-2.0-only",
+  "license": "GPL-3.0-only",
   "packageManager": "pnpm@10.10.0",
   "dependencies": {
     "@prisma/client": "6.7.0",
