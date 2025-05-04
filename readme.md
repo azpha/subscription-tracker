@@ -59,7 +59,6 @@ services:
       - subs-network
     ports:
       - 3000:3000
-      - 3001:3001
     environment:
       - DATABASE_URL=mysql://subscription:super_secret@db:3306/subscription
       - DISCORD_WEBHOOK=https://discord.com/api/webhooks/xxxxxxxxx/xxxxxxx
@@ -88,3 +87,43 @@ pnpm run dev:web
 ```
 
 **That's it!** You're all setup to contribute to subscription-tracker.
+
+## Components
+
+### frontend
+
+The frontend application, built using the **Vite** framework in React + TypeScript.
+
+```
+| frontend
+|   src
+|     assets <- static assets
+|     components <- react components
+|     utils <- utilities like the API interface + types
+|     App.tsx <- the SPA
+|     main.tsx <- the root of React
+```
+
+### backend
+
+The API application, built using **Express**. All database operations are done with **Prisma ORM**, request validation using **Zod**.
+
+```
+| backend
+|   src
+|     index.ts <- root of the Express project
+|     cron.ts <- the logic for the Cronjob that runs at midnight
+|     controllers <- business logic for endpoints
+|     routers <- endpoint configuration
+|     utils <- database configuration, request schemas
+```
+
+### proxy-server
+
+The reverse proxy that handles requests to both the frontend & the API in a deployment setting. This is what is exposed to the world via the Docker configuration & allows the API to be accessed via the `/api` path. It is also an Express server, just using the **http-proxy-middleware**.
+
+```
+| proxy-server
+|   src
+|     index.ts <- proxy code
+```
