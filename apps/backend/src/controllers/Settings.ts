@@ -16,6 +16,26 @@ async function GetApplicationVersion(
   }
 }
 
+async function GetWebhookStatus(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<any> {
+  try {
+    const discordWebhook = process.env.DISCORD_WEBHOOK as string;
+
+    return res.status(200).json({
+      status: 200,
+      data: {
+        discordWebhook,
+      },
+    });
+  } catch (e) {
+    next(e);
+  }
+}
+
 export default {
   GetApplicationVersion,
+  GetWebhookStatus,
 };
