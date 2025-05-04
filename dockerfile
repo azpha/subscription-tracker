@@ -21,10 +21,10 @@ RUN pnpm i
 ENV NODE_ENV production
 RUN npm run build:api
 RUN npm run build:web
+RUN npm run build:proxy
 
 # expose ports
 EXPOSE 3000
-EXPOSE 3001
 
 # run app
 CMD [ "sh", "-c", "pnpm run db:deploy && pnpm run start" ]

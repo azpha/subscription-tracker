@@ -46,6 +46,6 @@ const errorHandler = (
 // @ts-ignore pathparams err
 app.use(errorHandler);
 
-app.listen(process.env.PORT || 3001, () => {
+app.listen(process.env.PORT || 3002, () => {
   console.log("Listening on port " + (process.env.PORT || 3001));
 });
