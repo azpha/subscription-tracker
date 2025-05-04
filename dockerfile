@@ -1,5 +1,7 @@
 FROM node:22
 WORKDIR /usr/src/app
+ARG VERSION
+ENV APPLICATION_VERSION=${VERSION}
 
 # for pnpm
 ENV PNPM_HOME="/pnpm"

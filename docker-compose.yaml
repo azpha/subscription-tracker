@@ -2,7 +2,7 @@ networks:
   subs-network:
     name: subs-network
 volumes:
-  db:
+  subs-db:
 
 services:
   db:
@@ -11,7 +11,7 @@ services:
     networks:
       - subs-network
     volumes:
-      - db:/var/lib/mysql
+      - subs-db:/var/lib/mysql
     environment:
       MARIADB_ROOT_PASSWORD: super_secret
       MARIADB_USER: subscription
