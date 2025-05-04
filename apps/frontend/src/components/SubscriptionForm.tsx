@@ -120,7 +120,13 @@ export default function SubscriptionForm({
               }
               placeholder={"YYYY-MM-DD"}
               onChange={(v: string) => {
-                handleValueUpdate({ lastBillingDate: v });
+                handleValueUpdate({
+                  lastBillingDate: new Date(
+                    new Date(v).toLocaleDateString("en-US", {
+                      timeZone: "UTC",
+                    })
+                  ), // i hate this so fucking much.
+                });
               }}
             />
           </div>
@@ -136,7 +142,13 @@ export default function SubscriptionForm({
               }
               placeholder={"YYYY-MM-DD"}
               onChange={(v: string) => {
-                handleValueUpdate({ nextBillingDate: v });
+                handleValueUpdate({
+                  nextBillingDate: new Date(
+                    new Date(v).toLocaleDateString("en-US", {
+                      timeZone: "UTC",
+                    })
+                  ), // i hate this so fucking much.
+                });
               }}
             />
           </div>
