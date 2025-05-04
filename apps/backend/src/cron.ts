@@ -17,6 +17,8 @@ type DiscordEmbedField = {
   inline: boolean;
 };
 
+const isDevelopmentFlagEnabled =
+  (process.env.SHORT_CRON_EXPIRY as string) === "true";
 const DISCORD_WEBHOOK_SCHEMA: DiscordWebhook = {
   username: "Subscriptions",
   embeds: [
@@ -75,10 +77,13 @@ async function sendDiscordMessage(message: DiscordWebhook) {
   });
 }
 
-// cron.schedule("*/5 * * * * *", () => {
-//   console.log("5 seconds");
-//   job();
-// });
-cron.schedule("0 0 */1 * *", () => {
-  job();
-});
+if (isDevelopmentFlagEnabled) {
+  cron.schedule("*/5 * * * * *", () => {
+    console.log("5 seconds");
+    job();
+  });
+} else {
+  cron.schedule("0 0 */1 * *", () => {
+    job();
+  });
+}
