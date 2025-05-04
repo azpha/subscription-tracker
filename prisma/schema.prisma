@@ -1,20 +1,21 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
+  output   = "./generated/prisma"
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model Subscription {
-    id              Int      @id @default(autoincrement())
-    name            String
-    price           String
-    nextBillingDate DateTime
-    paymentMethod   String
-    totalSpent      Int      @default(0)
+  id                       Int      @id @default(autoincrement())
+  name                     String
+  price                    Float
+  paymentMethod            String
+  lastBillingDate          DateTime
+  nextBillingDate          DateTime
+  billingFrequencyInMonths Int
+  totalSpend               Float    @default(0.00)
+  shouldNotifyExpiry       Boolean  @default(true)
 }
