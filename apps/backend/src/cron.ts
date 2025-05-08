@@ -19,19 +19,20 @@ type DiscordEmbedField = {
 
 const isDevelopmentFlagEnabled =
   (process.env.SHORT_CRON_EXPIRY as string) === "true";
-const DISCORD_WEBHOOK_SCHEMA: DiscordWebhook = {
-  username: "Subscriptions",
-  embeds: [
-    {
-      title: "Subscriptions expiring!",
-      description: "You have subscriptions expiring soon!",
-      color: 16711680,
-      fields: [],
-    },
-  ],
-};
 
 async function job() {
+  const DISCORD_WEBHOOK_SCHEMA: DiscordWebhook = {
+    username: "Subscriptions",
+    embeds: [
+      {
+        title: "Subscriptions expiring!",
+        description: "You have subscriptions expiring soon!",
+        color: 16711680,
+        fields: [],
+      },
+    ],
+  };
+
   const currentDatePlusSeven = new Date();
   currentDatePlusSeven.setDate(currentDatePlusSeven.getDate() + 7);
 
@@ -45,7 +46,6 @@ async function job() {
   });
 
   const currentDate = new Date();
-  const discordWebhookMessage = DISCORD_WEBHOOK_SCHEMA;
   for (const subscription of expiringSoonSubscriptions) {
     const differenceInMs = Math.abs(
       currentDate.getTime() - subscription.nextBillingDate.getTime()
@@ -60,7 +60,7 @@ async function job() {
         value: `${diffInDays} day(s), ${subscription.paymentMethod}`,
         inline: true,
       };
-      discordWebhookMessage.embeds[0].fields.push(field);
+      DISCORD_WEBHOOK_SCHEMA.embeds[0].fields.push(field);
     }
 
     // update the subscriptions billing date + total tracked spend
@@ -87,8 +87,8 @@ async function job() {
 
   // send the webhook if there are more than 1 subscription
   // in the fields
-  if (discordWebhookMessage.embeds[0].fields.length > 0) {
-    sendDiscordMessage(discordWebhookMessage);
+  if (DISCORD_WEBHOOK_SCHEMA.embeds[0].fields.length > 0) {
+    sendDiscordMessage(DISCORD_WEBHOOK_SCHEMA);
   }
 }
 

@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/index.ts",
+    "dev:cron": "tsx src/cron.ts",
     "start": "tsc && node dist/index.js"
   },
   "keywords": [],
