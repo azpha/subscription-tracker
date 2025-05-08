@@ -102,14 +102,17 @@ async function sendDiscordMessage(message: DiscordWebhook) {
   });
 }
 
-// SHORT_CRON_EXPIRY environment variable
-if (isDevelopmentFlagEnabled) {
-  cron.schedule("*/5 * * * * *", () => {
-    console.log("5 seconds");
-    job();
-  });
+if (process.env.DISCORD_WEBHOOK) {
+  if (isDevelopmentFlagEnabled) {
+    cron.schedule("*/5 * * * * *", () => {
+      console.log("5 seconds");
+      job();
+    });
+  } else {
+    cron.schedule("0 0 */1 * *", () => {
+      job();
+    });
+  }
 } else {
-  cron.schedule("0 0 */1 * *", () => {
-    job();
-  });
+  console.warn("DISCORD_WEBHOOK not defined, not starting cron schedule");
 }
