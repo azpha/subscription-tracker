@@ -4,7 +4,7 @@ const paymentMethod = z.enum(["Card", "PayPal", "Bank"]);
 export default {
   SubscriptionCreation: z.object({
     name: z.string(),
-    price: z.number(),
+    price: z.coerce.number().multipleOf(0.01),
     paymentMethod,
     lastBillingDate: z.coerce.date(),
     nextBillingDate: z.coerce.date(),
@@ -12,11 +12,12 @@ export default {
   }),
   SubscriptionUpdate: z.object({
     name: z.string().optional(),
-    price: z.number().optional(),
+    price: z.coerce.number().multipleOf(0.01).optional(),
     paymentMethod: paymentMethod.optional(),
     nextBillingDate: z.coerce.date().optional(),
     shouldNotifyExpiry: z.boolean().optional(),
     totalSpend: z.number().optional(),
   }),
+  GetExpiringSoonRange: z.enum(["7-days", "30-days"]).optional(),
   SearchForSubscription: z.string(),
 };

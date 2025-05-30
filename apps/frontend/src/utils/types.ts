@@ -15,4 +15,6 @@ type Response = {
   error: string | null;
 };
 
-export type { Subscription, Response };
+type CurrentFilter = "all-subscriptions" | "7-days" | "30-days";
+
+export type { Subscription, Response, CurrentFilter };

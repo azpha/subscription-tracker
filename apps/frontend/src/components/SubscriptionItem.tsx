@@ -22,7 +22,8 @@ export default function SubscriptionItem({
 
         <div className="text-sm opacity-75">
           <p>
-            ${subscription.price}, {subscription.paymentMethod}
+            ${Number(subscription.price).toFixed(2)},{" "}
+            {subscription.paymentMethod}
           </p>
           <p>{new Date(subscription.nextBillingDate).toLocaleDateString()}</p>
         </div>

@@ -12,6 +12,19 @@ async function fetchItems(): Promise<Subscription[]> {
   });
 }
 
+async function fetchExpiringSoonItems(
+  inRange?: string
+): Promise<Subscription[]> {
+  return fetch(
+    BASE_URL + `/metrics/expiringSoon${inRange && `?range=${inRange}`}`
+  ).then(async (res) => {
+    if (res.ok) {
+      const data = await res.json();
+      return data.data as Subscription[];
+    } else throw new Error("Invalid response from API");
+  });
+}
+
 async function createItem(subscription: Subscription): Promise<Response> {
   return fetch(BASE_URL + "/items", {
     method: "POST",
@@ -101,6 +114,7 @@ async function fetchVersion(): Promise<string> {
 
 export default {
   fetchItems,
+  fetchExpiringSoonItems,
   createItem,
   updateItem,
   deleteItem,

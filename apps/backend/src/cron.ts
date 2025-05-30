@@ -79,7 +79,7 @@ async function job() {
         data: {
           nextBillingDate: newBillingDate,
           lastBillingDate: new Date(),
-          totalSpend: subscription.price + subscription.totalSpend,
+          totalSpend: subscription.totalSpend.add(subscription.price),
         },
       });
     }

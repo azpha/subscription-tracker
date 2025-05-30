@@ -1,5 +1,7 @@
+import { Decimal } from "../../../../prisma/generated/prisma/runtime/library";
 import Database from "../utils/Database";
 import type { Request, Response, NextFunction } from "express";
+import Schemas from "../utils/Schemas";
 
 async function GetEstimatedCostPerMonth(
   req: Request,
@@ -13,9 +15,9 @@ async function GetEstimatedCostPerMonth(
       },
     });
 
-    let totalSpend = 0;
+    let totalSpend = new Decimal(0);
     for (const subscription of data) {
-      totalSpend += subscription.price;
+      totalSpend = totalSpend.add(subscription.price);
     }
 
     return res.status(200).json({
@@ -49,7 +51,43 @@ async function TopFiveSpenders(
   }
 }
 
+async function GetExpiringSoon(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<any> {
+  try {
+    Schemas.GetExpiringSoonRange.parse(req.query.range);
+
+    const currentDate = new Date();
+    const filteredCurrentDate = new Date();
+
+    if (req.query.range === "7-days") {
+      filteredCurrentDate.setDate(filteredCurrentDate.getDate() + 7);
+    } else if (req.query.range === "30-days") {
+      filteredCurrentDate.setDate(filteredCurrentDate.getDate() + 30);
+    }
+
+    const data = await Database.subscription.findMany({
+      where: {
+        nextBillingDate: {
+          gte: currentDate,
+          lte: filteredCurrentDate,
+        },
+      },
+    });
+
+    return res.status(200).json({
+      status: 200,
+      data,
+    });
+  } catch (e) {
+    next(e);
+  }
+}
+
 export default {
   GetEstimatedCostPerMonth,
   TopFiveSpenders,
+  GetExpiringSoon,
 };

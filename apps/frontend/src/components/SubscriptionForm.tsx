@@ -23,11 +23,6 @@ export default function SubscriptionForm({
     if (!configuredSubscription) {
       setFormError("You need to define values before submitting the form!");
     } else {
-      if (configuredSubscription.price) {
-        const priceString = configuredSubscription.price as string;
-        configuredSubscription.price = parseFloat(priceString);
-      }
-
       if (subscription) {
         await api.updateItem({
           ...configuredSubscription,
@@ -94,7 +89,7 @@ export default function SubscriptionForm({
               defaultValue={subscription?.price}
               placeholder={"Price"}
               onChange={(v: string) => {
-                handleValueUpdate({ price: v });
+                handleValueUpdate({ price: `${Number(v).toFixed(2)}` });
               }}
             />
           </div>
