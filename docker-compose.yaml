@@ -37,4 +37,5 @@ services:
       - 3000:3000
     environment:
       - DATABASE_URL=mysql://subscription:super_secret@db:3306/subscription
-      - DISCORD_WEBHOOK=https://discord.com/api/webhooks/xxxxxxx/xxxxxxxxx
+      - DISCORD_WEBHOOK=https://discord.com/api/webhooks/xxxxxxx/xxxxxxxxx # support for discord webhooks
+      - NTFY_HOST=https://push.domain.tld/topic # support for ntfy notifications

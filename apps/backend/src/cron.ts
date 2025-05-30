@@ -1,5 +1,7 @@
 import cron from "node-cron";
 import Database from "./utils/Database";
+import NtfyUtils from "./utils/NtfyUtils";
+import "dotenv/config";
 
 type DiscordWebhook = {
   username: string;
@@ -54,7 +56,7 @@ async function job() {
 
     // any subscription expiring in sub-7 days will be sent to
     // the subscription
-    if (diffInDays <= 7) {
+    if (diffInDays <= 7 && process.env.DISCORD_WEBHOOK) {
       const field = {
         name: subscription.name,
         value: `${diffInDays} day(s), ${subscription.paymentMethod}`,
@@ -85,10 +87,21 @@ async function job() {
     }
   }
 
-  // send the webhook if there are more than 1 subscription
-  // in the fields
-  if (DISCORD_WEBHOOK_SCHEMA.embeds[0].fields.length > 0) {
+  // send the webhook if configured
+  if (
+    process.env.DISCORD_WEBHOOK &&
+    DISCORD_WEBHOOK_SCHEMA.embeds[0].fields.length > 0
+  ) {
     sendDiscordMessage(DISCORD_WEBHOOK_SCHEMA);
+  }
+
+  // send ntfy push notification if configured
+  if (process.env.NTFY_HOST) {
+    if (expiringSoonSubscriptions.length === 1) {
+      NtfyUtils.sendSpecificPushNotification(expiringSoonSubscriptions[0]);
+    } else if (expiringSoonSubscriptions.length > 0) {
+      NtfyUtils.sendAllPushNotification();
+    }
   }
 }
 
@@ -102,7 +115,11 @@ async function sendDiscordMessage(message: DiscordWebhook) {
   });
 }
 
-if (process.env.DISCORD_WEBHOOK) {
+if (!process.env.DISCORD_WEBHOOK && !process.env.NTFY_HOST) {
+  console.warn(
+    "DISCORD_WEBHOOK & NTFY_HOST not defined, not starting cron schedule"
+  );
+} else {
   if (isDevelopmentFlagEnabled) {
     cron.schedule("*/5 * * * * *", () => {
       console.log("5 seconds");
@@ -113,6 +130,4 @@ if (process.env.DISCORD_WEBHOOK) {
       job();
     });
   }
-} else {
-  console.warn("DISCORD_WEBHOOK not defined, not starting cron schedule");
 }
