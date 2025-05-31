@@ -12,7 +12,7 @@ A simple tracker for all of your subscriptions.
 ---
 
 This is a simple subscription-tracker to track & monitor all of your ongoing
-financial subscriptions. It has support for Discord notifications, with Slack
+financial subscriptions. It has support for Discord & Ntfy notifications, with Slack
 and support for other webhooks in progress.
 
 ## Deployment
@@ -62,7 +62,17 @@ services:
     environment:
       - DATABASE_URL=mysql://subscription:super_secret@db:3306/subscription
       - DISCORD_WEBHOOK=https://discord.com/api/webhooks/xxxxxxxxx/xxxxxxx
+      - NTFY_HOST=https://push.domain.tld
+      - BASE_URL=https://subs.domain.tld
 ```
+
+## Configuration
+
+There are a few configuration changes you can make to make your instance yours. All can be placed in the `enivronment` section of the docker-compose config as displayed above.
+
+- `DISCORD_WEBOOK` - the Discord webhook URL you'd like notifications to be sent to.
+- `NTFY_HOST` - the hostname of your Ntfy instance (without the trailing /)
+- `BASE_URL` - the hostname of your subscription-tracker instance. Used for sending you to your instance when clicking on notifications
 
 ## Development
 
