@@ -2,45 +2,48 @@ import React, { useState, useEffect } from "react";
 import StyledInput from "../StyledInput";
 import type { Subscription } from "../../utils/types";
 import api from "../../utils/api";
+import { useAppDispatch } from "../../store/hooks";
+import { hydrateItems } from "../../store/thunks/itemThunks";
+import { closeActiveModal } from "../../store/reducers/modalSlice";
 
 export default function SubscriptionForm({
-  onClose,
-  onUpdate,
   subscription,
 }: {
-  onClose: () => void;
-  onUpdate: () => void;
   subscription?: Subscription | null;
 }) {
+  const dispatch = useAppDispatch();
   const [configuredSubscription, setConfiguredSubscription] =
     useState<Subscription | null>(null);
   const [formError, setFormError] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    let failed = false;
 
     // submit & reset
     if (!configuredSubscription) {
       setFormError("You need to define values before submitting the form!");
+      failed = true;
     } else {
       if (subscription) {
         await api.updateItem({
           ...configuredSubscription,
           id: subscription.id,
         });
-
-        onUpdate();
-        setConfiguredSubscription(null);
       } else {
         const { status, error } = await api.createItem(configuredSubscription);
         if (!status && error) {
+          failed = true;
           console.error(error);
           setFormError(error);
-        } else {
-          onUpdate();
-          setConfiguredSubscription(null);
         }
       }
+    }
+
+    if (!failed) {
+      dispatch(hydrateItems());
+      dispatch(closeActiveModal());
+      setConfiguredSubscription(null);
     }
   };
 
@@ -86,7 +89,11 @@ export default function SubscriptionForm({
           <div>
             <label>Price</label>
             <StyledInput
-              defaultValue={Number(subscription?.price).toFixed(2)}
+              defaultValue={
+                subscription
+                  ? Number(subscription?.price).toFixed(2)
+                  : undefined
+              }
               placeholder={"Price"}
               onChange={(v: string) => {
                 handleValueUpdate({ price: `${Number(v).toFixed(2)}` });
@@ -158,13 +165,6 @@ export default function SubscriptionForm({
         </div>
         <p className="max-w-[200px] pt-2 text-red-200 font-bold">{formError}</p>
       </form>
-
-      <p
-        className="absolute top-2 right-2 select-none hover:cursor-pointer text-2xl"
-        onClick={onClose}
-      >
-        X
-      </p>
     </div>
   );
 }

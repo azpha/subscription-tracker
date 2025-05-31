@@ -1,16 +1,33 @@
-import { useState } from "react";
-import type { CurrentFilter } from "../utils/types";
+import { useState, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import {
+  updateDateFilter,
+  updateSearchFilter,
+} from "../store/reducers/itemSlice";
+import { DateRangeFilter } from "../utils/types";
+import { hydrateItems } from "../store/thunks/itemThunks";
+import StyledInput from "./StyledInput";
 
-export default function SubscriptionFilters({
-  currentFilter,
-  setCurrentFilter,
-  setSearchQuery,
-}: {
-  currentFilter: CurrentFilter;
-  setCurrentFilter: (v: CurrentFilter) => void;
-  setSearchQuery: (v: string) => void;
-}) {
+export default function SubscriptionFilters() {
+  // hooks
+  const dispatch = useAppDispatch();
+
+  // state
   const [showFilters, setShowFilters] = useState<boolean>(false);
+  const filters = useAppSelector((state) => state.item.filters);
+
+  useEffect(() => {
+    const params = [];
+
+    if (filters.dateRange && filters.dateRange !== "all-subscriptions") {
+      params.push(`dateRange=${filters.dateRange}`);
+    }
+    if (filters.q) {
+      params.push(`q=${filters.q}`);
+    }
+
+    dispatch(hydrateItems(params.join("&")));
+  }, [filters]);
 
   const Filters = () => {
     return (
@@ -21,10 +38,12 @@ export default function SubscriptionFilters({
         </div>
         <div>
           <select
-            onChange={(e) => setCurrentFilter(e.target.value as CurrentFilter)}
+            onChange={(e) =>
+              dispatch(updateDateFilter(e.target.value as DateRangeFilter))
+            }
             className="bg-white w-full p-2 text-black"
             id="renewal"
-            value={currentFilter}
+            value={filters.dateRange}
           >
             <option value={"all-subscriptions"}>All subscriptions</option>
             <option value={"7-days"}>7 days</option>
@@ -39,13 +58,14 @@ export default function SubscriptionFilters({
     <div className="border border-white border-solid p-4 w-full">
       <div className="flex flex-wrap space-x-2">
         <div className="relative flex-1">
-          <input
+          <StyledInput
             type={"text"}
+            dark={false}
             placeholder={"search.."}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
+            shouldDebounce={true}
+            onChange={(v: string) => {
+              dispatch(updateSearchFilter(v));
             }}
-            className="bg-white text-black rounded-lg p-2 w-full"
           />
         </div>
         <button

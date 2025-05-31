@@ -185,7 +185,7 @@ async function FetchItems(
       sortObject.where = {
         ...sortObject.where,
         name: {
-          includes: q,
+          contains: q,
         },
       };
     }

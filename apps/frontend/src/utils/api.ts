@@ -3,21 +3,10 @@ import { Subscription, Response, NotificationConfiguration } from "./types";
 const BASE_URL =
   import.meta.env.VITE_BASE_URL || `${location.protocol}//${location.host}/api`;
 
-async function fetchItems(): Promise<Subscription[]> {
-  return fetch(BASE_URL + "/items").then(async (res) => {
-    if (res.ok) {
-      const data = await res.json();
-      return data.data as Subscription[];
-    } else throw new Error("Invalid response from API");
-  });
-}
+async function fetchItems(params?: string): Promise<Subscription[]> {
+  const path = params ? `/items?${params}` : "/items";
 
-async function fetchExpiringSoonItems(
-  inRange?: string
-): Promise<Subscription[]> {
-  return fetch(
-    BASE_URL + `/metrics/expiringSoon${inRange && `?range=${inRange}`}`
-  ).then(async (res) => {
+  return fetch(BASE_URL + path).then(async (res) => {
     if (res.ok) {
       const data = await res.json();
       return data.data as Subscription[];
@@ -135,7 +124,6 @@ async function testNtfyPush(): Promise<boolean> {
 
 export default {
   fetchItems,
-  fetchExpiringSoonItems,
   createItem,
   updateItem,
   deleteItem,
