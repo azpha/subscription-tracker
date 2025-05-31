@@ -43,6 +43,18 @@ function App() {
       requestWithFilter(activeFilter);
     }
   }, [activeFilter]);
+  useEffect(() => {
+    const query = location.search.replace("?", "").split("&");
+    for (const param of query) {
+      const value = param.split("=");
+      if (
+        value[0] === "filter" &&
+        (value[1] === "7-days" || value[1] === "30-days")
+      ) {
+        setActiveFilter(value[1]);
+      }
+    }
+  }, []);
 
   return (
     <main className="bg-black text-white min-h-screen flex justify-center items-center">
