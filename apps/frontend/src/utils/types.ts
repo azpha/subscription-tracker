@@ -20,11 +20,24 @@ type NotificationConfiguration = {
   ntfy: boolean;
 };
 
-type CurrentFilter = "all-subscriptions" | "7-days" | "30-days";
+type DateRangeFilter = "all-subscriptions" | "7-days" | "30-days";
+type SortByFilter = "none" | "price" | "date";
+type SortDirectionFilter = "none" | "desc" | "asc";
+type Filters = {
+  sortBy: SortByFilter;
+  sortDirection: SortDirectionFilter;
+  priceRangeMin: string | null;
+  priceRangeMax: string | null;
+  dateRange: DateRangeFilter;
+  q: string | null;
+};
 
 export type {
   Subscription,
   Response,
-  CurrentFilter,
   NotificationConfiguration,
+  Filters,
+  DateRangeFilter,
+  SortByFilter,
+  SortDirectionFilter,
 };

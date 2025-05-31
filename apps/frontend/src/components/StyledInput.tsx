@@ -40,7 +40,7 @@ export default function StyledInput({
       }}
       className={`${
         dark ? "bg-black text-white" : "bg-white text-black"
-      } rounded-lg p-2 block`}
+      } rounded-lg p-2 block w-full`}
     />
   );
 }
