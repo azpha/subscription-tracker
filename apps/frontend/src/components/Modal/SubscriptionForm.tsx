@@ -86,7 +86,7 @@ export default function SubscriptionForm({
           <div>
             <label>Price</label>
             <StyledInput
-              defaultValue={subscription?.price}
+              defaultValue={Number(subscription?.price).toFixed(2)}
               placeholder={"Price"}
               onChange={(v: string) => {
                 handleValueUpdate({ price: `${Number(v).toFixed(2)}` });
