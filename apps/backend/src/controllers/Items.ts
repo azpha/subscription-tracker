@@ -172,13 +172,17 @@ async function FetchItems(
   next: NextFunction
 ): Promise<any> {
   try {
-    const { minPrice, maxPrice, dateRange, q } = req.query;
+    const { minPrice, maxPrice, dateRange, q, sortBy, sortDirection } =
+      req.query;
 
     if (q) Schemas.SearchForSubscription.parse(q);
     if (dateRange) Schemas.SubscriptionDateRange.parse(dateRange);
+    if (sortBy) Schemas.SubscriptionSortBy.parse(sortBy);
+    if (sortDirection) Schemas.SubscriptionSortDirection.parse(sortDirection);
 
     const sortObject = {
       where: {},
+      orderBy: {},
     };
 
     if (q) {
@@ -217,6 +221,21 @@ async function FetchItems(
           lte: maxDecimal,
           gte: minDecimal,
         },
+      };
+    }
+    if (sortBy) {
+      if (sortBy === "price") {
+        sortObject.orderBy = {
+          price: sortDirection || "desc",
+        };
+      } else if (sortBy === "date") {
+        sortObject.orderBy = {
+          nextBillingDate: sortDirection || "asc",
+        };
+      }
+    } else {
+      sortObject.orderBy = {
+        id: "desc",
       };
     }
 

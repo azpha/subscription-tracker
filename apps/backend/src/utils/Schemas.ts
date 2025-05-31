@@ -18,6 +18,8 @@ export default {
     shouldNotifyExpiry: z.boolean().optional(),
     totalSpend: z.number().optional(),
   }),
+  SubscriptionSortDirection: z.enum(["desc", "asc"]).optional(),
+  SubscriptionSortBy: z.enum(["price", "date"]).optional(),
   SubscriptionDateRange: z.enum(["7-days", "30-days"]).optional(),
   SearchForSubscription: z.string(),
 };

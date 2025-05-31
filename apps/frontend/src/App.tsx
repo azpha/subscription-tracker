@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import SubscriptionList from "./components/SubscriptionList";
 import SubscriptionFilters from "./components/SubscriptionFilters";
 import { Plus, Info } from "lucide-react";
-import { useAppSelector, useAppDispatch } from "./store/hooks";
+import { useAppDispatch } from "./store/hooks";
 import { hydrateItems } from "./store/thunks/itemThunks";
 import type { DateRangeFilter, Subscription } from "./utils/types";
 import {
@@ -13,7 +13,6 @@ import ModalContainer from "./components/Modal/ModalContainer";
 import { setActiveModal } from "./store/reducers/modalSlice";
 
 function App() {
-  const items = useAppSelector((state) => state.item.items);
   const dispatch = useAppDispatch();
 
   const fetchSubscriptions = async () => {
@@ -58,16 +57,13 @@ function App() {
               </button>
             </div>
 
-            {items && (
-              <SubscriptionList
-                refresh={fetchSubscriptions}
-                subscriptions={items}
-                onEdit={(subscription: Subscription) => {
-                  dispatch(updateEditingItem(subscription));
-                  dispatch(setActiveModal("editing"));
-                }}
-              />
-            )}
+            <SubscriptionList
+              refresh={fetchSubscriptions}
+              onEdit={(subscription: Subscription) => {
+                dispatch(updateEditingItem(subscription));
+                dispatch(setActiveModal("editing"));
+              }}
+            />
           </div>
         </div>
       </div>

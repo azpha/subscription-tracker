@@ -21,7 +21,11 @@ type NotificationConfiguration = {
 };
 
 type DateRangeFilter = "all-subscriptions" | "7-days" | "30-days";
+type SortByFilter = "none" | "price" | "date";
+type SortDirectionFilter = "none" | "desc" | "asc";
 type Filters = {
+  sortBy: SortByFilter;
+  sortDirection: SortDirectionFilter;
   priceRangeMin: string | null;
   priceRangeMax: string | null;
   dateRange: DateRangeFilter;
@@ -34,4 +38,6 @@ export type {
   NotificationConfiguration,
   Filters,
   DateRangeFilter,
+  SortByFilter,
+  SortDirectionFilter,
 };
