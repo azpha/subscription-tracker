@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import SubscriptionList from "./components/SubscriptionList";
-import api from "./utils/api";
 import SubscriptionForm from "./components/SubscriptionForm";
-import Modal from "./components/Modal";
-import type { Subscription, CurrentFilter } from "./utils/types";
 import SubscriptionFilters from "./components/SubscriptionFilters";
 import InfoModal from "./components/InfoModal";
+import Modal from "./components/Modal";
+import api from "./utils/api";
+import { Plus, Info } from "lucide-react";
+import type { Subscription, CurrentFilter } from "./utils/types";
 
 function App() {
   const [subscriptions, setSubscriptions] = useState<Subscription[] | null>(
@@ -52,20 +53,24 @@ function App() {
           setCurrentFilter={(v) => setActiveFilter(v)}
         />
 
-        <div className="border border-white border-solid p-2 w-full">
-          <div className="p-2">
-            <div className="flex-wrap flex justify-between pb-2 md:space-y-0 space-y-2">
-              <div className="flex flex-wrap space-x-2">
-                <h1 className="text-2xl font-bold">Subscription Tracker</h1>
-              </div>
-
+        <div className="border border-white border-solid w-full">
+          <div className="mb-2 p-2">
+            <div className="space-x-2 mb-2 flex justify-end">
+              <button
+                onClick={() => {
+                  setShowInfo(true);
+                }}
+                className="bg-white text-black rounded-lg p-1 font-bold hover:cursor-pointer"
+              >
+                <Info />
+              </button>
               <button
                 onClick={() => {
                   setShowForm(true);
                 }}
-                className="bg-white text-black rounded-lg p-2 font-bold hover:cursor-pointer"
+                className="bg-white text-black rounded-lg p-1 font-bold hover:cursor-pointer"
               >
-                Create
+                <Plus />
               </button>
             </div>
 

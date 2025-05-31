@@ -123,7 +123,7 @@ export default function InfoModal() {
         )}
 
         <h1 className="font-semibold">Ntfy Configured?</h1>
-        {notificationStatus.discord ? (
+        {notificationStatus.ntfy ? (
           <>
             <p className="font-semibold text-green-500">Enabled</p>
             <div className="my-2 flex flex-wrap items-center space-x-2">
