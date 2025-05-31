@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import StyledInput from "./StyledInput";
-import type { Subscription } from "../utils/types";
-import api from "../utils/api";
+import StyledInput from "../StyledInput";
+import type { Subscription } from "../../utils/types";
+import api from "../../utils/api";
 
 export default function SubscriptionForm({
   onClose,

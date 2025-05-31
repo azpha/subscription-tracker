@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import SubscriptionList from "./components/SubscriptionList";
-import SubscriptionForm from "./components/SubscriptionForm";
+import SubscriptionForm from "./components/Modal/SubscriptionForm";
 import SubscriptionFilters from "./components/SubscriptionFilters";
-import InfoModal from "./components/InfoModal";
-import Modal from "./components/Modal";
+import InfoModal from "./components/Modal/InfoModal";
+import Modal from "./components/Modal/Modal";
 import api from "./utils/api";
 import { Plus, Info } from "lucide-react";
 import type { Subscription, CurrentFilter } from "./utils/types";
@@ -17,7 +17,7 @@ function App() {
   const [activeFilter, setActiveFilter] =
     useState<CurrentFilter>("all-subscriptions");
   const [showForm, setShowForm] = useState<boolean>(false);
-  const [showInfo, setShowInfo] = useState<boolean>(false);
+  const [showInfo, setShowInfo] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const fetchSubscriptions = async () => {

@@ -1,7 +1,10 @@
-import Version from "./Version";
-import api from "../utils/api";
+import Version from "../Version";
+import api from "../../utils/api";
+import ConfigTile from "../ConfigTile";
+import Discord from "../Icons/Discord";
+import Ntfy from "../Icons/Ntfy";
 import { useEffect, useState } from "react";
-import { NotificationConfiguration } from "../utils/types";
+import { NotificationConfiguration } from "../../utils/types";
 
 export default function InfoModal() {
   const [notificationStatus, setNotificationStatus] =
@@ -101,46 +104,35 @@ export default function InfoModal() {
       <h1 className="text-2xl font-semibold">Subscription Tracker</h1>
       <Version />
 
-      <div className="border-solid border-y-1 my-2 py-2">
-        <h1 className="font-semibold">Discord Configured?</h1>
-        {notificationStatus.discord ? (
-          <>
-            <p className="font-semibold text-green-500">Enabled</p>
-            <div className="my-2 flex flex-wrap items-center space-x-2">
-              <button
-                type="button"
-                onClick={onDiscordTest}
-                className="text-black bg-white rounded-lg font-semibold p-1"
-              >
-                Test
-              </button>
-
-              {testStatus.type === "discord" && <StatusComponent />}
-            </div>
-          </>
-        ) : (
-          <p className="font-semibold text-red-500">Disabled</p>
-        )}
-
-        <h1 className="font-semibold">Ntfy Configured?</h1>
-        {notificationStatus.ntfy ? (
-          <>
-            <p className="font-semibold text-green-500">Enabled</p>
-            <div className="my-2 flex flex-wrap items-center space-x-2">
-              <button
-                type="button"
-                onClick={onNtfyTest}
-                className="text-black bg-white rounded-lg font-semibold p-1"
-              >
-                Test
-              </button>
-
-              {testStatus.type === "ntfy" && <StatusComponent />}
-            </div>
-          </>
-        ) : (
-          <p className="font-semibold text-red-500">Disabled</p>
-        )}
+      <hr className="my-2" />
+      <div className="flex flex-col w-fit mx-auto">
+        <div className="flex justify-start">
+          <h1 className="font-semibold text-2xl mb-2">Integrations</h1>
+        </div>
+        <div className="flex justify-center">
+          <div className="grid grid-cols-2 gap-2">
+            <ConfigTile
+              icon={<Discord />}
+              title={"Discord"}
+              actionLabel={"Test"}
+              action={onDiscordTest}
+              actionDisabled={!notificationStatus.discord}
+              message={
+                testStatus.type === "discord" ? <StatusComponent /> : undefined
+              }
+            />
+            <ConfigTile
+              icon={<Ntfy />}
+              title={"Ntfy"}
+              actionLabel={"Test"}
+              action={onNtfyTest}
+              actionDisabled={!notificationStatus.ntfy}
+              message={
+                testStatus.type === "ntfy" ? <StatusComponent /> : undefined
+              }
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
