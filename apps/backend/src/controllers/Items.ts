@@ -1,3 +1,4 @@
+import { Decimal } from "../../../../prisma/generated/prisma/runtime/library";
 import Database from "../utils/Database";
 import Schemas from "../utils/Schemas";
 import type { Request, Response, NextFunction } from "express";
@@ -171,7 +172,55 @@ async function FetchItems(
   next: NextFunction
 ): Promise<any> {
   try {
-    const data = await Database.subscription.findMany();
+    const { minPrice, maxPrice, dateRange, q } = req.query;
+
+    if (q) Schemas.SearchForSubscription.parse(q);
+    if (dateRange) Schemas.SubscriptionDateRange.parse(dateRange);
+
+    const sortObject = {
+      where: {},
+    };
+
+    if (q) {
+      sortObject.where = {
+        ...sortObject.where,
+        name: {
+          includes: q,
+        },
+      };
+    }
+    if (dateRange) {
+      const currentDate = new Date();
+      const modifiedDate = new Date();
+
+      if (dateRange === "7-days") {
+        modifiedDate.setDate(modifiedDate.getDate() + 7);
+      } else if (dateRange === "30-days") {
+        modifiedDate.setDate(modifiedDate.getDate() + 30);
+      }
+
+      sortObject.where = {
+        ...sortObject.where,
+        nextBillingDate: {
+          lte: modifiedDate,
+          gte: currentDate,
+        },
+      };
+    }
+    if (minPrice && maxPrice) {
+      const minDecimal = new Decimal(minPrice as string);
+      const maxDecimal = new Decimal(maxPrice as string);
+
+      sortObject.where = {
+        ...sortObject.where,
+        price: {
+          lte: maxDecimal,
+          gte: minDecimal,
+        },
+      };
+    }
+
+    const data = await Database.subscription.findMany(sortObject);
 
     return res.status(200).json({
       status: 200,

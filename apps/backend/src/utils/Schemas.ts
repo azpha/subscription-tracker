@@ -18,6 +18,6 @@ export default {
     shouldNotifyExpiry: z.boolean().optional(),
     totalSpend: z.number().optional(),
   }),
-  GetExpiringSoonRange: z.enum(["7-days", "30-days"]).optional(),
+  SubscriptionDateRange: z.enum(["7-days", "30-days"]).optional(),
   SearchForSubscription: z.string(),
 };

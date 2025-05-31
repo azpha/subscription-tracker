@@ -8,6 +8,5 @@ router.get(
   MetricsController.GetEstimatedCostPerMonth
 );
 router.get("/topFive", MetricsController.TopFiveSpenders);
-router.get("/expiringSoon", MetricsController.GetExpiringSoon);
 
 export default router;
