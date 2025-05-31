@@ -49,6 +49,7 @@ async function TestWebhook(
         embeds: [
           {
             title: "It works!",
+            url: `${process.env.BASE_URL}/`,
             description:
               "Your subscription-tracker Discord webhook configuration works!",
             color: 16711680,
@@ -92,7 +93,7 @@ async function TestPushNotification(
         title: "It works!",
         message: "Your subscription-tracker notification configuration works!",
         priority: 4,
-        click: `${process.env.NTFY_LINK_TO}/`,
+        click: `${process.env.BASE_URL}/`,
       };
 
       const result = await fetch(host.origin, {

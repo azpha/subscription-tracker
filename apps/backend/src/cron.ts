@@ -9,6 +9,7 @@ type DiscordWebhook = {
 };
 type DiscordEmbed = {
   title: string;
+  url: string;
   description: string;
   color: number;
   fields: DiscordEmbedField[];
@@ -28,6 +29,7 @@ async function job() {
     embeds: [
       {
         title: "Subscriptions expiring!",
+        url: `${process.env.BASE_URL}/?filter=7-days`,
         description: "You have subscriptions expiring soon!",
         color: 16711680,
         fields: [],

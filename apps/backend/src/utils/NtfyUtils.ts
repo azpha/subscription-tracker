@@ -8,7 +8,7 @@ const sendAllPushNotification = () => {
     title: "Subscriptions Expiring!",
     message: "You have multiple subscriptions expiring soon!",
     priority: 4,
-    click: `${process.env.NTFY_LINK_TO}/?filter=7-days`,
+    click: `${process.env.BASE_URL}/?filter=7-days`,
   };
 
   return fetch(host.origin, {
@@ -32,7 +32,7 @@ const sendSpecificPushNotification = (subscription: Subscription) => {
       subscription.nextBillingDate
     ).toLocaleDateString()}!`,
     priority: 4,
-    click: `${process.env.NTFY_LINK_TO}/?filter=7-days`,
+    click: `${process.env.BASE_URL}/?filter=7-days`,
   };
 
   return fetch(host.origin, {

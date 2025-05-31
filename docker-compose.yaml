@@ -39,3 +39,4 @@ services:
       - DATABASE_URL=mysql://subscription:super_secret@db:3306/subscription
       - DISCORD_WEBHOOK=https://discord.com/api/webhooks/xxxxxxx/xxxxxxxxx # support for discord webhooks
       - NTFY_HOST=https://push.domain.tld/topic # support for ntfy notifications
+      - BASE_URL=https://subs.domain.tld # the url of this instance to link to in ntfy/discord notifications
