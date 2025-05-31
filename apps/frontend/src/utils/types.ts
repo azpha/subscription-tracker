@@ -15,6 +15,16 @@ type Response = {
   error: string | null;
 };
 
+type NotificationConfiguration = {
+  discord: boolean;
+  ntfy: boolean;
+};
+
 type CurrentFilter = "all-subscriptions" | "7-days" | "30-days";
 
-export type { Subscription, Response, CurrentFilter };
+export type {
+  Subscription,
+  Response,
+  CurrentFilter,
+  NotificationConfiguration,
+};

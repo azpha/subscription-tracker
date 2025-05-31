@@ -9,6 +9,7 @@
   "license": "ISC",
   "scripts": {
     "dev": "vite",
+    "dev:expose": "vite --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -16,6 +17,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
+    "lucide-react": "^0.511.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "serve": "^14.2.4"

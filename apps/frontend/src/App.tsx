@@ -3,9 +3,9 @@ import SubscriptionList from "./components/SubscriptionList";
 import api from "./utils/api";
 import SubscriptionForm from "./components/SubscriptionForm";
 import Modal from "./components/Modal";
-import Version from "./components/Version";
 import type { Subscription, CurrentFilter } from "./utils/types";
 import SubscriptionFilters from "./components/SubscriptionFilters";
+import InfoModal from "./components/InfoModal";
 
 function App() {
   const [subscriptions, setSubscriptions] = useState<Subscription[] | null>(
@@ -16,6 +16,7 @@ function App() {
   const [activeFilter, setActiveFilter] =
     useState<CurrentFilter>("all-subscriptions");
   const [showForm, setShowForm] = useState<boolean>(false);
+  const [showInfo, setShowInfo] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const fetchSubscriptions = async () => {
@@ -44,14 +45,14 @@ function App() {
 
   return (
     <main className="bg-black text-white min-h-screen flex justify-center items-center">
-      <div className="flex flex-wrap space-y-4">
+      <div className="flex flex-wrap">
         <SubscriptionFilters
           currentFilter={activeFilter}
           setSearchQuery={setSearchQuery}
           setCurrentFilter={(v) => setActiveFilter(v)}
         />
 
-        <div className="border border-white border-solid p-2 container">
+        <div className="border border-white border-solid p-2 w-full">
           <div className="p-2">
             <div className="flex-wrap flex justify-between pb-2 md:space-y-0 space-y-2">
               <div className="flex flex-wrap space-x-2">
@@ -87,7 +88,6 @@ function App() {
         </div>
       </div>
 
-      <Version />
       {showForm && (
         <Modal onClose={() => setShowForm(false)}>
           <SubscriptionForm
@@ -102,6 +102,11 @@ function App() {
             }}
             subscription={editingSubscription}
           />
+        </Modal>
+      )}
+      {showInfo && (
+        <Modal onClose={() => setShowInfo(false)}>
+          <InfoModal />
         </Modal>
       )}
     </main>

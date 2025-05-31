@@ -1,4 +1,4 @@
-import { Subscription, Response } from "./types";
+import { Subscription, Response, NotificationConfiguration } from "./types";
 
 const BASE_URL =
   import.meta.env.VITE_BASE_URL || `${location.protocol}//${location.host}/api`;
@@ -112,6 +112,27 @@ async function fetchVersion(): Promise<string> {
   });
 }
 
+async function fetchConfigStatus(): Promise<NotificationConfiguration> {
+  return fetch(BASE_URL + "/settings/notifications", {
+    method: "get",
+  }).then(async (res) => {
+    const body = await res.json();
+    return body?.data as NotificationConfiguration;
+  });
+}
+
+async function testDiscordWebhook(): Promise<boolean> {
+  return fetch(BASE_URL + "/settings/notifications/test/discord", {
+    method: "post",
+  }).then((res) => res.ok);
+}
+
+async function testNtfyPush(): Promise<boolean> {
+  return fetch(BASE_URL + "/settings/notifications/test/ntfy", {
+    method: "post",
+  }).then((res) => res.ok);
+}
+
 export default {
   fetchItems,
   fetchExpiringSoonItems,
@@ -119,4 +140,7 @@ export default {
   updateItem,
   deleteItem,
   fetchVersion,
+  fetchConfigStatus,
+  testDiscordWebhook,
+  testNtfyPush,
 };
