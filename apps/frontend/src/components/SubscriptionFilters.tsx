@@ -107,7 +107,6 @@ export default function SubscriptionFilters() {
               >
                 <option value={"none"}>None</option>
                 <option value={"price"}>Price</option>
-                <option value={"date"}>Date</option>
               </select>
             </div>
           </div>

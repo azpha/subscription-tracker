@@ -228,14 +228,14 @@ async function FetchItems(
         sortObject.orderBy = {
           price: sortDirection || "desc",
         };
-      } else if (sortBy === "date") {
+      } else {
         sortObject.orderBy = {
-          nextBillingDate: sortDirection || "asc",
+          nextBillingDate: sortDirection || "desc",
         };
       }
     } else {
       sortObject.orderBy = {
-        id: "desc",
+        nextBillingDate: "desc",
       };
     }
 

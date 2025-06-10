@@ -21,7 +21,7 @@ type NotificationConfiguration = {
 };
 
 type DateRangeFilter = "all-subscriptions" | "7-days" | "30-days";
-type SortByFilter = "none" | "price" | "date";
+type SortByFilter = "none" | "price";
 type SortDirectionFilter = "none" | "desc" | "asc";
 type Filters = {
   sortBy: SortByFilter;
