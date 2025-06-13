@@ -2,13 +2,13 @@ import { useEffect } from "react";
 import { Plus, Info } from "lucide-react";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import SubscriptionList from "@/components/SubscriptionList";
-import SubscriptionFilters from "@/components/SubscriptionFilters";
 import { useAppDispatch } from "@/store/hooks";
 import { hydrateItems } from "@/store/thunks/itemThunks";
 import { updateDateFilter } from "@/store/reducers/itemSlice";
-import type { DateRangeFilter } from "@/utils/types";
 import SubscriptionForm from "./components/Modal/SubscriptionForm";
+import SubscriptionList from "@/components/SubscriptionList";
+import SubscriptionFilters from "@/components/SubscriptionFilters";
+import type { DateRangeFilter } from "@/utils/types";
 
 function App() {
   const dispatch = useAppDispatch();

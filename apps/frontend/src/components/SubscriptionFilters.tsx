@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useAppDispatch } from "../store/hooks";
+import { useState, useCallback } from "react";
+import { useAppDispatch } from "@/store/hooks";
 import {
   resetFilters,
   updateDateFilter,
@@ -8,23 +8,34 @@ import {
   updateSearchFilter,
   updateSortByFilter,
   updateSortDirectionFilter,
-} from "../store/reducers/itemSlice";
+} from "@/store/reducers/itemSlice";
 import {
   DateRangeFilter,
   SortByFilter,
   SortDirectionFilter,
-} from "../utils/types";
+} from "@/utils/types";
+import { debounce } from "lodash";
 
-import StyledInput from "./StyledInput";
+import { Input } from "@/components/ui/input";
 import { Filter, SortAsc } from "lucide-react";
+import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 
 export default function SubscriptionFilters() {
-  // hooks
-  const dispatch = useAppDispatch();
-
   // state
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [showSort, setShowSort] = useState<boolean>(false);
+
+  // hooks
+  const dispatch = useAppDispatch();
+  const debounced = useCallback(
+    debounce(
+      (value: string, func: ActionCreatorWithPayload<string, string>) => {
+        dispatch(func(value));
+      },
+      500
+    ),
+    [dispatch]
+  );
 
   const Filters = () => {
     return (
@@ -35,34 +46,26 @@ export default function SubscriptionFilters() {
             <div className="pb-2">
               <label className="font-semibold">Minimum Price</label>
             </div>
-            <div>
-              <StyledInput
-                type={"text"}
-                placeholder="Min. Price.."
-                dark={false}
-                shouldDebounce={true}
-                onChange={(v: string) => {
-                  dispatch(updateMinPriceFilter(v));
-                }}
-              />
-            </div>
+            <Input
+              type={"text"}
+              placeholder="Min. Price.."
+              onChange={(v) => {
+                debounced(v.currentTarget.value, updateMinPriceFilter);
+              }}
+            />
           </div>
 
           <div>
             <div className="pb-2">
               <label className="font-semibold">Maximum Price</label>
             </div>
-            <div>
-              <StyledInput
-                type={"text"}
-                placeholder="Max. Price.."
-                dark={false}
-                shouldDebounce={true}
-                onChange={(v: string) => {
-                  dispatch(updateMaxPriceFilter(v));
-                }}
-              />
-            </div>
+            <Input
+              type={"text"}
+              placeholder="Max. Price.."
+              onChange={(v) => {
+                debounced(v.currentTarget.value, updateMaxPriceFilter);
+              }}
+            />
           </div>
 
           <div>
@@ -141,13 +144,11 @@ export default function SubscriptionFilters() {
     <div className="border border-white border-solid p-4 w-full">
       <div className="flex flex-wrap space-x-2">
         <div className="relative flex-1">
-          <StyledInput
+          <Input
             type={"text"}
-            dark={false}
             placeholder={"search.."}
-            shouldDebounce={true}
-            onChange={(v: string) => {
-              dispatch(updateSearchFilter(v));
+            onChange={(v) => {
+              debounced(v.currentTarget.value, updateSearchFilter);
             }}
           />
         </div>
