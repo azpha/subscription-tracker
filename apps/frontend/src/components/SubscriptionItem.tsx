@@ -1,5 +1,7 @@
-import type { Subscription } from "../utils/types";
-import api from "../utils/api";
+import type { Subscription } from "@/utils/types";
+import api from "@/utils/api";
+import { Button } from "@/components/ui/button";
+import { Card, CardAction, CardHeader } from "@/components/ui/card";
 
 export default function SubscriptionItem({
   subscription,
@@ -16,37 +18,26 @@ export default function SubscriptionItem({
   };
 
   return (
-    <div className="relative w-full border border-solid p-2 bg-zinc-800">
-      <div className="flex justify-between">
-        <div className="max-w-[350px] whitespace-wrap break-all">
-          <h1 className="text-2xl font-bold">{subscription.name}</h1>
-
-          <div className="text-sm opacity-75">
-            <p>
-              ${Number(subscription.price).toFixed(2)},{" "}
-              {subscription.paymentMethod}
-            </p>
-            <p>{new Date(subscription.nextBillingDate).toLocaleDateString()}</p>
-          </div>
+    <Card className="bg-zinc-800 text-white">
+      <CardHeader>
+        <h1 className="text-2xl font-bold">{subscription.name}</h1>
+        <div className="text-sm opacity-75">
+          <p>
+            ${Number(subscription.price).toFixed(2)},{" "}
+            {subscription.paymentMethod}
+          </p>
+          <p>{new Date(subscription.nextBillingDate).toLocaleDateString()}</p>
         </div>
-
-        <div className="flex items-center space-x-2">
-          <button
-            type={"button"}
-            onClick={() => onEdit(subscription)}
-            className={"bg-zinc-900 text-white rounded-lg p-2"}
-          >
-            Edit
-          </button>
-          <button
-            type={"button"}
+        <CardAction className="flex flex-col space-y-2">
+          <Button onClick={() => onEdit(subscription)}>Edit</Button>
+          <Button
             onClick={handleDeletion}
             className={"bg-red-950 text-white rounded-lg p-2"}
           >
             Delete
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </CardAction>
+      </CardHeader>
+    </Card>
   );
 }
