@@ -1,9 +1,10 @@
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { hydrateItems } from "../store/thunks/itemThunks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { hydrateItems } from "@/store/thunks/itemThunks";
 
 import SubscriptionItem from "./SubscriptionItem";
-import type { Subscription } from "../utils/types";
+import type { Subscription } from "@/utils/types";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function SubscriptionList({
   refresh,
@@ -42,10 +43,10 @@ export default function SubscriptionList({
     dispatch(hydrateItems(params.join("&")));
   }, [filters]);
 
-  return (
-    <div className="border border-solid max-h-[50vh] overflow-y-auto border-white bg-zinc-800">
-      {subscriptions && subscriptions.length > 0 ? (
-        subscriptions.map((v, k) => {
+  if (subscriptions && subscriptions.length > 0) {
+    return (
+      <ScrollArea className="h-72">
+        {subscriptions.map((v, k) => {
           return (
             <SubscriptionItem
               refresh={refresh}
@@ -54,13 +55,15 @@ export default function SubscriptionList({
               subscription={v}
             />
           );
-        })
-      ) : (
-        <div className="p-2 text-center">
-          <h1 className="font-bold text-2xl">Uh oh!</h1>
-          <p>No subscriptions created :*(</p>
-        </div>
-      )}
-    </div>
-  );
+        })}
+      </ScrollArea>
+    );
+  } else {
+    return (
+      <div className="p-2 text-center">
+        <h1 className="font-bold text-2xl">Uh oh!</h1>
+        <p>No subscriptions created :*(</p>
+      </div>
+    );
+  }
 }
