@@ -17,6 +17,7 @@ import {
 import { debounce } from "lodash";
 
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Filter, SortAsc } from "lucide-react";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 
@@ -152,7 +153,7 @@ export default function SubscriptionFilters() {
             }}
           />
         </div>
-        <button
+        <Button
           onClick={() => {
             setShowFilters(false);
             setShowSort(!showSort);
@@ -161,8 +162,8 @@ export default function SubscriptionFilters() {
           className="bg-white text-black rounded-lg p-2 font-bold hover:cursor-pointer"
         >
           <SortAsc />
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => {
             setShowSort(false);
             setShowFilters(!showFilters);
@@ -171,7 +172,7 @@ export default function SubscriptionFilters() {
           className="bg-white text-black rounded-lg p-2 font-bold hover:cursor-pointer"
         >
           <Filter />
-        </button>
+        </Button>
       </div>
 
       {showFilters && <Filters />}

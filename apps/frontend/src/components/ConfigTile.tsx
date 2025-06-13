@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function ConfigTile({
   icon,
@@ -20,17 +21,23 @@ export default function ConfigTile({
       {icon}
 
       <h1 className="font-semibold">{title}</h1>
-      {actionDisabled && <p className="font-semibold text-red-500">Disabled</p>}
+      {actionDisabled && (
+        <Button
+          disabled={true}
+          className="bg-white text-center text-black hover:bg-zinc-500 font-semibold my-2 p-2 text-sm rounded-lg"
+        >
+          <p className="font-semibold text-red-500 my-2">Disabled</p>
+        </Button>
+      )}
       {!actionDisabled && (
         <>
-          <button
+          <Button
             onClick={action}
             disabled={actionDisabled}
-            type="button"
-            className="bg-white text-center text-black font-semibold p-1 text-sm rounded-lg"
+            className="bg-white text-center text-black hover:bg-zinc-500 font-semibold my-2 p-2 text-sm rounded-lg"
           >
             {actionLabel}
-          </button>
+          </Button>
           {message}
         </>
       )}
