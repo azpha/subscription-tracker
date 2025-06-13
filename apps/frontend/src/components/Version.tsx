@@ -16,7 +16,7 @@ export default function Version() {
   }, []);
 
   return (
-    <div className="text-white">
+    <div>
       {version && (
         <a
           href={`https://github.com/azpha/subscription-tracker/releases/${version}`}

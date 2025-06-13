@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAppDispatch } from "@/store/hooks";
 import { hydrateItems } from "@/store/thunks/itemThunks";
 import { updateDateFilter } from "@/store/reducers/itemSlice";
+import InfoModal from "./components/Modal/InfoModal";
 import SubscriptionForm from "./components/Modal/SubscriptionForm";
 import SubscriptionList from "@/components/SubscriptionList";
 import SubscriptionFilters from "@/components/SubscriptionFilters";
@@ -41,9 +42,16 @@ function App() {
         <div className="border border-white border-solid w-full">
           <div className="mb-2 p-2">
             <div className="space-x-2 mb-2 flex justify-end">
-              <Button className="bg-white text-black hover:bg-zinc-400">
-                <Info />
-              </Button>
+              <Dialog>
+                <DialogTrigger>
+                  <Button className="bg-white text-black hover:bg-zinc-400">
+                    <Info />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="w-fit">
+                  <InfoModal />
+                </DialogContent>
+              </Dialog>
               <Dialog>
                 <DialogTrigger>
                   <Button className="bg-white text-black hover:bg-zinc-400">

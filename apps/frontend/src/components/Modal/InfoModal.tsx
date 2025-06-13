@@ -100,7 +100,7 @@ export default function InfoModal() {
   };
 
   return (
-    <div className="bg-zinc-800 border border-white rounded-lg p-2">
+    <div className="text-black">
       <h1 className="text-2xl font-semibold">Subscription Tracker</h1>
       <Version />
 
@@ -110,7 +110,7 @@ export default function InfoModal() {
           <h1 className="font-semibold text-2xl mb-2">Integrations</h1>
         </div>
         <div className="flex justify-center">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 text-white">
             <ConfigTile
               icon={<Discord />}
               title={"Discord"}
