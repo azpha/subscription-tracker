@@ -1,16 +1,14 @@
 import { useEffect } from "react";
-import SubscriptionList from "./components/SubscriptionList";
-import SubscriptionFilters from "./components/SubscriptionFilters";
 import { Plus, Info } from "lucide-react";
-import { useAppDispatch } from "./store/hooks";
-import { hydrateItems } from "./store/thunks/itemThunks";
-import type { DateRangeFilter, Subscription } from "./utils/types";
-import {
-  updateEditingItem,
-  updateDateFilter,
-} from "./store/reducers/itemSlice";
-import ModalContainer from "./components/Modal/ModalContainer";
-import { setActiveModal } from "./store/reducers/modalSlice";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import SubscriptionList from "@/components/SubscriptionList";
+import SubscriptionFilters from "@/components/SubscriptionFilters";
+import { useAppDispatch } from "@/store/hooks";
+import { hydrateItems } from "@/store/thunks/itemThunks";
+import { updateDateFilter } from "@/store/reducers/itemSlice";
+import type { DateRangeFilter } from "@/utils/types";
+import SubscriptionForm from "./components/Modal/SubscriptionForm";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -43,32 +41,25 @@ function App() {
         <div className="border border-white border-solid w-full">
           <div className="mb-2 p-2">
             <div className="space-x-2 mb-2 flex justify-end">
-              <button
-                onClick={() => dispatch(setActiveModal("info"))}
-                className="bg-white text-black rounded-lg p-1 font-bold hover:cursor-pointer"
-              >
+              <Button className="bg-white text-black hover:bg-zinc-400">
                 <Info />
-              </button>
-              <button
-                onClick={() => dispatch(setActiveModal("editing"))}
-                className="bg-white text-black rounded-lg p-1 font-bold hover:cursor-pointer"
-              >
-                <Plus />
-              </button>
+              </Button>
+              <Dialog>
+                <DialogTrigger>
+                  <Button className="bg-white text-black hover:bg-zinc-400">
+                    <Plus />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="w-fit bg-zinc-800 text-white">
+                  <SubscriptionForm />
+                </DialogContent>
+              </Dialog>
             </div>
 
-            <SubscriptionList
-              refresh={fetchSubscriptions}
-              onEdit={(subscription: Subscription) => {
-                dispatch(updateEditingItem(subscription));
-                dispatch(setActiveModal("editing"));
-              }}
-            />
+            <SubscriptionList refresh={fetchSubscriptions} />
           </div>
         </div>
       </div>
-
-      <ModalContainer />
     </main>
   );
 }

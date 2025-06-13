@@ -3,16 +3,9 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { hydrateItems } from "@/store/thunks/itemThunks";
 
 import SubscriptionItem from "./SubscriptionItem";
-import type { Subscription } from "@/utils/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function SubscriptionList({
-  refresh,
-  onEdit,
-}: {
-  refresh: () => void;
-  onEdit: (subscription: Subscription) => void;
-}) {
+export default function SubscriptionList({ refresh }: { refresh: () => void }) {
   const dispatch = useAppDispatch();
   const { filters, items: subscriptions } = useAppSelector(
     (state) => state.item
@@ -48,12 +41,7 @@ export default function SubscriptionList({
       <ScrollArea className="h-72">
         {subscriptions.map((v, k) => {
           return (
-            <SubscriptionItem
-              refresh={refresh}
-              onEdit={onEdit}
-              key={k}
-              subscription={v}
-            />
+            <SubscriptionItem refresh={refresh} key={k} subscription={v} />
           );
         })}
       </ScrollArea>
