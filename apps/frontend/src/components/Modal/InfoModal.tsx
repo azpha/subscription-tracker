@@ -100,7 +100,7 @@ export default function InfoModal() {
   };
 
   return (
-    <div className="text-black">
+    <div>
       <h1 className="text-2xl font-semibold">Subscription Tracker</h1>
       <Version />
 

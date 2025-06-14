@@ -35,7 +35,7 @@ export default function SubscriptionItem({
             </DialogTrigger>
             <Button
               onClick={handleDeletion}
-              className={"bg-red-950 text-white rounded-lg p-2"}
+              className={"hover:bg-red-950 text-white rounded-lg p-2"}
             >
               Delete
             </Button>

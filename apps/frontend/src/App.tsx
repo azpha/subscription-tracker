@@ -48,7 +48,7 @@ function App() {
                     <Info />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="w-fit">
+                <DialogContent className="w-fit dark text-white">
                   <InfoModal />
                 </DialogContent>
               </Dialog>
@@ -58,7 +58,7 @@ function App() {
                     <Plus />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="w-fit bg-zinc-800 text-white">
+                <DialogContent className="w-fit dark text-white">
                   <SubscriptionForm />
                 </DialogContent>
               </Dialog>

@@ -18,6 +18,15 @@ import { debounce } from "lodash";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectGroup,
+  SelectLabel,
+  SelectItem,
+} from "@/components/ui/select";
 import { Filter, SortAsc } from "lucide-react";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 
@@ -73,19 +82,26 @@ export default function SubscriptionFilters() {
             <div className="pb-2">
               <label className="font-semibold">Renewal Period</label>
             </div>
-            <div>
-              <select
-                onChange={(e) =>
-                  dispatch(updateDateFilter(e.target.value as DateRangeFilter))
-                }
-                className="bg-white w-full p-2 text-black rounded-lg"
-                id="renewal"
-              >
-                <option value={"all-subscriptions"}>All subscriptions</option>
-                <option value={"7-days"}>7 days</option>
-                <option value={"30-days"}>30 days</option>
-              </select>
-            </div>
+            <Select
+              onValueChange={(v) =>
+                dispatch(updateDateFilter(v as DateRangeFilter))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a filter" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>
+                    <SelectItem value={"all-subscriptions"}>
+                      All subscriptions
+                    </SelectItem>
+                    <SelectItem value={"7-days"}>7 days</SelectItem>
+                    <SelectItem value={"30-days"}>30 days</SelectItem>
+                  </SelectLabel>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
@@ -101,40 +117,42 @@ export default function SubscriptionFilters() {
             <div className="pb-2">
               <label className="font-semibold">Sort By</label>
             </div>
-            <div>
-              <select
-                onChange={(e) =>
-                  dispatch(updateSortByFilter(e.target.value as SortByFilter))
-                }
-                className="bg-white w-full p-2 text-black rounded-lg"
-                id="renewal"
-              >
-                <option value={"none"}>None</option>
-                <option value={"price"}>Price</option>
-              </select>
-            </div>
+            <Select
+              onValueChange={(v) =>
+                dispatch(updateSortByFilter(v as SortByFilter))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a filter" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value={"none"}>None</SelectItem>
+                  <SelectItem value={"price"}>Price</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <div>
             <div className="pb-2">
               <label className="font-semibold">Sort Direction</label>
             </div>
-            <div>
-              <select
-                onChange={(e) =>
-                  dispatch(
-                    updateSortDirectionFilter(
-                      e.target.value as SortDirectionFilter
-                    )
-                  )
-                }
-                className="bg-white w-full p-2 text-black rounded-lg"
-                id="renewal"
-              >
-                <option value={"desc"}>Descending</option>
-                <option value={"asc"}>Ascending</option>
-              </select>
-            </div>
+            <Select
+              onValueChange={(v) =>
+                dispatch(updateSortDirectionFilter(v as SortDirectionFilter))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a filter" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value={"desc"}>Descending</SelectItem>
+                  <SelectItem value={"asc"}>Ascending</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
@@ -159,7 +177,7 @@ export default function SubscriptionFilters() {
             setShowSort(!showSort);
             dispatch(resetFilters());
           }}
-          className="bg-white text-black rounded-lg p-2 font-bold hover:cursor-pointer"
+          className="bg-white text-black hover:bg-zinc-400 rounded-lg p-2 font-bold hover:cursor-pointer"
         >
           <SortAsc />
         </Button>
@@ -169,7 +187,7 @@ export default function SubscriptionFilters() {
             setShowFilters(!showFilters);
             dispatch(resetFilters());
           }}
-          className="bg-white text-black rounded-lg p-2 font-bold hover:cursor-pointer"
+          className="bg-white text-black hover:bg-zinc-400 rounded-lg p-2 font-bold hover:cursor-pointer"
         >
           <Filter />
         </Button>

@@ -163,7 +163,7 @@ export default function SubscriptionForm({
             />
           </div>
           <div className="flex justify-start">
-            <DialogClose>
+            <DialogClose className="w-full">
               <Button className="w-full" type="submit">
                 Submit
               </Button>
