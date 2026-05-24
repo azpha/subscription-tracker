@@ -131,9 +131,10 @@ function App() {
                   <p className="text-xl">{metrics?.expiringNext?.name}</p>
                   <p className="xs text-muted-foreground">
                     ${metrics?.expiringNext?.price} -{" "}
-                    {new Date(
-                      metrics?.expiringNext.billingDate,
-                    ).toLocaleDateString()}
+                    {metrics?.expiringNext &&
+                      new Date(
+                        metrics?.expiringNext.billingDate,
+                      ).toLocaleDateString()}
                   </p>
                 </CardContent>
               </Card>
