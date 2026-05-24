@@ -10,7 +10,7 @@
     "dev:api": "pnpm --filter backend dev",
     "build:web": "pnpm --filter frontend build",
     "build:api": "pnpm --filter backend build",
-    "start": "pnpm --filter backend start"
+    "start": "pnpm --filter database db:deploy && pnpm --filter backend start"
   },
   "keywords": [],
   "author": "",

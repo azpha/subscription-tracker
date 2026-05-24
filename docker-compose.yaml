@@ -3,8 +3,8 @@ volumes:
 
 services:
   subscription-tracker:
-    # image: ghcr.io/azpha/subscription-tracker:latest
-    build: .
+    # build: .
+    image: subscription-tracker-subscription-tracker:latest
     restart: unless-stopped
     ports:
       - 3000:3000
