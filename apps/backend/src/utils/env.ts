@@ -2,6 +2,7 @@ import { z } from "zod";
 import "dotenv/config";
 
 const envSchema = z.object({
+  NODE_ENV: z.enum(["production", "development"]).default("development"),
   APPLICATION_VERSION: z.string().default("1.0.0"),
   PORT: z.coerce.number().default(3000),
   DISCORD_WEBHOOK: z.string().url().min(1).optional(),

@@ -21,6 +21,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 // routes
+if (env.NODE_ENV === "development") {
+  console.log(__dirname);
+  // app.use("/", path.join(__dirname, "../web/"));
+}
 app.use("/api/icons", express.static(path.join(env.DATA_PATH, "files")));
 app.use("/api/items", itemsRouter);
 app.use("/api/settings", settingsRouter);

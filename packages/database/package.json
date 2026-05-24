@@ -3,7 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js"
+    },
+  "./generated/prisma": "./generated/prisma/index.js",
+  "./generated/prisma/*": "./generated/prisma/*.js"
+  },
   "scripts": {
+    "build": "tsc",
     "db:studio": "prisma studio",
     "db:migrate": "prisma migrate dev && prisma generate",
     "db:deploy": "prisma migrate deploy",
@@ -16,6 +27,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.10.0",
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^25.9.1",
     "prisma": "catalog:prisma"
   },

@@ -5,12 +5,12 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build": "pnpm --filter backend build && pnpm --filter frontend build",
+    "build": "pnpm --filter database build && pnpm --filter backend build && pnpm --filter frontend build",
     "dev:web": "pnpm --filter frontend dev",
     "dev:api": "pnpm --filter backend dev",
     "build:web": "pnpm --filter frontend build",
     "build:api": "pnpm --filter backend build",
-    "start": "concurrently \"pnpm --filter backend start\" \"pnpm --filter frontend start\" \"pnpm --filter proxy-server start\""
+    "start": "pnpm --filter backend start"
   },
   "keywords": [],
   "author": "",
