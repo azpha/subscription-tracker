@@ -10,11 +10,11 @@
       "types": "./dist/index.d.ts",
       "require": "./dist/index.js"
     },
-  "./generated/prisma": "./generated/prisma/index.js",
-  "./generated/prisma/*": "./generated/prisma/*.js"
+    "./generated/prisma": "./generated/prisma/index.js",
+    "./generated/prisma/*": "./generated/prisma/*.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "db:studio": "prisma studio",
     "db:migrate": "prisma migrate dev && prisma generate",
     "db:deploy": "prisma migrate deploy",

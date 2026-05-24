@@ -8,7 +8,7 @@ const envSchema = z.object({
   DISCORD_WEBHOOK: z.string().url().min(1).optional(),
   NTFY_HOST: z.string().url().min(1).optional(),
   BASE_URL: z.string().url().min(1),
-  DATA_PATH: z.string().url().min(1).default("/app"),
+  DATA_PATH: z.string().url().min(1).default("/app/files"),
   SHORT_CRON_EXPIRY: z.coerce.boolean().default(false),
 });
 

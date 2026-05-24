@@ -5,7 +5,7 @@ catalogs:
   prisma:
     prisma: latest
 ignoredBuiltDependencies:
-  - '@prisma/engines'
+  - "@prisma/engines"
   - esbuild
   - msw
   - prisma
