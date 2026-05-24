@@ -6,9 +6,14 @@ interface Subscription {
   totalSpend: number;
   paymentMethod: "Card" | "PayPal" | "Bank";
   shouldNotifyExpiry: boolean;
-  lastBillingDate: string;
-  nextBillingDate: string;
-  billingFrequencyInMonths: number;
+  billingDate: string;
+  categoryId?: Number;
+  categoryName?: string;
 }
 
-export type { Subscription };
+interface Category {
+  id: number;
+  name: string;
+}
+
+export type { Subscription, Category };

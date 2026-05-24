@@ -2,6 +2,21 @@ import { prisma } from "database";
 import schemas from "../utils/schemas";
 import type { Request, Response, NextFunction } from "express";
 
+async function fetchAllCategories(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const categories = await prisma.category.findMany();
+
+    res.status(200).json(categories);
+    return;
+  } catch (e) {
+    next(e);
+  }
+}
+
 async function createCategory(req: Request, res: Response, next: NextFunction) {
   try {
     const { name } = schemas.category.parse(req.body);
@@ -66,6 +81,7 @@ async function renameCategory(req: Request, res: Response, next: NextFunction) {
 }
 
 export default {
+  fetchAllCategories,
   createCategory,
   deleteCategory,
   renameCategory,

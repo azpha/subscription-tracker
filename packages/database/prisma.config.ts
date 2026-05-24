@@ -8,6 +8,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: `file:${path.join(env("DATA_PATH"), "subs.db")}`,
+    url: `file:${path.join(env("DATA_PATH") || "/app", "subs.db")}`,
   },
 });

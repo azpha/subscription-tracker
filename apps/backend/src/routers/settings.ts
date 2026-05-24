@@ -1,5 +1,5 @@
 import { Router } from "express";
-import SettingsController from "../controllers/Settings";
+import SettingsController from "../controllers/settings";
 
 const router = Router();
 
@@ -8,7 +8,7 @@ router.get("/notifications", SettingsController.GetWebhookStatus);
 router.post("/notifications/test/discord", SettingsController.TestWebhook);
 router.post(
   "/notifications/test/ntfy",
-  SettingsController.TestPushNotification
+  SettingsController.TestPushNotification,
 );
 
 export default router;

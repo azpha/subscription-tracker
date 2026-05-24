@@ -1,4 +1,4 @@
-import { Subscription, Response, NotificationConfiguration } from "./types";
+import { Category, Subscription } from "./types";
 
 const BASE_URL =
   import.meta.env.VITE_BASE_URL || `${location.protocol}//${location.host}/api`;
@@ -14,7 +14,16 @@ async function fetchItems(params?: string): Promise<Subscription[]> {
   });
 }
 
-async function createItem(subscription: Subscription): Promise<Response> {
+async function fetchCategories(): Promise<Category[]> {
+  return fetch(BASE_URL + "/categories").then(async (res) => {
+    if (res.ok) {
+      const data = await res.json();
+      return data as Category[];
+    } else throw new Error("Invalid response from API");
+  });
+}
+
+async function createItem(subscription: Subscription): Promise<boolean> {
   return fetch(BASE_URL + "/items", {
     method: "POST",
     headers: {
@@ -23,57 +32,51 @@ async function createItem(subscription: Subscription): Promise<Response> {
     body: JSON.stringify(subscription),
   })
     .then(async (res) => {
-      const body = await res.json();
-      let error = "";
-      if (body.issues) {
-        error = body.issues[0].message;
-      } else {
-        error = body.message;
-      }
-
-      return {
-        status: res.ok,
-        error: error,
-      };
+      return res.ok;
     })
     .catch((err) => {
-      return {
-        status: false,
-        error: err,
-      };
+      console.error("Failed to upload image!", err);
+      return false;
     });
 }
 
-async function updateItem(subscription: Subscription): Promise<Response> {
-  const { id, ...deconstructedSubscription } = subscription;
+async function createCategory(name: string): Promise<number> {
+  return fetch(BASE_URL + "/categories", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      name,
+    }),
+  })
+    .then(async (res) => {
+      const data = await res.json();
+      return data.id;
+    })
+    .catch((e) => {
+      console.error("Failed to create category!", e);
+      return false;
+    });
+}
+
+async function updateItem(
+  id: number,
+  subscription: Subscription,
+): Promise<boolean> {
   return fetch(BASE_URL + "/items/" + id, {
     method: "PATCH",
     headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify(deconstructedSubscription),
+    body: JSON.stringify(subscription),
   })
     .then(async (res) => {
-      const body = await res.json();
-
-      let error = "";
-      if (body.issues) {
-        error = body.issues[0].message;
-      } else {
-        error = body.message;
-      }
-
-      return {
-        status: res.ok,
-        error: error,
-      };
+      return res.ok;
     })
     .catch(async (e) => {
       console.error("Failed to update item", e);
-      return {
-        status: false,
-        error: e,
-      };
+      return false;
     });
 }
 
@@ -101,15 +104,6 @@ async function fetchVersion(): Promise<string> {
   });
 }
 
-async function fetchConfigStatus(): Promise<NotificationConfiguration> {
-  return fetch(BASE_URL + "/settings/notifications", {
-    method: "get",
-  }).then(async (res) => {
-    const body = await res.json();
-    return body?.data as NotificationConfiguration;
-  });
-}
-
 async function testDiscordWebhook(): Promise<boolean> {
   return fetch(BASE_URL + "/settings/notifications/test/discord", {
     method: "post",
@@ -122,13 +116,32 @@ async function testNtfyPush(): Promise<boolean> {
   }).then((res) => res.ok);
 }
 
+async function uploadIcon(formData: FormData): Promise<string> {
+  return fetch(BASE_URL + "/items/icon", {
+    method: "post",
+    body: formData,
+  })
+    .then(async (res) => {
+      if (res.ok) {
+        const data = await res.json();
+        return data.name;
+      } else throw new Error("Failed to upload image!");
+    })
+    .catch((e) => {
+      console.error("Failed to upload image!", e);
+      return "";
+    });
+}
+
 export default {
   fetchItems,
+  fetchCategories,
   createItem,
+  createCategory,
   updateItem,
   deleteItem,
   fetchVersion,
-  fetchConfigStatus,
   testDiscordWebhook,
   testNtfyPush,
+  uploadIcon,
 };

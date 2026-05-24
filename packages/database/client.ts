@@ -4,7 +4,7 @@ import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import path from "node:path";
 
 const adapter = new PrismaBetterSqlite3({
-  url: `file:${path.join(process.env.DATA_PATH as string, "subs.db")}`,
+  url: `file:${path.join((process.env.DATA_PATH as string) || "/app", "subs.db")}`,
 });
 
 const globalForPrisma = globalThis as typeof globalThis & {

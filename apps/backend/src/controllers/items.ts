@@ -1,7 +1,11 @@
 import { Decimal } from "database/generated/prisma/internal/prismaNamespace";
 import { prisma } from "database";
 import Schemas from "../utils/schemas";
+import fs from "fs";
+import path from "node:path";
 import type { Request, Response, NextFunction } from "express";
+import env from "../utils/env";
+import schemas from "../utils/schemas";
 
 async function createItem(
   req: Request,
@@ -9,31 +13,10 @@ async function createItem(
   next: NextFunction,
 ): Promise<any> {
   try {
-    Schemas.subscriptionCreation.parse(req.body);
-
-    // calculate billing frequency
-    let { nextBillingDate, lastBillingDate } = req.body;
-    const nextBillingDateTime = new Date(nextBillingDate);
-    const lastBillingDateTime = new Date(lastBillingDate);
-    const differenceInMonths =
-      (nextBillingDateTime.getFullYear() - lastBillingDateTime.getFullYear()) *
-        12 +
-      (nextBillingDateTime.getMonth() - lastBillingDateTime.getMonth());
-
-    if (lastBillingDateTime.getTime() > nextBillingDateTime.getTime()) {
-      return res.status(400).json({
-        status: 400,
-        message: "Last billing date cannot be greater than next billing date",
-      });
-    }
+    const body = Schemas.subscriptionCreation.parse(req.body);
 
     const data = await prisma.subscription.create({
-      data: {
-        ...req.body,
-        billingFrequencyInMonths: differenceInMonths,
-        nextBillingDate: nextBillingDateTime,
-        lastBillingDate: lastBillingDateTime,
-      },
+      data: body,
     });
 
     return res.status(200).json({
@@ -92,7 +75,7 @@ async function updateItem(
   next: NextFunction,
 ): Promise<any> {
   try {
-    Schemas.subscriptionUpdate.parse({
+    const body = Schemas.subscriptionUpdate.parse({
       ...req.body,
     });
 
@@ -116,45 +99,11 @@ async function updateItem(
       });
     }
 
-    // recalculate billing frequency if billing date changed
-    let updateObject = {
-      billingFrequencyInMonths: sub.billingFrequencyInMonths,
-      nextBillingDate: sub.nextBillingDate,
-      lastBillingDate: sub.lastBillingDate,
-    };
-    if (req.body.nextBillingDate || req.body.lastBillingDate) {
-      const nextBillingDateTime = new Date(
-        req.body.nextBillingDate || sub.nextBillingDate,
-      );
-      const lastBillingDateTime = new Date(
-        req.body.lastBillingDate || sub.lastBillingDate,
-      );
-
-      if (lastBillingDateTime.getTime() > nextBillingDateTime.getTime()) {
-        return res.status(400).json({
-          status: 400,
-          message: "Last billing date cannot be greater than next billing date",
-        });
-      }
-
-      updateObject.billingFrequencyInMonths =
-        (nextBillingDateTime.getFullYear() -
-          lastBillingDateTime.getFullYear()) *
-          12 +
-        (nextBillingDateTime.getMonth() - lastBillingDateTime.getMonth());
-
-      ((updateObject.nextBillingDate = nextBillingDateTime),
-        (updateObject.lastBillingDate = lastBillingDateTime));
-    }
-
     const data = await prisma.subscription.update({
       where: {
         id: parseInt(req.params.id),
       },
-      data: {
-        ...req.body,
-        ...updateObject,
-      },
+      data: body,
     });
 
     return res.status(200).json({
@@ -205,7 +154,7 @@ async function fetchItems(
 
       sortObject.where = {
         ...sortObject.where,
-        nextBillingDate: {
+        billingDate: {
           lte: modifiedDate,
           gte: currentDate,
         },
@@ -230,12 +179,12 @@ async function fetchItems(
         };
       } else {
         sortObject.orderBy = {
-          nextBillingDate: sortDirection || "desc",
+          billingDate: sortDirection || "desc",
         };
       }
     } else {
       sortObject.orderBy = {
-        nextBillingDate: "desc",
+        billingDate: "desc",
       };
     }
 
@@ -305,6 +254,57 @@ async function searchForItem(
   }
 }
 
+async function fetchIcon(req: Request, res: Response, next: NextFunction) {
+  try {
+    const id = schemas.id.parse(req.params.id);
+    const uploadPath = path.join(env.DATA_PATH, "files");
+
+    const item = await prisma.subscription.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!item) {
+      res.status(404).json({
+        status: 404,
+        message: "No item found with that ID",
+      });
+      return;
+    }
+
+    if (fs.existsSync(path.join(uploadPath, item.image))) {
+      res.status(200).sendFile(path.join(uploadPath, item.image));
+    } else {
+      res.status(404).json({
+        status: 404,
+        message: "File not found",
+      });
+      return;
+    }
+  } catch (e) {
+    next(e);
+  }
+}
+
+async function uploadIcon(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (req.file) {
+      res.status(200).json({
+        status: 200,
+        name: req.file.filename,
+      });
+    } else {
+      res.status(400).json({
+        status: 400,
+        message: "No file provided",
+      });
+    }
+  } catch (e) {
+    next(e);
+  }
+}
+
 export default {
   createItem,
   updateItem,
@@ -312,4 +312,6 @@ export default {
   fetchItem,
   fetchItems,
   deleteItem,
+  uploadIcon,
+  fetchIcon,
 };

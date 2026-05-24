@@ -20,10 +20,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 // routes
-app.use("/items", itemsRouter);
-app.use("/settings", settingsRouter);
-app.use("/metrics", metricsRouter);
-app.use("/categories", categoriesRouter);
+app.use("/api/items", itemsRouter);
+app.use("/api/settings", settingsRouter);
+app.use("/api/metrics", metricsRouter);
+app.use("/api/categories", categoriesRouter);
 
 // error handling
 const errorHandler = (

@@ -13,13 +13,11 @@ model Subscription {
   image                    String
   price                    Decimal
   paymentMethod            String
-  lastBillingDate          DateTime
-  nextBillingDate          DateTime
-  billingFrequencyInMonths Int
+  billingDate              DateTime
   category                 Category? @relation(fields: [categoryId], references: [id])
   totalSpend               Decimal   @default(0.00)
   shouldNotifyExpiry       Boolean   @default(true)
-  categoryId               Int
+  categoryId               Int?
 }
 
 model Category {

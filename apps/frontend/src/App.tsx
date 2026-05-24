@@ -1,95 +1,173 @@
+import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "./components/ui/card";
 import CompactItem from "./components/CompactItem";
 import FullItem from "./components/FullItem";
+import api from "./utils/api";
+import Create from "./components/modals/create";
+import Edit from "./components/modals/edit";
+import type { Category, Subscription } from "./utils/types";
 
 function App() {
+  const [items, setItems] = useState<Subscription[] | null>(null);
+  const [editingItem, setEditingItem] = useState<Subscription | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  // modal states
+  const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+
+  const fetchItems = async () => {
+    api.fetchItems().then((res) => {
+      setItems(res);
+    });
+  };
+  const fetchCategories = async () => {
+    api.fetchCategories().then((res) => {
+      setCategories(res);
+    });
+  };
+  const deleteItem = async (id: number) => {
+    api.deleteItem(id).then((res) => {
+      if (res) fetchItems();
+    });
+  };
+  useEffect(() => {
+    fetchItems();
+    fetchCategories();
+  }, []);
+  useEffect(() => {
+    console.log(items);
+  }, [items]);
+  useEffect(() => {
+    if (!createModalOpen && items) {
+      fetchItems();
+      fetchCategories();
+    }
+    if (!editModalOpen && items) {
+      fetchItems();
+      fetchCategories();
+    }
+  }, [createModalOpen]);
+
   return (
-    <div className="bg-black min-h-screen flex justify-center text-white dark">
-      <div className="w-full md:max-w-7xl m-10">
-        <div className="flex md:flex-row flex-col justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Tracker</h1>
-            <p className="text-sm opacity-50">
-              Track your upcoming subscriptions
-            </p>
-          </div>
-          <div className="flex items-center my-2 md:my-0">
-            <button
-              onClick={() => console.log("test")}
-              type="button"
-              className={`bg-white text-black p-2 rounded-lg font-semibold w-full`}
-            >
-              Add subscription
-            </button>
-          </div>
-        </div>
-
-        <div className="mt-2">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card className="border border-gray-500">
-              <CardHeader>
-                <CardTitle>Monthly Spending</CardTitle>
-              </CardHeader>
-              <CardContent>Test</CardContent>
-            </Card>
-            <Card className="border border-gray-500">
-              <CardHeader>
-                <CardTitle>Yearly Spending</CardTitle>
-              </CardHeader>
-              <CardContent>Test</CardContent>
-            </Card>
-            <Card className="border border-gray-500">
-              <CardHeader>
-                <CardTitle>Active Subscriptions</CardTitle>
-              </CardHeader>
-              <CardContent>Test</CardContent>
-            </Card>
-            <Card className="border border-gray-500">
-              <CardHeader>
-                <CardTitle>Next Payment</CardTitle>
-              </CardHeader>
-              <CardContent>Test</CardContent>
-            </Card>
+    <div>
+      <Create modalState={createModalOpen} setModalState={setCreateModalOpen} />
+      {editingItem && (
+        <Edit
+          modalState={editModalOpen}
+          setModalState={setEditModalOpen}
+          subscription={editingItem}
+        />
+      )}
+      <div className="bg-black min-h-screen flex justify-center text-white dark">
+        <div className="w-full md:max-w-7xl m-10">
+          <div className="flex md:flex-row flex-col justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">Tracker</h1>
+              <p className="text-sm opacity-50">
+                Track your upcoming subscriptions
+              </p>
+            </div>
+            <div className="flex items-center my-2 md:my-0 space-x-2">
+              <button
+                onClick={() => setCreateModalOpen(true)}
+                type="button"
+                className={`bg-white text-black p-2 rounded-lg font-semibold w-full text-sm`}
+              >
+                Add subscription
+              </button>
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-2 sm:grid-cols-1 gap-4 my-8">
-            <Card className="border border-gray-500">
-              <CardHeader>
-                <CardTitle>Monthly Spending Trend</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Test</p>
-              </CardContent>
-            </Card>
-            <Card className="border border-gray-500">
-              <CardHeader>
-                <CardTitle>Spending By Category</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Test</p>
-              </CardContent>
-            </Card>
-          </div>
+          <div className="mt-2">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Card className="border border-gray-500">
+                <CardHeader>
+                  <CardTitle>Monthly Spending</CardTitle>
+                </CardHeader>
+                <CardContent>Test</CardContent>
+              </Card>
+              <Card className="border border-gray-500">
+                <CardHeader>
+                  <CardTitle>Yearly Spending</CardTitle>
+                </CardHeader>
+                <CardContent>Test</CardContent>
+              </Card>
+              <Card className="border border-gray-500">
+                <CardHeader>
+                  <CardTitle>Active Subscriptions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-xl">{items?.length}</p>
+                  <p className="text-xs text-muted-foreground">
+                    Across {categories.length} categories
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border border-gray-500">
+                <CardHeader>
+                  <CardTitle>Next Payment</CardTitle>
+                </CardHeader>
+                <CardContent>Test</CardContent>
+              </Card>
+            </div>
 
-          <div className="my-4 space-y-8">
-            <Card className="border border-gray-500">
-              <CardHeader>
-                <CardTitle>All Subscriptions</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <FullItem />
-              </CardContent>
-            </Card>
-            <Card className="border border-gray-500">
-              <CardHeader>
-                <CardTitle>Upcoming</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                  <CompactItem />
-                </div>
-              </CardContent>
-            </Card>
+            <div className="grid md:grid-cols-2 sm:grid-cols-1 gap-4 my-8">
+              <Card className="border border-gray-500">
+                <CardHeader>
+                  <CardTitle>Monthly Spending Trend</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>Test</p>
+                </CardContent>
+              </Card>
+              <Card className="border border-gray-500">
+                <CardHeader>
+                  <CardTitle>Spending By Category</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>Test</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="my-4 space-y-8">
+              <Card className="border border-gray-500">
+                <CardHeader>
+                  <CardTitle>All Subscriptions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {items?.map((v, k) => {
+                      return (
+                        <FullItem
+                          categories={categories}
+                          deleteItem={deleteItem}
+                          onEditClick={(v) => {
+                            setEditingItem(v);
+                            setEditModalOpen(true);
+                          }}
+                          subscription={v}
+                          key={k}
+                        />
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="border border-gray-500">
+                <CardHeader>
+                  <CardTitle>Upcoming</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {items?.map((v, k) => {
+                      return <CompactItem subscription={v} key={k} />;
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </div>

@@ -4,3 +4,10 @@ packages:
 catalogs:
   prisma:
     prisma: latest
+ignoredBuiltDependencies:
+  - '@prisma/engines'
+  - esbuild
+  - msw
+  - prisma
+onlyBuiltDependencies:
+  - better-sqlite3
