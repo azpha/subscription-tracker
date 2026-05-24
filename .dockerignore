@@ -1,5 +1,4 @@
-node_modules
-*.db*
+**/node_modules
+**/.pnpm-store
+**/dist
 .env
-prisma/generated*
-dist

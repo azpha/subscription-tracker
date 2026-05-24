@@ -30,7 +30,7 @@ async function deleteItem(
   next: NextFunction,
 ): Promise<any> {
   try {
-    const id = parseInt(req.params.id);
+    const id = Schemas.id.parse(req.params.id);
     if (isNaN(id)) {
       return res.status(400).json({
         status: 400,
@@ -75,7 +75,7 @@ async function updateItem(
       ...req.body,
     });
 
-    const id = parseInt(req.params.id);
+    const id = Schemas.id.parse(req.params.id);
     if (isNaN(id)) {
       return res.status(400).json({
         status: 400,
@@ -97,7 +97,7 @@ async function updateItem(
 
     const data = await prisma.subscription.update({
       where: {
-        id: parseInt(req.params.id),
+        id,
       },
       data: body,
     });
@@ -201,7 +201,7 @@ async function fetchItem(
   next: NextFunction,
 ): Promise<any> {
   try {
-    const id = parseInt(req.params.id);
+    const id = Schemas.id.parse(req.params.id);
 
     if (isNaN(id)) {
       return res.status(400).json({
