@@ -13,6 +13,10 @@ export default function FullItem({
   onEditClick,
   deleteItem,
 }: FullItemProps) {
+  const filteredCategory = categories.filter(
+    (v) => v.id === subscription.categoryId,
+  );
+
   return (
     <div className="bg-secondary/50 border border-border p-2 rounded-lg">
       <div className="flex flex-row justify-between">
@@ -21,9 +25,9 @@ export default function FullItem({
           <div className="flex flex-row space-x-2">
             <div className="border border-border p-1 rounded-lg">
               <p className="text-xs text-muted-foreground">
-                {categories &&
-                  categories.filter((v) => v.id === subscription.categoryId)[0]
-                    .name}
+                {filteredCategory.length > 0
+                  ? filteredCategory[0].name
+                  : "None"}
               </p>
             </div>
             <p className="flex items-center text-xs">

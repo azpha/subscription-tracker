@@ -1,4 +1,4 @@
-import { Category, Subscription } from "./types";
+import { Category, Metrics, Subscription } from "./types";
 
 const BASE_URL =
   import.meta.env.VITE_BASE_URL || `${location.protocol}//${location.host}/api`;
@@ -104,6 +104,17 @@ async function fetchVersion(): Promise<string> {
   });
 }
 
+async function fetchMetrics(): Promise<Metrics> {
+  return fetch(BASE_URL + "/metrics", {
+    method: "GET",
+  }).then(async (res) => {
+    if (res.ok) {
+      const body = await res.json();
+      return body;
+    } else throw new Error("Failed to fetch version");
+  });
+}
+
 async function testDiscordWebhook(): Promise<boolean> {
   return fetch(BASE_URL + "/settings/notifications/test/discord", {
     method: "post",
@@ -144,4 +155,5 @@ export default {
   testDiscordWebhook,
   testNtfyPush,
   uploadIcon,
+  fetchMetrics,
 };

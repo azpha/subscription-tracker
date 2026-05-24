@@ -5,12 +5,13 @@ import FullItem from "./components/FullItem";
 import api from "./utils/api";
 import Create from "./components/modals/create";
 import Edit from "./components/modals/edit";
-import type { Category, Subscription } from "./utils/types";
+import { Metrics, type Category, type Subscription } from "./utils/types";
 
 function App() {
   const [items, setItems] = useState<Subscription[] | null>(null);
   const [editingItem, setEditingItem] = useState<Subscription | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [metrics, setMetrics] = useState<Metrics | null>(null);
 
   // modal states
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
@@ -26,6 +27,11 @@ function App() {
       setCategories(res);
     });
   };
+  const fetchMetrics = async () => {
+    api.fetchMetrics().then((res) => {
+      setMetrics(res);
+    });
+  };
   const deleteItem = async (id: number) => {
     api.deleteItem(id).then((res) => {
       if (res) fetchItems();
@@ -34,6 +40,7 @@ function App() {
   useEffect(() => {
     fetchItems();
     fetchCategories();
+    fetchMetrics();
   }, []);
   useEffect(() => {
     console.log(items);
@@ -85,13 +92,23 @@ function App() {
                 <CardHeader>
                   <CardTitle>Monthly Spending</CardTitle>
                 </CardHeader>
-                <CardContent>Test</CardContent>
+                <CardContent>
+                  <p className="text-xl">${metrics?.totalSpendPerMonth}</p>
+                  <p className="text-xs text-muted-foreground">
+                    Across {items?.length} subscriptions
+                  </p>
+                </CardContent>
               </Card>
               <Card className="border border-gray-500">
                 <CardHeader>
                   <CardTitle>Yearly Spending</CardTitle>
                 </CardHeader>
-                <CardContent>Test</CardContent>
+                <CardContent>
+                  <p className="text-xl">${metrics?.totalSpendPerYear}</p>
+                  <p className="text-xs text-muted-foreground">
+                    Across {items?.length} subscriptions
+                  </p>
+                </CardContent>
               </Card>
               <Card className="border border-gray-500">
                 <CardHeader>

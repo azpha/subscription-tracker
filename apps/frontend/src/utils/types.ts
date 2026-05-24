@@ -16,4 +16,10 @@ interface Category {
   name: string;
 }
 
-export type { Subscription, Category };
+interface Metrics {
+  totalSpendPerMonth: number;
+  totalSpendPerYear: number;
+  top5: Subscription[];
+}
+
+export type { Subscription, Category, Metrics };

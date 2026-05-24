@@ -2,48 +2,27 @@ import { Decimal } from "database/generated/prisma/internal/prismaNamespace";
 import { prisma } from "database";
 import type { Request, Response, NextFunction } from "express";
 
-async function GetEstimatedCostPerMonth(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<any> {
+async function getMetrics(req: Request, res: Response, next: NextFunction) {
   try {
-    const data = await prisma.subscription.findMany({
-      where: {
-        billingFrequencyInMonths: 1, // only true monthly subscriptions
-      },
-    });
-
-    let totalSpend = new Decimal(0);
-    for (const subscription of data) {
-      totalSpend = totalSpend.add(subscription.price);
+    const subs = await prisma.subscription.findMany();
+    let totalSpendPerMonth = new Decimal(0);
+    let totalSpendPerYear = new Decimal(0);
+    for (const subscription of subs) {
+      totalSpendPerMonth = totalSpendPerMonth.add(subscription.price);
+      totalSpendPerYear = totalSpendPerYear.add(subscription.price.mul(12));
     }
 
-    return res.status(200).json({
-      status: 200,
-      totalSpend,
-    });
-  } catch (e) {
-    next(e);
-  }
-}
-
-async function TopFiveSpenders(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<any> {
-  try {
-    const data = await prisma.subscription.findMany({
+    const top5 = await prisma.subscription.findMany({
       take: 5,
       orderBy: {
         price: "desc",
       },
     });
 
-    return res.status(200).json({
-      status: 200,
-      data,
+    res.status(200).json({
+      totalSpendPerMonth,
+      totalSpendPerYear,
+      top5,
     });
   } catch (e) {
     next(e);
@@ -51,6 +30,5 @@ async function TopFiveSpenders(
 }
 
 export default {
-  GetEstimatedCostPerMonth,
-  TopFiveSpenders,
+  getMetrics,
 };
