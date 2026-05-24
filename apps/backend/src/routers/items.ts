@@ -11,7 +11,7 @@ const router = Router();
 const allowed_types = new Set(["image/png", "image/jpeg", "image/webp"]);
 const multerStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadPath = path.join(env.DATA_PATH, "files");
+    const uploadPath = path.join(env.DATA_PATH || "/", "files");
     if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath);
     cb(null, uploadPath);
   },

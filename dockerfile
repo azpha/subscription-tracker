@@ -35,14 +35,16 @@ ARG VERSION
 ENV APPLICATION_VERSION=${VERSION}
 ENV NODE_ENV=production
 
-COPY --from=builder /app/apps/backend/dist    ./apps/backend/dist
-COPY --from=builder /app/apps/backend/node_modules  ./apps/backend/node_modules
-COPY --from=builder /app/apps/frontend/dist   ./apps/frontend/dist
-COPY --from=builder /app/packages/database    ./packages/database
-COPY --from=builder /app/node_modules         ./node_modules
-COPY --from=builder /app/package.json         ./package.json
-COPY --from=builder /app/pnpm-workspace.yaml  ./pnpm-workspace.yaml
+COPY --from=builder /app/apps/backend/package.json    ./apps/backend/package.json
+COPY --from=builder /app/apps/backend/dist            ./apps/backend/dist
+COPY --from=builder /app/apps/backend/node_modules    ./apps/backend/node_modules
+COPY --from=builder /app/apps/frontend/package.json   ./apps/frontend/package.json
+COPY --from=builder /app/apps/frontend/dist           ./apps/frontend/dist
+COPY --from=builder /app/packages/database            ./packages/database
+COPY --from=builder /app/node_modules                 ./node_modules
+COPY --from=builder /app/package.json                 ./package.json
+COPY --from=builder /app/pnpm-workspace.yaml          ./pnpm-workspace.yaml
 
 EXPOSE 3000
 
-CMD ["node", "apps/backend/dist/index.js"]
+CMD ["pnpm", "run", "start"]

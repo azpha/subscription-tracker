@@ -24,7 +24,7 @@ app.use(cors());
 if (env.NODE_ENV === "production") {
   app.use("/", express.static(path.join(__dirname, "../../frontend/dist")));
 }
-app.use("/api/icons", express.static(path.join(env.DATA_PATH, "files")));
+app.use("/api/icons", express.static(path.join(env.DATA_PATH || "/", "files")));
 app.use("/api/items", itemsRouter);
 app.use("/api/settings", settingsRouter);
 app.use("/api/metrics", metricsRouter);

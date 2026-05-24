@@ -3,12 +3,12 @@ volumes:
 
 services:
   subscription-tracker:
-    # build: .
+    build: .
     image: subscription-tracker-subscription-tracker:latest
     restart: unless-stopped
     ports:
       - 3000:3000
     volumes:
-      - "subs:/app"
+      - "subs:/files"
     environment:
       - BASE_URL=https://subs.domain.tld # the url of this instance to link to in ntfy/discord notifications

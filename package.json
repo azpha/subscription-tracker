@@ -2,7 +2,6 @@
   "name": "subscription-tracker",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "build": "pnpm --filter database build && pnpm --filter backend build && pnpm --filter frontend build",
