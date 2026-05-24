@@ -1,24 +1,17 @@
-# subscription-tracker
+# subber
 
-A simple tracker for all of your subscriptions.
-
-<a href="https://github.com/azpha/subscription-tracker">
-<img alt="GPL 2.0 License" src="https://img.shields.io/github/license/azpha/subscription-tracker.svg"/>
+<a href="https://github.com/azpha/subber">
+<img alt="GPL 2.0 License" src="https://img.shields.io/github/license/azpha/subber.svg"/>
 </a>
 <a href="https://github.com/azpha/subscription-tracker/releases">
-<img alt="Current Release" src="https://img.shields.io/github/release/azpha/subscription-tracker.svg"/>
+<img alt="Current Release" src="https://img.shields.io/github/release/azpha/subber.svg"/>
 </a>
 
----
-
-This is a simple subscription-tracker to track & monitor all of your ongoing
-financial subscriptions. It has support for Discord & Ntfy notifications, with Slack
-and support for other webhooks in progress.
+Easily track all of your active subscriptions & get notified when you're about to be charged. Has support for both Discord and Ntfy notifications depending on your preferences.
 
 ## Deployment
 
-Included in this repository is a `docker-compose.yaml` to quickly deploy via
-a Docker container.
+Docker is the most recommended way to deploy this service. There is a handy `docker-compose.yml` file in the root of the repository if you need. It should look something like this
 
 ```yaml
 volumes:
@@ -40,7 +33,7 @@ services:
 
 There are a few configuration changes you can make to make your instance yours. All can be placed in the `enivronment` section of the docker-compose config as displayed above.
 
-- `BASE_URL` - the hostname of your subscription-tracker instance. Used for sending you to your instance when clicking on notifications
+- `BASE_URL` - the hostname of your subber instance (w/o a trailing slash). Used for sending you to your instance when clicking on notifications
 
 ## Development
 
@@ -53,7 +46,7 @@ pnpm i
 This project uses **Prisma** as an ORM, you can find all the code related to this in the `packages/prisma` folder. You'll need to deploy migrations to a local SQLite database
 
 ```bash
-pnpm run db:migrate
+pnpm --filter database run db:migrate
 ```
 
 After you've done that, you're good to go! Run the dev script of the component you're working on, or both in separate terminals if you're modifying both.
@@ -63,34 +56,4 @@ pnpm run dev:api
 pnpm run dev:web
 ```
 
-**That's it!** You're all setup to contribute to subscription-tracker.
-
-## Components
-
-### frontend
-
-The frontend application, built using the **Vite** framework in React + TypeScript.
-
-```
-| frontend
-|   src
-|     assets <- static assets
-|     components <- react components
-|     utils <- utilities like the API interface + types
-|     App.tsx <- the SPA
-|     main.tsx <- the root of React
-```
-
-### backend
-
-The API application, built using **Express**. All database operations are done with **Prisma ORM**, request validation using **Zod**.
-
-```
-| backend
-|   src
-|     index.ts <- root of the Express project
-|     cron.ts <- the logic for the Cronjob that runs at midnight
-|     controllers <- business logic for endpoints
-|     routers <- endpoint configuration
-|     utils <- database configuration, request schemas
-```
+**That's it!** You're all setup to contribute to subber.
