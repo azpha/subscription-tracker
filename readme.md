@@ -3,7 +3,7 @@
 <a href="https://github.com/azpha/subber">
 <img alt="GPL 2.0 License" src="https://img.shields.io/github/license/azpha/subber.svg"/>
 </a>
-<a href="https://github.com/azpha/subscription-tracker/releases">
+<a href="https://github.com/azpha/subber/releases">
 <img alt="Current Release" src="https://img.shields.io/github/release/azpha/subber.svg"/>
 </a>
 
