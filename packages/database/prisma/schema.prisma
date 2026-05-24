@@ -14,11 +14,31 @@ model Subscription {
   price              Decimal
   paymentMethod      String
   billingDate        DateTime
+  lastBillingDate    DateTime?
   category           Category? @relation(fields: [categoryId], references: [id])
   totalSpend         Decimal   @default(0.00)
   previousTotalSpend Decimal   @default(0.00)
   shouldNotifyExpiry Boolean   @default(true)
   categoryId         Int?
+}
+
+model MonthlyReport {
+  id   Int      @id @default(autoincrement())
+  year Int      @unique
+  jan  Decimal?
+  feb  Decimal?
+  mar  Decimal?
+  apr  Decimal?
+  may  Decimal?
+  jun  Decimal?
+  jul  Decimal?
+  aug  Decimal?
+  sept Decimal?
+  oct  Decimal?
+  nov  Decimal?
+  dec  Decimal?
+
+  @@index([year])
 }
 
 model Category {

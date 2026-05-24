@@ -25,4 +25,20 @@ interface Metrics {
   top5: Subscription[];
 }
 
-export type { Subscription, Category, Metrics };
+interface MonthlyReport {
+  year: number;
+  jan?: number;
+  feb?: number;
+  mar?: number;
+  apr?: number;
+  may?: number;
+  jun?: number;
+  jul?: number;
+  aug?: number;
+  sept?: number;
+  oct?: number;
+  nov?: number;
+  dec?: number;
+}
+
+export type { Subscription, Category, Metrics, MonthlyReport };

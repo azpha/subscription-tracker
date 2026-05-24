@@ -2,6 +2,7 @@ import cron from "node-cron";
 import { prisma } from "database";
 import webhooks from "./utils/webhooks";
 import env from "./utils/env";
+import { Decimal } from "database/generated/prisma/internal/prismaNamespace";
 
 type DiscordWebhook = {
   username: string;
@@ -21,8 +22,22 @@ type DiscordEmbedField = {
 };
 
 const isDevelopmentFlagEnabled = env.SHORT_CRON_EXPIRY;
+const MONTHS = {
+  0: "jan",
+  1: "feb",
+  2: "mar",
+  3: "apr",
+  4: "may",
+  5: "jun",
+  6: "jul",
+  7: "aug",
+  8: "sep",
+  9: "oct",
+  10: "nov",
+  11: "dec",
+};
 
-async function job() {
+async function dailyJob() {
   const DISCORD_WEBHOOK_SCHEMA: DiscordWebhook = {
     username: "Subscriptions",
     embeds: [
@@ -78,6 +93,7 @@ async function job() {
         },
         data: {
           billingDate: newBillingDate,
+          lastBillingDate: subscription.billingDate,
           totalSpend: subscription.totalSpend.add(subscription.price),
           previousTotalSpend: subscription.totalSpend,
         },
@@ -103,6 +119,36 @@ async function job() {
   }
 }
 
+async function monthlyJob() {
+  const date = new Date();
+  const month = MONTHS[date.getMonth() as keyof typeof MONTHS];
+
+  let monthlyPrice = new Decimal(0);
+  const subs = await prisma.subscription.findMany();
+  for (const sub of subs) {
+    if (
+      MONTHS[sub.lastBillingDate?.getMonth() as keyof typeof MONTHS] ===
+        month ||
+      MONTHS[sub.billingDate?.getMonth() as keyof typeof MONTHS] === month
+    ) {
+      monthlyPrice = monthlyPrice.add(sub.price);
+    }
+  }
+
+  await prisma.monthlyReport.upsert({
+    where: {
+      year: date.getFullYear(),
+    },
+    create: {
+      year: date.getFullYear(),
+      [month]: monthlyPrice,
+    },
+    update: {
+      [month]: monthlyPrice,
+    },
+  });
+}
+
 async function sendDiscordMessage(message: DiscordWebhook) {
   fetch(env.DISCORD_WEBHOOK as string, {
     method: "post",
@@ -113,19 +159,25 @@ async function sendDiscordMessage(message: DiscordWebhook) {
   });
 }
 
-if (!env.DISCORD_WEBHOOK && !env.NTFY_HOST) {
-  console.warn(
-    "DISCORD_WEBHOOK & NTFY_HOST not defined, not starting cron schedule",
-  );
+if (isDevelopmentFlagEnabled) {
+  cron.schedule("*/5 * * * * *", () => {
+    console.log("5 seconds");
+    dailyJob();
+  });
+  cron.schedule("*/7 * * * * *", () => {
+    console.log("7 seconds");
+    monthlyJob();
+  });
 } else {
-  if (isDevelopmentFlagEnabled) {
-    cron.schedule("*/5 * * * * *", () => {
-      console.log("5 seconds");
-      job();
-    });
-  } else {
-    cron.schedule("0 0 */1 * *", () => {
-      job();
-    });
-  }
+  cron.schedule("0 0 */1 * *", () => {
+    dailyJob();
+  });
+  cron.schedule("0 0 */1 * *", () => {
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    if (today.getMonth() != tomorrow.getMonth()) {
+      monthlyJob();
+    }
+  });
 }

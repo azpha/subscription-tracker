@@ -28,4 +28,5 @@ export default {
   category: z.object({
     name: z.string().min(1),
   }),
+  monthlyReport: z.coerce.number().optional(),
 };

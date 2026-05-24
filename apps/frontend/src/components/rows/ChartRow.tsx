@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardContent, CardTitle } from "../ui/card";
 import CategoryChart from "../CategoryChart";
+import MonthlyChart from "../MonthlyChart";
 import EmptyState from "../EmptyState";
 
 interface ChartRowProps {
@@ -16,7 +17,7 @@ export default function ChartRow({ categorySpending }: ChartRowProps) {
           <CardTitle>Monthly Spending Trend</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>Test</p>
+          <MonthlyChart />
         </CardContent>
       </Card>
       <Card className="border border-gray-500">

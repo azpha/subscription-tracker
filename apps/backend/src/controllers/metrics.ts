@@ -1,6 +1,7 @@
 import { Decimal } from "database/generated/prisma/internal/prismaNamespace";
 import { prisma } from "database";
 import type { Request, Response, NextFunction } from "express";
+import schemas from "../utils/schemas";
 
 async function getMetrics(req: Request, res: Response, next: NextFunction) {
   try {
@@ -58,6 +59,25 @@ async function getMetrics(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+async function getMonthlyReport(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const year = schemas.monthlyReport.parse(req.params.year);
+    const data = await prisma.monthlyReport.findFirst({
+      where: {
+        year: year || new Date().getFullYear(),
+      },
+    });
+    res.status(200).json(data);
+  } catch (e) {
+    next(e);
+  }
+}
+
 export default {
   getMetrics,
+  getMonthlyReport,
 };
