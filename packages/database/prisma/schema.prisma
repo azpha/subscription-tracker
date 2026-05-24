@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Subscription {
+  id                       Int       @id @default(autoincrement())
+  name                     String
+  image                    String
+  price                    Decimal
+  paymentMethod            String
+  lastBillingDate          DateTime
+  nextBillingDate          DateTime
+  billingFrequencyInMonths Int
+  category                 Category? @relation(fields: [categoryId], references: [id])
+  totalSpend               Decimal   @default(0.00)
+  shouldNotifyExpiry       Boolean   @default(true)
+  categoryId               Int
+}
+
+model Category {
+  id            Int            @id @default(autoincrement())
+  name          String         @unique
+  subscriptions Subscription[]
+}

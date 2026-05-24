@@ -4,14 +4,15 @@ import express, {
   type NextFunction,
 } from "express";
 import cors from "cors";
+import env from "./utils/env";
 import { ZodError } from "zod";
-import "dotenv/config";
 import "./cron";
 
 // routers
-import ItemsRouter from "./routers/Items";
-import SettingsRouter from "./routers/Settings";
-import MetricsRouter from "./routers/Metrics";
+import itemsRouter from "./routers/items";
+import settingsRouter from "./routers/settings";
+import metricsRouter from "./routers/metrics";
+import categoriesRouter from "./routers/categories";
 
 const app = express();
 app.use(express.json());
@@ -19,16 +20,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 // routes
-app.use("/items", ItemsRouter);
-app.use("/settings", SettingsRouter);
-app.use("/metrics", MetricsRouter);
+app.use("/items", itemsRouter);
+app.use("/settings", settingsRouter);
+app.use("/metrics", metricsRouter);
+app.use("/categories", categoriesRouter);
 
 // error handling
 const errorHandler = (
   err: Error | ZodError,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   if (err instanceof ZodError) {
     return res.status(400).json({
@@ -54,6 +56,6 @@ app.use("/*splat", (req: Request, res: Response) => {
   }) as any;
 });
 
-app.listen(process.env.PORT || 3002, () => {
-  console.log("Listening on port " + (process.env.PORT || 3002));
+app.listen(env.PORT || 3002, () => {
+  console.log("Listening on port " + (env.PORT || 3002));
 });

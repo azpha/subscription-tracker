@@ -1,7 +1,7 @@
 import cron from "node-cron";
-import Database from "./utils/Database";
-import NtfyUtils from "./utils/NtfyUtils";
-import "dotenv/config";
+import { prisma } from "database";
+import webhooks from "./utils/webhooks";
+import env from "./utils/env";
 
 type DiscordWebhook = {
   username: string;
@@ -20,8 +20,7 @@ type DiscordEmbedField = {
   inline: boolean;
 };
 
-const isDevelopmentFlagEnabled =
-  (process.env.SHORT_CRON_EXPIRY as string) === "true";
+const isDevelopmentFlagEnabled = env.SHORT_CRON_EXPIRY;
 
 async function job() {
   const DISCORD_WEBHOOK_SCHEMA: DiscordWebhook = {
@@ -29,7 +28,7 @@ async function job() {
     embeds: [
       {
         title: "Subscriptions expiring!",
-        url: `${process.env.BASE_URL}/?filter=7-days`,
+        url: `${env.BASE_URL}/?filter=7-days`,
         description: "You have subscriptions expiring soon!",
         color: 16711680,
         fields: [],
@@ -40,7 +39,7 @@ async function job() {
   const currentDatePlusSeven = new Date();
   currentDatePlusSeven.setDate(currentDatePlusSeven.getDate() + 7);
 
-  const expiringSoonSubscriptions = await Database.subscription.findMany({
+  const expiringSoonSubscriptions = await prisma.subscription.findMany({
     where: {
       nextBillingDate: {
         gte: new Date(),
@@ -52,13 +51,13 @@ async function job() {
   const currentDate = new Date();
   for (const subscription of expiringSoonSubscriptions) {
     const differenceInMs = Math.abs(
-      currentDate.getTime() - subscription.nextBillingDate.getTime()
+      currentDate.getTime() - subscription.nextBillingDate.getTime(),
     );
     const diffInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
 
     // any subscription expiring in sub-7 days will be sent to
     // the subscription
-    if (diffInDays <= 7 && process.env.DISCORD_WEBHOOK) {
+    if (diffInDays <= 7 && env.DISCORD_WEBHOOK) {
       const field = {
         name: subscription.name,
         value: `${diffInDays} day(s), ${subscription.paymentMethod}`,
@@ -73,10 +72,10 @@ async function job() {
       const newBillingDate = subscription.nextBillingDate;
       newBillingDate.setMonth(
         subscription.nextBillingDate.getMonth() +
-          subscription.billingFrequencyInMonths
+          subscription.billingFrequencyInMonths,
       );
 
-      await Database.subscription.update({
+      await prisma.subscription.update({
         where: {
           id: subscription.id,
         },
@@ -91,24 +90,24 @@ async function job() {
 
   // send the webhook if configured
   if (
-    process.env.DISCORD_WEBHOOK &&
+    env.DISCORD_WEBHOOK &&
     DISCORD_WEBHOOK_SCHEMA.embeds[0].fields.length > 0
   ) {
     sendDiscordMessage(DISCORD_WEBHOOK_SCHEMA);
   }
 
   // send ntfy push notification if configured
-  if (process.env.NTFY_HOST) {
+  if (env.NTFY_HOST) {
     if (expiringSoonSubscriptions.length === 1) {
-      NtfyUtils.sendSpecificPushNotification(expiringSoonSubscriptions[0]);
+      webhooks.sendSpecificPushNotification(expiringSoonSubscriptions[0]);
     } else if (expiringSoonSubscriptions.length > 0) {
-      NtfyUtils.sendAllPushNotification();
+      webhooks.sendAllPushNotification();
     }
   }
 }
 
 async function sendDiscordMessage(message: DiscordWebhook) {
-  fetch(process.env.DISCORD_WEBHOOK as string, {
+  fetch(env.DISCORD_WEBHOOK as string, {
     method: "post",
     headers: {
       "content-type": "application/json",
@@ -117,9 +116,9 @@ async function sendDiscordMessage(message: DiscordWebhook) {
   });
 }
 
-if (!process.env.DISCORD_WEBHOOK && !process.env.NTFY_HOST) {
+if (!env.DISCORD_WEBHOOK && !env.NTFY_HOST) {
   console.warn(
-    "DISCORD_WEBHOOK & NTFY_HOST not defined, not starting cron schedule"
+    "DISCORD_WEBHOOK & NTFY_HOST not defined, not starting cron schedule",
   );
 } else {
   if (isDevelopmentFlagEnabled) {
