@@ -19,9 +19,21 @@ async function getMetrics(req: Request, res: Response, next: NextFunction) {
       },
     });
 
+    const currentDatePlusSeven = new Date();
+    currentDatePlusSeven.setDate(currentDatePlusSeven.getDate() + 7);
+    const expiringSoon = await prisma.subscription.findMany({
+      where: {
+        billingDate: {
+          gte: new Date(),
+          lte: currentDatePlusSeven,
+        },
+      },
+    });
+
     res.status(200).json({
       totalSpendPerMonth,
       totalSpendPerYear,
+      expiringSoon,
       top5,
     });
   } catch (e) {

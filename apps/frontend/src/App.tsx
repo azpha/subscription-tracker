@@ -49,10 +49,12 @@ function App() {
     if (!createModalOpen && items) {
       fetchItems();
       fetchCategories();
+      fetchMetrics();
     }
     if (!editModalOpen && items) {
       fetchItems();
       fetchCategories();
+      fetchMetrics();
     }
   }, [createModalOpen]);
 
@@ -178,7 +180,7 @@ function App() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    {items?.map((v, k) => {
+                    {metrics?.expiringSoon?.map((v, k) => {
                       return <CompactItem subscription={v} key={k} />;
                     })}
                   </div>

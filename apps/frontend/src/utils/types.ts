@@ -19,6 +19,7 @@ interface Category {
 interface Metrics {
   totalSpendPerMonth: number;
   totalSpendPerYear: number;
+  expiringSoon: Subscription[];
   top5: Subscription[];
 }
 
