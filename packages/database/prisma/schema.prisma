@@ -8,16 +8,17 @@ datasource db {
 }
 
 model Subscription {
-  id                       Int       @id @default(autoincrement())
-  name                     String
-  image                    String
-  price                    Decimal
-  paymentMethod            String
-  billingDate              DateTime
-  category                 Category? @relation(fields: [categoryId], references: [id])
-  totalSpend               Decimal   @default(0.00)
-  shouldNotifyExpiry       Boolean   @default(true)
-  categoryId               Int?
+  id                 Int       @id @default(autoincrement())
+  name               String
+  image              String
+  price              Decimal
+  paymentMethod      String
+  billingDate        DateTime
+  category           Category? @relation(fields: [categoryId], references: [id])
+  totalSpend         Decimal   @default(0.00)
+  previousTotalSpend Decimal   @default(0.00)
+  shouldNotifyExpiry Boolean   @default(true)
+  categoryId         Int?
 }
 
 model Category {

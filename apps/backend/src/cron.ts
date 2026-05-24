@@ -41,7 +41,7 @@ async function job() {
 
   const expiringSoonSubscriptions = await prisma.subscription.findMany({
     where: {
-      nextBillingDate: {
+      billingDate: {
         gte: new Date(),
         lte: currentDatePlusSeven,
       },
@@ -51,7 +51,7 @@ async function job() {
   const currentDate = new Date();
   for (const subscription of expiringSoonSubscriptions) {
     const differenceInMs = Math.abs(
-      currentDate.getTime() - subscription.nextBillingDate.getTime(),
+      currentDate.getTime() - subscription.billingDate.getTime(),
     );
     const diffInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
 
@@ -69,20 +69,17 @@ async function job() {
     // update the subscriptions billing date + total tracked spend
     // if there are no more days until expiration
     if (diffInDays === 0) {
-      const newBillingDate = subscription.nextBillingDate;
-      newBillingDate.setMonth(
-        subscription.nextBillingDate.getMonth() +
-          subscription.billingFrequencyInMonths,
-      );
+      const newBillingDate = subscription.billingDate;
+      newBillingDate.setMonth(subscription.billingDate.getMonth() + 1);
 
       await prisma.subscription.update({
         where: {
           id: subscription.id,
         },
         data: {
-          nextBillingDate: newBillingDate,
-          lastBillingDate: new Date(),
+          billingDate: newBillingDate,
           totalSpend: subscription.totalSpend.add(subscription.price),
+          previousTotalSpend: subscription.totalSpend,
         },
       });
     }

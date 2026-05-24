@@ -7,8 +7,12 @@ async function getMetrics(req: Request, res: Response, next: NextFunction) {
     const subs = await prisma.subscription.findMany();
     let totalSpendPerMonth = new Decimal(0);
     let totalSpendPerYear = new Decimal(0);
+    let previousMonthsTotalSpend = new Decimal(0);
     for (const subscription of subs) {
       totalSpendPerMonth = totalSpendPerMonth.add(subscription.price);
+      previousMonthsTotalSpend = previousMonthsTotalSpend.add(
+        subscription.previousTotalSpend,
+      );
       totalSpendPerYear = totalSpendPerYear.add(subscription.price.mul(12));
     }
 
@@ -43,6 +47,7 @@ async function getMetrics(req: Request, res: Response, next: NextFunction) {
 
     res.status(200).json({
       totalSpendPerMonth,
+      previousMonthsTotalSpend,
       totalSpendPerYear,
       expiringSoon,
       expiringNext,
