@@ -2,12 +2,14 @@ import { useState, useEffect, useMemo } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "./components/ui/card";
 import CompactItem from "./components/CompactItem";
 import FullItem from "./components/FullItem";
-import api from "./utils/api";
 import Create from "./components/modals/create";
 import Edit from "./components/modals/edit";
-import { Metrics, type Category, type Subscription } from "./utils/types";
-import CategoryChart from "./components/CategoryChart";
 import EmptyState from "./components/EmptyState";
+import TopRow from "./components/rows/TopRow";
+import ChartRow from "./components/rows/ChartRow";
+import Header from "./components/Header";
+import api from "./utils/api";
+import { type Metrics, type Category, type Subscription } from "./utils/types";
 
 function App() {
   const [items, setItems] = useState<Subscription[] | null>(null);
@@ -78,102 +80,16 @@ function App() {
       <div className="bg-black min-h-screen flex justify-center text-white dark">
         <div className="w-full md:max-w-7xl m-10">
           <div className="flex md:flex-row flex-col justify-between">
-            <div>
-              <h1 className="text-2xl font-bold">Tracker</h1>
-              <p className="text-sm opacity-50">
-                Track your upcoming subscriptions
-              </p>
-            </div>
-            <div className="flex items-center my-2 md:my-0 space-x-2">
-              <button
-                onClick={() => setCreateModalOpen(true)}
-                type="button"
-                className={`bg-white text-black p-2 rounded-lg font-semibold w-full text-sm`}
-              >
-                Add subscription
-              </button>
-            </div>
+            <Header setCreateModalOpen={setCreateModalOpen} />
           </div>
 
           <div className="mt-6">
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Card className="border border-gray-500">
-                <CardHeader>
-                  <CardTitle>Monthly Spending</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xl">${metrics?.totalSpendPerMonth}</p>
-                  <p className="text-xs text-muted-foreground">
-                    Across {items?.length} subscriptions
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="border border-gray-500">
-                <CardHeader>
-                  <CardTitle>Yearly Spending</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xl">${metrics?.totalSpendPerYear}</p>
-                  <p className="text-xs text-muted-foreground">
-                    Across {items?.length} subscriptions
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="border border-gray-500">
-                <CardHeader>
-                  <CardTitle>Active Subscriptions</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xl">{items?.length}</p>
-                  <p className="text-xs text-muted-foreground">
-                    Across {categories.length} categories
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="border border-gray-500">
-                <CardHeader>
-                  <CardTitle>Next Payment</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {metrics && metrics.expiringNext ? (
-                    <>
-                      <p className="text-xl">{metrics?.expiringNext?.name}</p>
-                      <p className="xs text-muted-foreground">
-                        ${metrics?.expiringNext?.price} -{" "}
-                        {metrics?.expiringNext &&
-                          new Date(
-                            metrics?.expiringNext.billingDate,
-                          ).toLocaleDateString()}
-                      </p>
-                    </>
-                  ) : (
-                    <EmptyState />
-                  )}
-                </CardContent>
-              </Card>
+              <TopRow items={items} categories={categories} metrics={metrics} />
             </div>
 
             <div className="grid md:grid-cols-2 sm:grid-cols-1 gap-4 my-8">
-              <Card className="border border-gray-500">
-                <CardHeader>
-                  <CardTitle>Monthly Spending Trend</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>Test</p>
-                </CardContent>
-              </Card>
-              <Card className="border border-gray-500">
-                <CardHeader>
-                  <CardTitle>Spending By Category</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {categorySpending && categorySpending.length > 0 ? (
-                    <CategoryChart categorySpending={categorySpending} />
-                  ) : (
-                    <EmptyState />
-                  )}
-                </CardContent>
-              </Card>
+              <ChartRow categorySpending={categorySpending} />
             </div>
 
             <div className="my-4 space-y-8">
