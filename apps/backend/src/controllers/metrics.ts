@@ -30,10 +30,22 @@ async function getMetrics(req: Request, res: Response, next: NextFunction) {
       },
     });
 
+    const expiringNext = await prisma.subscription.findFirst({
+      where: {
+        billingDate: {
+          gte: new Date(),
+        },
+      },
+      orderBy: {
+        billingDate: "asc",
+      },
+    });
+
     res.status(200).json({
       totalSpendPerMonth,
       totalSpendPerYear,
       expiringSoon,
+      expiringNext,
       top5,
     });
   } catch (e) {

@@ -127,7 +127,15 @@ function App() {
                 <CardHeader>
                   <CardTitle>Next Payment</CardTitle>
                 </CardHeader>
-                <CardContent>Test</CardContent>
+                <CardContent>
+                  <p className="text-xl">{metrics?.expiringNext?.name}</p>
+                  <p className="xs text-muted-foreground">
+                    ${metrics?.expiringNext?.price} -{" "}
+                    {new Date(
+                      metrics?.expiringNext.billingDate,
+                    ).toLocaleDateString()}
+                  </p>
+                </CardContent>
               </Card>
             </div>
 

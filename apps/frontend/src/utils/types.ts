@@ -20,6 +20,7 @@ interface Metrics {
   totalSpendPerMonth: number;
   totalSpendPerYear: number;
   expiringSoon: Subscription[];
+  expiringNext: Subscription;
   top5: Subscription[];
 }
 
