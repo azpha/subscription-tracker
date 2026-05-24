@@ -1,5 +1,6 @@
 import env from "./env";
 import { Subscription } from "database";
+import type { DiscordWebhook } from "./types";
 
 const sendAllPushNotification = () => {
   const host = new URL(env.NTFY_HOST as string);
@@ -30,7 +31,7 @@ const sendSpecificPushNotification = (subscription: Subscription) => {
     message: `${subscription.name} ($${Number(subscription.price).toFixed(
       2,
     )}, ${subscription.paymentMethod}) is expiring on ${new Date(
-      subscription.nextBillingDate,
+      subscription.billingDate,
     ).toLocaleDateString()}!`,
     priority: 4,
     click: `${env.BASE_URL}/?filter=7-days`,
@@ -45,7 +46,18 @@ const sendSpecificPushNotification = (subscription: Subscription) => {
   });
 };
 
+async function sendDiscordWebhook(schema: DiscordWebhook) {
+  fetch(env.DISCORD_WEBHOOK as string, {
+    method: "post",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(schema),
+  });
+}
+
 export default {
   sendAllPushNotification,
   sendSpecificPushNotification,
+  sendDiscordWebhook,
 };

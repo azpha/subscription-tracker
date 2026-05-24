@@ -3,23 +3,7 @@ import { prisma } from "database";
 import webhooks from "./utils/webhooks";
 import env from "./utils/env";
 import { Decimal } from "database/generated/prisma/internal/prismaNamespace";
-
-type DiscordWebhook = {
-  username: string;
-  embeds: DiscordEmbed[];
-};
-type DiscordEmbed = {
-  title: string;
-  url: string;
-  description: string;
-  color: number;
-  fields: DiscordEmbedField[];
-};
-type DiscordEmbedField = {
-  name: string;
-  value: string;
-  inline: boolean;
-};
+import type { DiscordWebhook } from "./utils/types";
 
 const isDevelopmentFlagEnabled = env.SHORT_CRON_EXPIRY;
 const MONTHS = {
@@ -106,7 +90,7 @@ async function dailyJob() {
     env.DISCORD_WEBHOOK &&
     DISCORD_WEBHOOK_SCHEMA.embeds[0].fields.length > 0
   ) {
-    sendDiscordMessage(DISCORD_WEBHOOK_SCHEMA);
+    webhooks.sendDiscordWebhook(DISCORD_WEBHOOK_SCHEMA);
   }
 
   // send ntfy push notification if configured
@@ -146,16 +130,6 @@ async function monthlyJob() {
     update: {
       [month]: monthlyPrice,
     },
-  });
-}
-
-async function sendDiscordMessage(message: DiscordWebhook) {
-  fetch(env.DISCORD_WEBHOOK as string, {
-    method: "post",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(message),
   });
 }
 
