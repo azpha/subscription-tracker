@@ -1,11 +1,7 @@
 import { Decimal } from "database/generated/prisma/internal/prismaNamespace";
 import { prisma } from "database";
 import Schemas from "../utils/schemas";
-import fs from "fs";
-import path from "node:path";
 import type { Request, Response, NextFunction } from "express";
-import env from "../utils/env";
-import schemas from "../utils/schemas";
 
 async function createItem(
   req: Request,
@@ -254,39 +250,6 @@ async function searchForItem(
   }
 }
 
-async function fetchIcon(req: Request, res: Response, next: NextFunction) {
-  try {
-    const id = schemas.id.parse(req.params.id);
-    const uploadPath = path.join(env.DATA_PATH, "files");
-
-    const item = await prisma.subscription.findFirst({
-      where: {
-        id,
-      },
-    });
-
-    if (!item) {
-      res.status(404).json({
-        status: 404,
-        message: "No item found with that ID",
-      });
-      return;
-    }
-
-    if (fs.existsSync(path.join(uploadPath, item.image))) {
-      res.status(200).sendFile(path.join(uploadPath, item.image));
-    } else {
-      res.status(404).json({
-        status: 404,
-        message: "File not found",
-      });
-      return;
-    }
-  } catch (e) {
-    next(e);
-  }
-}
-
 async function uploadIcon(req: Request, res: Response, next: NextFunction) {
   try {
     if (req.file) {
@@ -313,5 +276,4 @@ export default {
   fetchItems,
   deleteItem,
   uploadIcon,
-  fetchIcon,
 };

@@ -5,6 +5,7 @@ import express, {
 } from "express";
 import cors from "cors";
 import env from "./utils/env";
+import path from "node:path";
 import { ZodError } from "zod";
 import "./cron";
 
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 // routes
+app.use("/api/icons", express.static(path.join(env.DATA_PATH, "files")));
 app.use("/api/items", itemsRouter);
 app.use("/api/settings", settingsRouter);
 app.use("/api/metrics", metricsRouter);

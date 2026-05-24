@@ -31,7 +31,6 @@ const upload = multer({
 
 router.get("/", itemsController.fetchItems);
 router.get("/:id", itemsController.fetchItem);
-router.get("/:id/icon", itemsController.fetchIcon);
 router.get("/search", itemsController.searchForItem);
 router.post("/", itemsController.createItem);
 router.post("/icon", upload.single("content"), itemsController.uploadIcon);
