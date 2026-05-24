@@ -31,7 +31,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - "subs:/app"
+      - "subs:/files"
     environment:
       - BASE_URL=https://subs.domain.tld
 ```
