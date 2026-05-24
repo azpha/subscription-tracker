@@ -1,42 +1,13 @@
-networks:
-  subs-network:
-    name: subs-network
 volumes:
   subs-db:
 
 services:
-  db:
-    image: mariadb
-    restart: unless-stopped
-    networks:
-      - subs-network
-    volumes:
-      - subs-db:/var/lib/mysql
-    environment:
-      MARIADB_ROOT_PASSWORD: super_secret
-      MARIADB_USER: subscription
-      MARIADB_PASSWORD: super_secret
-      MARIADB_DATABASE: subscription
-    healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      start_period: 10s
-      interval: 10s
-      timeout: 5s
-      retries: 3
-
   subscription-tracker:
     image: ghcr.io/azpha/subscription-tracker:latest
-    # build: .
     restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - subs-network
     ports:
       - 3000:3000
+    volumes:
+      - "subs:/app"
     environment:
-      - DATABASE_URL=mysql://subscription:super_secret@db:3306/subscription
-      - DISCORD_WEBHOOK=https://discord.com/api/webhooks/xxxxxxx/xxxxxxxxx # support for discord webhooks
-      - NTFY_HOST=https://push.domain.tld/topic # support for ntfy notifications
       - BASE_URL=https://subs.domain.tld # the url of this instance to link to in ntfy/discord notifications
