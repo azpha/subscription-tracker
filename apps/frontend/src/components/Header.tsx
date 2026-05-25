@@ -1,22 +1,29 @@
+import { ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
+
 interface HeaderProps {
-  setCreateModalOpen: (v: boolean) => void;
+  headerButtons?: ReactNode | ReactNode[];
 }
-export default function Header({ setCreateModalOpen }: HeaderProps) {
+export default function Header({ headerButtons }: HeaderProps) {
+  const navigate = useNavigate();
+
   return (
     <>
       <div>
-        <h1 className="text-2xl font-bold">Tracker</h1>
+        <h1
+          className="text-2xl font-bold hover:cursor-pointer hover:underline"
+          onClick={() => navigate("/")}
+        >
+          Tracker
+        </h1>
         <p className="text-sm opacity-50">Track your upcoming subscriptions</p>
       </div>
-      <div className="flex items-center my-2 md:my-0 space-x-2">
-        <button
-          onClick={() => setCreateModalOpen(true)}
-          type="button"
-          className={`bg-white text-black p-2 rounded-lg font-semibold w-full text-sm`}
-        >
-          Add subscription
-        </button>
-      </div>
+      {/* {headerButtonAction && headerButtonLabel && ( */}
+      {headerButtons && (
+        <div className="flex flex-row items-center my-2 md:my-0 space-x-2">
+          {headerButtons}
+        </div>
+      )}
     </>
   );
 }

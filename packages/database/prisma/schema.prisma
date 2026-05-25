@@ -11,6 +11,11 @@ datasource db {
   provider = "sqlite"
 }
 
+enum VALID_SETTING {
+  DISCORD_WEBHOOK
+  NTFY_WEBHOOK
+}
+
 model Subscription {
   id                 Int       @id @default(autoincrement())
   name               String
@@ -49,4 +54,10 @@ model Category {
   id            Int            @id @default(autoincrement())
   name          String         @unique
   subscriptions Subscription[]
+}
+
+model Settings {
+  id Int @id @default(autoincrement())
+  name VALID_SETTING @unique
+  value String
 }

@@ -1,14 +1,10 @@
 import { Router } from "express";
-import SettingsController from "../controllers/settings";
+import settingsController from "../controllers/settings";
 
 const router = Router();
 
-router.get("/version", SettingsController.GetApplicationVersion);
-router.get("/notifications", SettingsController.GetWebhookStatus);
-router.post("/notifications/test/discord", SettingsController.TestWebhook);
-router.post(
-  "/notifications/test/ntfy",
-  SettingsController.TestPushNotification,
-);
+router.get("/version", settingsController.getVersion);
+router.get("/", settingsController.getSettings);
+router.post("/", settingsController.setSetting);
 
 export default router;

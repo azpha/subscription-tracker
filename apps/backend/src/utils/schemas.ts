@@ -29,4 +29,10 @@ export default {
     name: z.string().min(1),
   }),
   monthlyReport: z.coerce.number().optional(),
+  createSetting: z.array(
+    z.object({
+      name: z.enum(["DISCORD_WEBHOOK", "NTFY_WEBHOOK"]),
+      value: z.string().min(1),
+    }),
+  ),
 };

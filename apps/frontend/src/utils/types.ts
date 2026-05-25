@@ -41,4 +41,9 @@ interface MonthlyReport {
   dec?: number;
 }
 
-export type { Subscription, Category, Metrics, MonthlyReport };
+interface Settings {
+  name: string;
+  value: string;
+}
+
+export type { Subscription, Category, Metrics, MonthlyReport, Settings };

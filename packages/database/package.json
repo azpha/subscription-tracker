@@ -19,11 +19,11 @@
   "scripts": {
     "build": "prisma generate && tsc",
     "db:studio": "prisma studio",
-    "db:migrate": "prisma migrate dev && prisma generate",
+    "db:migrate": "prisma migrate dev && prisma generate && tsc",
     "db:deploy": "prisma migrate deploy",
-    "db:generate": "prisma generate",
+    "db:generate": "prisma generate && tsc",
     "db:format": "prisma format",
-    "db:reset": "prisma migrate reset && prisma generate"
+    "db:reset": "prisma migrate reset && prisma generate && tsc"
   },
   "keywords": [],
   "author": "",

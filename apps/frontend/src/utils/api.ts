@@ -1,4 +1,10 @@
-import { Category, Metrics, MonthlyReport, Subscription } from "./types";
+import {
+  Category,
+  Metrics,
+  MonthlyReport,
+  Settings,
+  Subscription,
+} from "./types";
 
 const BASE_URL =
   import.meta.env.VITE_BASE_URL || `${location.protocol}//${location.host}/api`;
@@ -19,6 +25,15 @@ async function fetchCategories(): Promise<Category[]> {
     if (res.ok) {
       const data = await res.json();
       return data as Category[];
+    } else throw new Error("Invalid response from API");
+  });
+}
+
+async function fetchSettings(): Promise<Settings[]> {
+  return fetch(BASE_URL + "/settings").then(async (res) => {
+    if (res.ok) {
+      const data = await res.json();
+      return data as Settings[];
     } else throw new Error("Invalid response from API");
   });
 }
@@ -76,6 +91,23 @@ async function updateItem(
     })
     .catch(async (e) => {
       console.error("Failed to update item", e);
+      return false;
+    });
+}
+
+async function updateSettings(settings: Settings[]): Promise<boolean> {
+  return fetch(BASE_URL + "/settings", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(settings),
+  })
+    .then(async (res) => {
+      return res.ok;
+    })
+    .catch(async (e) => {
+      console.error("Failed to update setting", e);
       return false;
     });
 }
@@ -168,4 +200,6 @@ export default {
   uploadIcon,
   fetchMetrics,
   fetchMonthlyReport,
+  fetchSettings,
+  updateSettings,
 };
