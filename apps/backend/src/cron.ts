@@ -22,6 +22,16 @@ const MONTHS = {
 };
 
 async function dailyJob() {
+  const discordWebhookUrl = await prisma.settings.findFirst({
+    where: {
+      name: "DISCORD_WEBHOOK",
+    },
+  });
+  const ntfyWebhookUrl = await prisma.settings.findFirst({
+    where: {
+      name: "NTFY_WEBHOOK",
+    },
+  });
   const DISCORD_WEBHOOK_SCHEMA: DiscordWebhook = {
     username: "Subscriptions",
     embeds: [
@@ -56,7 +66,7 @@ async function dailyJob() {
 
     // any subscription expiring in sub-7 days will be sent to
     // the subscription
-    if (diffInDays <= 7 && env.DISCORD_WEBHOOK) {
+    if (diffInDays <= 7 && discordWebhookUrl) {
       const field = {
         name: subscription.name,
         value: `${diffInDays} day(s), ${subscription.paymentMethod}`,
@@ -86,15 +96,12 @@ async function dailyJob() {
   }
 
   // send the webhook if configured
-  if (
-    env.DISCORD_WEBHOOK &&
-    DISCORD_WEBHOOK_SCHEMA.embeds[0].fields.length > 0
-  ) {
+  if (discordWebhookUrl && DISCORD_WEBHOOK_SCHEMA.embeds[0].fields.length > 0) {
     webhooks.sendDiscordWebhook(DISCORD_WEBHOOK_SCHEMA);
   }
 
   // send ntfy push notification if configured
-  if (env.NTFY_HOST) {
+  if (ntfyWebhookUrl) {
     if (expiringSoonSubscriptions.length === 1) {
       webhooks.sendSpecificPushNotification(expiringSoonSubscriptions[0]);
     } else if (expiringSoonSubscriptions.length > 0) {
