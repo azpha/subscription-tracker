@@ -97,15 +97,21 @@ async function dailyJob() {
 
   // send the webhook if configured
   if (discordWebhookUrl && DISCORD_WEBHOOK_SCHEMA.embeds[0].fields.length > 0) {
-    webhooks.sendDiscordWebhook(DISCORD_WEBHOOK_SCHEMA);
+    webhooks.sendDiscordWebhook(
+      discordWebhookUrl.value,
+      DISCORD_WEBHOOK_SCHEMA,
+    );
   }
 
   // send ntfy push notification if configured
   if (ntfyWebhookUrl) {
     if (expiringSoonSubscriptions.length === 1) {
-      webhooks.sendSpecificPushNotification(expiringSoonSubscriptions[0]);
+      webhooks.sendSpecificPushNotification(
+        ntfyWebhookUrl.value,
+        expiringSoonSubscriptions[0],
+      );
     } else if (expiringSoonSubscriptions.length > 0) {
-      webhooks.sendAllPushNotification();
+      webhooks.sendAllPushNotification(ntfyWebhookUrl.value);
     }
   }
 }
