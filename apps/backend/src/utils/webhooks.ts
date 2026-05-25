@@ -2,8 +2,8 @@ import env from "./env";
 import { Subscription } from "database";
 import type { DiscordWebhook } from "./types";
 
-const sendAllPushNotification = () => {
-  const host = new URL(env.NTFY_HOST as string);
+const sendAllPushNotification = (url: string) => {
+  const host = new URL(url);
 
   const payload = {
     topic: host.pathname.replace("/", ""),
@@ -22,8 +22,11 @@ const sendAllPushNotification = () => {
   });
 };
 
-const sendSpecificPushNotification = (subscription: Subscription) => {
-  const host = new URL(env.NTFY_HOST as string);
+const sendSpecificPushNotification = (
+  url: string,
+  subscription: Subscription,
+) => {
+  const host = new URL(url);
 
   const payload = {
     topic: host.pathname.replace("/", ""),
@@ -46,8 +49,8 @@ const sendSpecificPushNotification = (subscription: Subscription) => {
   });
 };
 
-async function sendDiscordWebhook(schema: DiscordWebhook) {
-  fetch(env.DISCORD_WEBHOOK as string, {
+async function sendDiscordWebhook(url: string, schema: DiscordWebhook) {
+  fetch(url, {
     method: "post",
     headers: {
       "content-type": "application/json",
