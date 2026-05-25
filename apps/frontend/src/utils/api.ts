@@ -158,18 +158,6 @@ async function fetchMonthlyReport(): Promise<MonthlyReport> {
   });
 }
 
-async function testDiscordWebhook(): Promise<boolean> {
-  return fetch(BASE_URL + "/settings/notifications/test/discord", {
-    method: "post",
-  }).then((res) => res.ok);
-}
-
-async function testNtfyPush(): Promise<boolean> {
-  return fetch(BASE_URL + "/settings/notifications/test/ntfy", {
-    method: "post",
-  }).then((res) => res.ok);
-}
-
 async function uploadIcon(formData: FormData): Promise<string> {
   return fetch(BASE_URL + "/items/icon", {
     method: "post",
@@ -187,6 +175,35 @@ async function uploadIcon(formData: FormData): Promise<string> {
     });
 }
 
+async function testDiscordWebhook(url: string): Promise<boolean> {
+  return fetch(BASE_URL + "/settings/test/discord?webhook=" + url, {
+    method: "post",
+  })
+    .then(async (res) => {
+      if (res.ok) {
+        return res.ok;
+      } else throw new Error("Failed to test Discord webhook!");
+    })
+    .catch((e) => {
+      console.error("Failed to test Discord webhook!", e);
+      return false;
+    });
+}
+async function testNtfyWebhook(url: string): Promise<boolean> {
+  return fetch(BASE_URL + "/settings/test/ntfy?webhook=" + url, {
+    method: "post",
+  })
+    .then(async (res) => {
+      if (res.ok) {
+        return res.ok;
+      } else throw new Error("Failed to test Ntfy webhook!");
+    })
+    .catch((e) => {
+      console.error("Failed to test Ntfy webhook!", e);
+      return false;
+    });
+}
+
 export default {
   fetchItems,
   fetchCategories,
@@ -196,7 +213,7 @@ export default {
   deleteItem,
   fetchVersion,
   testDiscordWebhook,
-  testNtfyPush,
+  testNtfyWebhook,
   uploadIcon,
   fetchMetrics,
   fetchMonthlyReport,

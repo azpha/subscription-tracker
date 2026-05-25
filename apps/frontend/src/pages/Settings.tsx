@@ -5,6 +5,7 @@ import api from "@/utils/api";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/utils/cn";
 
 interface SettingsItemProps {
   apiKey: string;
@@ -42,6 +43,8 @@ export default function SettingsPage() {
   const [original, setOriginal] = useState<Record<string, string>>({});
   const [values, setValues] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+  const [discordStatus, setDiscordStatus] = useState<boolean | null>(null);
+  const [ntfyStatus, setNtfyStatus] = useState<boolean | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,6 +54,18 @@ export default function SettingsPage() {
       setValues(map);
     });
   }, []);
+  useEffect(() => {
+    if (discordStatus || discordStatus === false) {
+      setTimeout(() => {
+        setDiscordStatus(null);
+      }, 5000);
+    }
+    if (ntfyStatus || ntfyStatus === false) {
+      setTimeout(() => {
+        setNtfyStatus(null);
+      }, 5000);
+    }
+  }, [discordStatus, ntfyStatus]);
 
   const handleChange = (name: string, value: string) => {
     setValues((prev) => ({ ...prev, [name]: value }));
@@ -77,6 +92,21 @@ export default function SettingsPage() {
   };
 
   const getValue = (apiKey: string) => values[apiKey] ?? "";
+
+  const onDiscordTest = async () => {
+    const url = getValue("DISCORD_WEBHOOK");
+    if (url) {
+      const result = await api.testDiscordWebhook(url);
+      setDiscordStatus(result);
+    }
+  };
+  const onNtfyTest = async () => {
+    const url = getValue("NTFY_WEBHOOK");
+    if (url) {
+      const result = await api.testNtfyWebhook(url);
+      setNtfyStatus(result);
+    }
+  };
 
   return (
     <Layout
@@ -120,6 +150,56 @@ export default function SettingsPage() {
             >
               {saving ? "Saving..." : "Save"}
             </Button>
+          </div>
+
+          <hr className="my-2" />
+
+          <h1 className="text-2xl font-bold">Test</h1>
+          <p className="text-sm text-muted-foreground">
+            Test your notification settings here
+          </p>
+
+          <div className="flex flex-col space-y-2 my-4">
+            <div className="flex flex-row space-x-2 items-center font-bold">
+              <h1>Discord</h1>
+              <Button
+                variant="secondary"
+                className={cn(
+                  discordStatus === true
+                    ? "text-green-400"
+                    : discordStatus === false
+                      ? "text-red-400"
+                      : "text-white",
+                )}
+                onClick={onDiscordTest}
+              >
+                {discordStatus === null
+                  ? "Test"
+                  : discordStatus
+                    ? "Success"
+                    : "Failed"}
+              </Button>
+            </div>
+            <div className="flex flex-row space-x-2 items-center font-bold">
+              <h1>Ntfy</h1>
+              <Button
+                variant="secondary"
+                className={cn(
+                  ntfyStatus === true
+                    ? "text-green-400"
+                    : ntfyStatus === false
+                      ? "text-red-400"
+                      : "text-white",
+                )}
+                onClick={onNtfyTest}
+              >
+                {ntfyStatus === null
+                  ? "Test"
+                  : ntfyStatus
+                    ? "Success"
+                    : "Failed"}
+              </Button>
+            </div>
           </div>
         </div>
       </div>

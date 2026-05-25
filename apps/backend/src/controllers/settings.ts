@@ -60,89 +60,84 @@ async function getSettings(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-// async function TestWebhook(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction,
-// ): Promise<any> {
-//   try {
-//     if (env.DISCORD_WEBHOOK) {
-//       const payload = {
-//         username: "Subscriptions",
-//         embeds: [
-//           {
-//             title: "It works!",
-//             url: `${env.BASE_URL}/`,
-//             description:
-//               "Your subscription-tracker Discord webhook configuration works!",
-//             color: 16711680,
-//           },
-//         ],
-//       };
+async function testDiscordWebhook(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const discordWebhook = schemas.discordWebhook.parse(req.query.webhook);
 
-//       const result = await fetch(env.DISCORD_WEBHOOK, {
-//         method: "post",
-//         headers: {
-//           "content-type": "application/json",
-//         },
-//         body: JSON.stringify(payload),
-//       });
+    if (!discordWebhook) {
+      res.status(404).json({
+        status: 404,
+        message: "No Discord webhook provided",
+      });
+    } else {
+      const payload = {
+        username: "Subscriptions",
+        embeds: [
+          {
+            title: "It works!",
+            url: `${env.BASE_URL}/`,
+            description:
+              "Your subscription-tracker Discord webhook configuration works!",
+            color: 16711680,
+          },
+        ],
+      };
 
-//       res.status(result.status).json({
-//         status: result,
-//       });
-//     } else {
-//       return res.status(400).json({
-//         status: 400,
-//         message: "Discord webhook not configured",
-//       });
-//     }
-//   } catch (e) {
-//     next(e);
-//   }
-// }
+      const result = await fetch(discordWebhook, {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-// async function TestPushNotification(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction,
-// ): Promise<any> {
-//   try {
-//     if (env.NTFY_HOST) {
-//       const host = new URL(env.NTFY_HOST);
+      res.sendStatus(result.status);
+      return;
+    }
+  } catch (e) {
+    next(e);
+  }
+}
 
-//       const payload = {
-//         topic: host.pathname.replace("/", ""),
-//         title: "It works!",
-//         message: "Your subscription-tracker notification configuration works!",
-//         priority: 4,
-//         click: `${env.BASE_URL}/`,
-//       };
+async function testNtfyWebhook(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const ntfyWebhook = schemas.ntfyWebhook.parse(req.query.webhook);
+    const host = new URL(ntfyWebhook);
 
-//       const result = await fetch(host.origin, {
-//         method: "post",
-//         headers: {
-//           "content-type": "application/json",
-//         },
-//         body: JSON.stringify(payload),
-//       });
+    const payload = {
+      topic: host.pathname.replace("/", ""),
+      title: "It works!",
+      message: "Your subscription-tracker notification configuration works!",
+      priority: 4,
+      click: `${env.BASE_URL}/`,
+    };
 
-//       res.status(result.status).json({
-//         status: result,
-//       });
-//     } else {
-//       return res.status(400).json({
-//         status: 400,
-//         message: "Ntfy host not configured",
-//       });
-//     }
-//   } catch (e) {
-//     next(e);
-//   }
-// }
+    const result = await fetch(host.origin, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    res.sendStatus(result.status);
+  } catch (e) {
+    next(e);
+  }
+}
 
 export default {
   getVersion,
   getSettings,
   setSetting,
+  testDiscordWebhook,
+  testNtfyWebhook,
 };

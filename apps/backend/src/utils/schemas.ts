@@ -35,4 +35,10 @@ export default {
       value: z.string().min(1),
     }),
   ),
+  discordWebhook: z
+    .string()
+    .includes("https://discord.com/api/webhooks")
+    .url()
+    .min(1),
+  ntfyWebhook: z.string().url().min(1),
 };
