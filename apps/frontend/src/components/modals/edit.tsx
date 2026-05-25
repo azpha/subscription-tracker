@@ -88,12 +88,19 @@ export default function Edit({
     const result = await api.updateItem(subscription.id, body);
     if (result) {
       reset();
+      setCreatingNewCategory(false);
       setModalState(false);
     }
   };
 
+  const modalStateChange = () => {
+    reset();
+    setCreatingNewCategory(false);
+    setModalState(false);
+  };
+
   return (
-    <Dialog open={modalState} onOpenChange={setModalState}>
+    <Dialog open={modalState} onOpenChange={modalStateChange}>
       <DialogContent className="dark">
         <DialogHeader>
           <DialogTitle>Edit {subscription.name}</DialogTitle>

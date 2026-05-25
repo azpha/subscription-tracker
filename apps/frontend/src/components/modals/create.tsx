@@ -76,12 +76,19 @@ export default function Create({
     const result = await api.createItem(body);
     if (result) {
       reset();
+      setCreatingNewCategory(false);
       setModalState(false);
     }
   };
 
+  const modalStateChange = () => {
+    reset();
+    setCreatingNewCategory(false);
+    setModalState(false);
+  };
+
   return (
-    <Dialog open={modalState} onOpenChange={setModalState}>
+    <Dialog open={modalState} onOpenChange={modalStateChange}>
       <DialogContent className="dark">
         <DialogHeader>
           <DialogTitle>Create</DialogTitle>
