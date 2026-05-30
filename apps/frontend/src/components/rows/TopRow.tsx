@@ -15,7 +15,9 @@ export default function TopRow({ metrics, items, categories }: TopRowProps) {
           <CardTitle>Monthly Spending</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-xl">${metrics?.totalSpendPerMonth}</p>
+          <p className="text-xl">
+            ${Number(metrics?.totalSpendPerMonth).toFixed(2)}
+          </p>
           <p className="text-xs text-muted-foreground">
             Across {items?.length} subscriptions
           </p>
@@ -26,7 +28,9 @@ export default function TopRow({ metrics, items, categories }: TopRowProps) {
           <CardTitle>Yearly Spending</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-xl">${metrics?.totalSpendPerYear}</p>
+          <p className="text-xl">
+            ${Number(metrics?.totalSpendPerYear).toFixed(2)}
+          </p>
           <p className="text-xs text-muted-foreground">
             Across {items?.length} subscriptions
           </p>
@@ -52,7 +56,7 @@ export default function TopRow({ metrics, items, categories }: TopRowProps) {
             <>
               <p className="text-xl">{metrics?.expiringNext?.name}</p>
               <p className="xs text-muted-foreground">
-                ${metrics?.expiringNext?.price} -{" "}
+                ${Number(metrics?.expiringNext?.price).toFixed(2)} -{" "}
                 {metrics?.expiringNext &&
                   new Date(
                     metrics?.expiringNext.billingDate,

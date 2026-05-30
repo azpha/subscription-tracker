@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardContent, CardTitle } from "../ui/card";
-import CategoryChart from "../CategoryChart";
-import MonthlyChart from "../MonthlyChart";
+import CategoryChart from "../charts/CategoryChart";
+import MonthlyChart from "../charts/MonthlyChart";
 import EmptyState from "../EmptyState";
 
 interface ChartRowProps {

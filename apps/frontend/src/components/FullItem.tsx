@@ -37,7 +37,9 @@ export default function FullItem({
         </div>
         <div className="flex flex-row space-x-4">
           <div className="flex flex-col justify-center">
-            <h1 className="text-lg font-bold">${subscription.price}</h1>
+            <h1 className="text-lg font-bold">
+              ${Number(subscription.price).toFixed(2)}
+            </h1>
             <p className="text-muted-foreground text-xs">/month</p>
           </div>
           <div className="flex items-center space-x-4">

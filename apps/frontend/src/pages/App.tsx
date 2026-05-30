@@ -18,6 +18,7 @@ import { type Metrics, type Category, type Subscription } from "../utils/types";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { SettingsIcon } from "lucide-react";
+import Version from "@/components/Version";
 
 function App() {
   const [items, setItems] = useState<Subscription[] | null>(null);
@@ -157,6 +158,9 @@ function App() {
               </CardContent>
             </Card>
           </div>
+        </div>
+        <div className="text-center">
+          <Version />
         </div>
       </Layout>
     </div>

@@ -7,8 +7,6 @@ export default function Version() {
   useEffect(() => {
     const fetchVersion = async () => {
       const apiVersion = await api.fetchVersion();
-      console.log(apiVersion);
-
       setVersion(apiVersion);
     };
 
@@ -19,10 +17,12 @@ export default function Version() {
     <div className="text-white">
       {version && (
         <a
-          href={`https://github.com/azpha/subscription-tracker/releases/${version}`}
+          href={`https://github.com/azpha/subber/releases/${version}`}
           target="_blank"
         >
-          <p>Version: {version}</p>
+          <p className="text-muted-foreground text-sm">
+            Version: <span className="underline">{version || "N/A"}</span>
+          </p>
         </a>
       )}
     </div>

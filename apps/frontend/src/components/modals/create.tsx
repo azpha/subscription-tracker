@@ -204,8 +204,8 @@ export default function Create({
                   render={({ field }) => {
                     return (
                       <Checkbox
-                        checked={field.value}
                         onCheckedChange={field.onChange}
+                        defaultChecked={true}
                       />
                     );
                   }}

@@ -2,7 +2,7 @@ interface Subscription {
   id: number;
   name: string;
   image: string;
-  price: number;
+  price: number | string;
   totalSpend: number;
   paymentMethod: "Card" | "PayPal" | "Bank";
   shouldNotifyExpiry: boolean;

@@ -16,7 +16,9 @@ export default function CompactItem({ subscription }: CompactItemProps) {
         </p>
       </div>
       <div className="text-right">
-        <p className="font-semibold text-primary">${subscription.price}</p>
+        <p className="font-semibold text-primary">
+          ${Number(subscription.price).toFixed(2)}
+        </p>
       </div>
     </div>
   );
