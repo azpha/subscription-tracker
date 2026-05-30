@@ -37,23 +37,23 @@ There are a few configuration changes you can make to make your instance yours. 
 
 ## Development
 
-Install project dependencies using **pnpm**.
+Pretty simple to get started with;
 
 ```bash
 pnpm i
+pnpm --filter database run db:migrate # sets up initial migrations
+pnpm run dev
 ```
 
-This project uses **Prisma** as an ORM, you can find all the code related to this in the `packages/prisma` folder. You'll need to deploy migrations to a local SQLite database
+And you should be up and running!
 
-```bash
+### Prisma
+
+When you modify the Prisma schema, make sure to run a migration and then rebuild the Database package.
+
+```
 pnpm --filter database run db:migrate
+pnpm --filter database build
 ```
 
-After you've done that, you're good to go! Run the dev script of the component you're working on, or both in separate terminals if you're modifying both.
-
-```bash
-pnpm run dev:api
-pnpm run dev:web
-```
-
-**That's it!** You're all setup to contribute to subber.
+This ensures the latest Prisma client + types are given to the backend.

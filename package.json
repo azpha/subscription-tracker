@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "pnpm --filter database build && pnpm --filter backend build && pnpm --filter frontend build",
-    "dev:web": "pnpm --filter frontend dev",
-    "dev:api": "pnpm --filter backend dev",
+    "dev": "concurrently \"pnpm --filter frontend dev\" \"pnpm --filter backend dev\"",
     "build:web": "pnpm --filter frontend build",
     "build:api": "pnpm --filter backend build",
     "start": "pnpm --filter database db:deploy && pnpm --filter backend start"
@@ -16,7 +15,7 @@
   "license": "GPL-3.0-only",
   "packageManager": "pnpm@10.10.0",
   "dependencies": {
-    "concurrently": "^9.1.2",
+    "concurrently": "^9.2.1",
     "dotenv": "^16.5.0"
   },
   "devDependencies": {
