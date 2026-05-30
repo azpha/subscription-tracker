@@ -37,7 +37,7 @@ async function dailyJob() {
     embeds: [
       {
         title: "Subscriptions expiring!",
-        url: `${env.BASE_URL}/?filter=7-days`,
+        url: `${env.BASE_URL}/`,
         description: "You have subscriptions expiring soon!",
         color: 16711680,
         fields: [],
