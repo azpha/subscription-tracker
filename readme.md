@@ -17,6 +17,7 @@ Easily track all of your active subscriptions & get notified when you're about t
 ## Table of Contents
 
 - [Deployment](#deployment)
+- [Configuration](#configuration)
 - [Development](#development)
   - [Prisma](#Prisma)
 
