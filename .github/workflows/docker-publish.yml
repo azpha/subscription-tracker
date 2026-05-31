@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: azpha/subscription-tracker
+  IMAGE_NAME: azpha/subber
 
 jobs:
   build-and-push-image:
