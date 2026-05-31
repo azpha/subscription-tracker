@@ -14,7 +14,7 @@ export default function Header({ headerButtons }: HeaderProps) {
           className="text-2xl font-bold hover:cursor-pointer hover:underline"
           onClick={() => navigate("/")}
         >
-          Tracker
+          Subber
         </h1>
         <p className="text-sm opacity-50">Track your upcoming subscriptions</p>
       </div>
