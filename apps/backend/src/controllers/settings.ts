@@ -80,8 +80,7 @@ async function testDiscordWebhook(
           {
             title: "It works!",
             url: `${env.BASE_URL}/`,
-            description:
-              "Your subscription-tracker Discord webhook configuration works!",
+            description: "Your Subber Discord webhook configuration works!",
             color: 16711680,
           },
         ],
@@ -115,7 +114,7 @@ async function testNtfyWebhook(
     const payload = {
       topic: host.pathname.replace("/", ""),
       title: "It works!",
-      message: "Your subscription-tracker notification configuration works!",
+      message: "Your Subber notification configuration works!",
       priority: 4,
       click: `${env.BASE_URL}/`,
     };
