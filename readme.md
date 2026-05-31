@@ -1,3 +1,5 @@
+<img alt="Subber Logo" width="100" src="https://storage.alexav.gg/content/subber.png" />
+
 # subber
 
 <a href="https://github.com/azpha/subber">
@@ -6,8 +8,19 @@
 <a href="https://github.com/azpha/subber/releases">
 <img alt="Current Release" src="https://img.shields.io/github/release/azpha/subber.svg"/>
 </a>
+<a href="https://github.com/azpha/subber/actions">
+<img alt="Build Workflow" src="https://img.shields.io/github/actions/workflow/status/azpha/subber/docker-publish.yml">
+</a>
 
 Easily track all of your active subscriptions & get notified when you're about to be charged. Has support for both Discord and Ntfy notifications depending on your preferences.
+
+## Table of Contents
+
+- [Deployment](#deployment)
+- [Development](#development)
+  - [Prisma](#Prisma)
+
+---
 
 ## Deployment
 
